@@ -25,7 +25,6 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
-	font-family: 'Roboto', sans-serif;
 }
 ol, ul {
 	list-style: none;
@@ -46,6 +45,7 @@ table {
 /* ==== SITE STYLES ==== */
 
 body{
+  font-family: 'Roboto', sans-serif;
 }
 
 .wrapper{
@@ -54,12 +54,10 @@ body{
 	margin: 0 auto 3rem;
 	padding-top: 2rem;
 }
-.headerImg{
-	width: 100%;
-	padding: 0 1%;
-}
+
 h1{
-	font-size: 1.75rem;
+  font-size: 1.75rem;
+  font-family: 'Roboto', sans-serif;
 }
 
 
@@ -70,5 +68,6 @@ h1{
 
 .txt--basic{
 	font-size: 1.25rem;
+	font-family: 'Roboto', sans-serif;
 }
 
