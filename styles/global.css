@@ -54,6 +54,7 @@ body{
 	width: 100%;
 	max-width:55rem;
 	margin: 0 auto 3rem;
+	vertical-align: middle;
 }
 .headerImg{
 	width: 100%;
