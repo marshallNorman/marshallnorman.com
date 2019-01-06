@@ -60,6 +60,10 @@ h1{
   font-family: 'Roboto', sans-serif;
 }
 
+li {
+margin: 0 .5rem;
+}
+
 
 .lo--v-space{
 	margin-top: 1.2rem;
