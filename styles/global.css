@@ -45,16 +45,12 @@ table {
 /* ==== SITE STYLES ==== */
 
 body{
-	background: rgb(35,35,35);
-	color: #fff;
-	text-align: center;
 }
 
 .wrapper{
 	width: 100%;
 	max-width:55rem;
 	margin: 0 auto 3rem;
-	vertical-align: middle;
 }
 .headerImg{
 	width: 100%;
