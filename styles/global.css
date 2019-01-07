@@ -67,11 +67,16 @@ li a:hover {
 
 .wrapper{
 	max-width: 30rem;
-	padding: 2rem;
+	padding: 3rem;
+}
+
+@media screen and (min-width: 34.375rem) {
+  .wrapper {
+    padding: 5rem;
+  }
 }
 
 .border-top {
-  padding-top: 1.75rem;
   border-top: 1px solid #E2C7B0;
 }
 
@@ -85,8 +90,11 @@ li a:hover {
 }
 
 
-.lo--v-space{
+.lo--v-space {
 	margin-top: 1.2rem;
+}
+.lo--v-padding_lg {
+	padding-top: 3rem;
 }
 
 
