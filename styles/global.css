@@ -92,7 +92,8 @@ li a:hover {
 
 .txt--basic{
 	font-family: 'Roboto', sans-serif;
-	font-weight: 100;
+	font-weight: 300;
+	color: #333;
 	line-height: 2rem;
 }
 
