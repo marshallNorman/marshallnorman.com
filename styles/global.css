@@ -48,13 +48,8 @@ body{
 }
 
 .wrapper{
-	width: 100%;
 	max-width:55rem;
-	margin: 0 auto 3rem;
-}
-.headerImg{
-	width: 100%;
-	padding: 0 1%;
+	padding: 2rem;
 }
 
 .heading-sm {
