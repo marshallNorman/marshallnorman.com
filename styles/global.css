@@ -48,6 +48,12 @@ table {
 body{
 }
 
+ol {
+  font-family: 'Roboto', sans-serif;
+}
+li {
+  margin .5rem 0;
+
 .wrapper{
 	max-width: 30rem;
 	padding: 2rem;
