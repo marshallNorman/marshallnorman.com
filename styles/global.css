@@ -68,6 +68,7 @@ li a:hover {
 .wrapper{
 	max-width: 30rem;
 	padding: 3rem;
+	margin: 0 auto;
 }
 
 @media screen and (min-width: 34.375rem) {
