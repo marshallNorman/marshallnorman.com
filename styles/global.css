@@ -55,9 +55,9 @@ li {
   display: inline-block;
 }
 li a {
-  padding: 0.5rem;
-  text-size: 0.85rem;
-  text-trandform: uppercase;
+  margin: 0 0.5rem 0 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
   text-decoration: none;
   color: #9B9B9B;
 }
