@@ -52,7 +52,17 @@ ol {
   font-family: 'Roboto', sans-serif;
 }
 li {
-  margin: .5rem 0;
+  display: inline-block;
+}
+li a {
+  padding: 0.5rem;
+  text-size: 0.85rem;
+  text-trandform: uppercase;
+  text-decoration: none;
+  color: #9B9B9B;
+}
+li a:hover {
+  color: #333;
 }
 
 .wrapper{
