@@ -45,21 +45,25 @@ table {
 /* ==== SITE STYLES ==== */
 
 body{
-  font-family: 'Roboto', sans-serif;
 }
 
 .wrapper{
+	width: 100%;
 	max-width:55rem;
-	padding: 2rem;
+	margin: 0 auto 3rem;
+}
+.headerImg{
+	width: 100%;
+	padding: 0 1%;
 }
 
-h1{
-  font-size: 1.75rem;
-  font-family: 'Roboto', sans-serif;
-}
-
-li {
-margin: .5rem 0;
+.heading-sm {
+	font-size: 0.85rem;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .05rem;
+	color: #9B9B9B;
 }
 
 
@@ -69,7 +73,8 @@ margin: .5rem 0;
 
 
 .txt--basic{
-	font-size: 1.25rem;
 	font-family: 'Roboto', sans-serif;
+	font-weight: 100;
+	line-height: 2rem;
 }
 
