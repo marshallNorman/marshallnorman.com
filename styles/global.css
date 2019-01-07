@@ -57,12 +57,14 @@ li {
 li a {
   margin: 0 0.5rem 0 0;
   font-size: 0.85rem;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
   text-transform: uppercase;
-  text-decoration: none;
-  color: #9B9B9B;
+  letter-spacing: .05rem;
+  color: #333;
 }
 li a:hover {
-  color: #333;
+  color: #E2C7B0;
 }
 
 .wrapper{
