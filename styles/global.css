@@ -57,12 +57,16 @@ li {
 li a {
   margin: 0 0.5rem 0 0;
   font-size: 0.85rem;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: .05rem;
+  color: #666;
   text-decoration: none;
-  color: #9B9B9B;
+  transition: color .15s ease;
 }
 li a:hover {
-  color: #333;
+  color: #E2C7B0;
 }
 
 .wrapper{
@@ -78,7 +82,7 @@ li a:hover {
 }
 
 .border-top {
-  border-top: 1px solid #E2C7B0;
+  border-top: 4px solid #E2C7B0;
 }
 
 .heading-sm {
