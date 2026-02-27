@@ -1,0 +1,566 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+---
+
+<Layout>
+  <Nav activeHref="#case-studies" />
+
+  <div class="cs-page">
+    <!-- Sticky case header: breadcrumb + anchor nav -->
+    <header class="cs-header">
+      <p class="cs-breadcrumb">
+        <a href="/#case-studies" class="cs-breadcrumb-link">Case Studies</a>
+        {" / Designing Dialpad's Agentic AI Platform"}
+      </p>
+      <nav class="cs-anchor-nav" id="anchor-nav">
+        <a href="#overview" class="anchor-link active">Overview</a>
+        <a href="#executive-summary" class="anchor-link">Executive Summary</a>
+        <a href="#strategic-context" class="anchor-link">Strategic Context</a>
+        <a href="#phase-1" class="anchor-link">Phase 1</a>
+        <a href="#phase-2" class="anchor-link">Phase 2</a>
+        <a href="#human-agency" class="anchor-link">Human Agency</a>
+        <a href="#leadership" class="anchor-link">Leadership</a>
+        <a href="#outcomes" class="anchor-link">Outcomes</a>
+        <a href="#reflection" class="anchor-link">Reflection</a>
+      </nav>
+    </header>
+
+    <!-- Hero / Overview -->
+    <section id="overview" class="cs-hero">
+      <div class="cs-title-block">
+        <h1 class="cs-title">Designing Dialpad's Agentic AI Platform</h1>
+        <p class="cs-subtitle">0 → 1 Foundation to Scaled System</p>
+        <p class="cs-context">at Dialpad</p>
+      </div>
+      <div class="hero-grid">
+        <div class="hero-panel hero-panel-main"></div>
+        <div class="hero-panel hero-panel-top-right"></div>
+        <div class="hero-panel hero-panel-bottom-right"></div>
+      </div>
+    </section>
+
+    <!-- Executive Summary -->
+    <section id="executive-summary" class="cs-section">
+      <span class="section-label">01 — Executive Summary</span>
+      <h2 class="section-heading">Executive Summary</h2>
+      <div class="section-body">
+        <dl class="cs-meta">
+          <dt>Role</dt>
+          <dd>Lead Designer, Agentic AI</dd>
+          <dt>Scope</dt>
+          <dd>50 → 150 person cross-functional initiative</dd>
+          <dt>Timeline</dt>
+          <dd>10 months (0→1), 8 months (platform expansion)</dd>
+        </dl>
+        <div class="cs-prose">
+          <p>In 2024, I was asked to lead design for Dialpad's first agentic AI offering. As the sole designer on a 50-person task force spanning Product, Engineering, and AI/ML, I defined the foundational interaction model, creation workflows, and guardrail systems for AI agents within a real-time communications platform.</p>
+          <p>Following a successful limited customer launch, Dialpad expanded the initiative into a 150-person organization. I helped scale the design function from one to eight designers, establishing shared interaction patterns, governance structures, and platform coherence while continuing to contribute as an IC under an accelerated roadmap.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Strategic Context -->
+    <section id="strategic-context" class="cs-section">
+      <span class="section-label">02 — Strategic Context</span>
+      <h2 class="section-heading">Strategic Context</h2>
+      <div class="section-body">
+        <div class="cs-prose">
+          <p>Agentic AI capabilities were rapidly maturing in 2024, and expectations around automation in SaaS products were shifting just as quickly. Dialpad saw an opportunity — and a necessity — to move beyond assistive AI toward autonomous task execution inside communication workflows.</p>
+          <p>However, the concept of an "agent" within a real-time communications environment was undefined. We needed to answer foundational questions:</p>
+        </div>
+        <ul class="cs-questions">
+          <li>What does autonomy look like in a live communication system?</li>
+          <li>How should an agent behave when uncertainty is high?</li>
+          <li>Where does human oversight begin and end?</li>
+          <li>How do we make AI action legible and interruptible?</li>
+        </ul>
+        <div class="cs-prose">
+          <p>This was not a feature addition. It was a new behavioral layer in the product.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Phase 1 -->
+    <section id="phase-1" class="cs-section">
+      <span class="section-label">03 — Phase 1</span>
+      <h2 class="section-heading">Phase 1: Defining the Agent Model (0 → 1)</h2>
+      <div class="section-body">
+        <div class="cs-prose">
+          <p>As the sole designer on the initial task force, my responsibility was to define how agents would exist, behave, and be managed inside the platform.</p>
+        </div>
+        <ol class="cs-contributions">
+          <li class="cs-contribution">
+            <strong>Defined the Agent Mental Model</strong>
+            <ul class="cs-list">
+              <li>Established a coherent conceptual model for what an "agent" is within Dialpad</li>
+              <li>Defined lifecycle, scope, memory, triggers, and constraints</li>
+            </ul>
+          </li>
+          <li class="cs-contribution">
+            <strong>Designed Agent Creation &amp; Management Systems</strong>
+            <ul class="cs-list">
+              <li>Agent setup and configuration</li>
+              <li>Role definition and permissions</li>
+              <li>Behavior constraints and escalation rules</li>
+              <li>Ongoing monitoring and iteration</li>
+            </ul>
+          </li>
+          <li class="cs-contribution">
+            <strong>Established Autonomy &amp; Override Patterns</strong>
+            <ul class="cs-list">
+              <li>Transparency into agent reasoning</li>
+              <li>Explicit handoff points</li>
+              <li>Safe interruption and correction mechanisms</li>
+            </ul>
+          </li>
+          <li class="cs-contribution">
+            <strong>Introduced Guardrails &amp; Safety Patterns</strong>
+            <ul class="cs-list">
+              <li>Partnered with AI/ML and Engineering to design visible boundaries around agent behavior</li>
+              <li>Ensuring actions were explainable, governable, and reversible</li>
+            </ul>
+          </li>
+        </ol>
+        <div class="cs-prose">
+          <p>Throughout this phase, I worked closely with Product and Engineering to balance ambition with feasibility under a 10-month timeline. Many early decisions shaped long-term architecture, so clarity and durability were critical.</p>
+          <p>The result was a limited customer launch that validated both demand and direction.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Phase 2 -->
+    <section id="phase-2" class="cs-section">
+      <span class="section-label">04 — Phase 2</span>
+      <h2 class="section-heading">Phase 2: Scaling from Product to Platform</h2>
+      <div class="section-body">
+        <div class="cs-prose">
+          <p>Following the initial launch, Dialpad tripled investment in the initiative. The team expanded from 50 to 150 people. Design grew from 1 to 8 designers under my oversight.</p>
+          <p>My role shifted from sole contributor to system steward — while still maintaining IC ownership on high-impact areas.</p>
+        </div>
+        <h3 class="cs-subheading">Scaling the Design System for Agents</h3>
+        <div class="cs-prose">
+          <p>As scope expanded, the product evolved into a broader AI platform, including:</p>
+        </div>
+        <ul class="cs-list">
+          <li>Visual drag-and-drop agent orchestration tools</li>
+          <li>Integration model for external systems (including MCP servers)</li>
+          <li>Expanded safety and governance controls</li>
+          <li>Automated evaluation and improvement workflows</li>
+          <li>Analytics and performance monitoring</li>
+          <li>Versioning and iteration systems</li>
+        </ul>
+        <div class="cs-prose">
+          <p>To prevent fragmentation as new designers joined, I:</p>
+        </div>
+        <ul class="cs-list">
+          <li>Established shared interaction patterns for AI orchestration</li>
+          <li>Defined principles for agent behavior consistency</li>
+          <li>Led regular design critiques to maintain coherence</li>
+          <li>Structured ownership across parallel workstreams</li>
+          <li>Balanced long-term system integrity with short-term delivery pressure</li>
+        </ul>
+        <div class="cs-prose">
+          <p>We had eight months to reach the next major launch milestone. Clear structure and steady decision-making were essential.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Human Agency -->
+    <section id="human-agency" class="cs-section">
+      <span class="section-label">05 — Human Agency</span>
+      <h2 class="section-heading">Designing for Human Agency</h2>
+      <div class="section-body">
+        <div class="cs-prose">
+          <p>In highly automated environments, the hardest problems are behavioral, not visual.</p>
+          <p>As agent capabilities expanded, we had to determine:</p>
+        </div>
+        <ul class="cs-questions">
+          <li>How much autonomy is appropriate?</li>
+          <li>When should an agent defer?</li>
+          <li>How do we communicate uncertainty?</li>
+          <li>What happens when an agent fails?</li>
+        </ul>
+        <blockquote class="cs-callout">
+          I believe that as systems become more autonomous, preserving human agency becomes the core design responsibility.
+        </blockquote>
+        <div class="cs-prose">
+          <p>Across both phases, I focused on:</p>
+        </div>
+        <ul class="cs-list">
+          <li>Making agent actions legible</li>
+          <li>Ensuring users could interrupt or override</li>
+          <li>Designing transparency into decision flows</li>
+          <li>Preventing automation from feeling opaque or extractive</li>
+        </ul>
+        <div class="cs-prose">
+          <p>This philosophy informed not only product decisions but how I led the team — prioritizing clarity, shared context, and visible reasoning in decision-making.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Leadership -->
+    <section id="leadership" class="cs-section">
+      <span class="section-label">06 — Leadership</span>
+      <h2 class="section-heading">Leadership &amp; Influence</h2>
+      <div class="section-body">
+        <div class="cs-prose">
+          <p>Beyond product design, I contributed to the broader initiative by:</p>
+        </div>
+        <ul class="cs-list">
+          <li>Producing executive-ready demos used in board-level presentations</li>
+          <li>Partnering with Sales to support customer conversations</li>
+          <li>Conducting and synthesizing customer interviews</li>
+          <li>Managing stakeholder expectations during rapid expansion</li>
+          <li>Helping sequence roadmap priorities under aggressive timelines</li>
+        </ul>
+        <div class="cs-prose">
+          <p>As the initiative grew, maintaining trust — internally and externally — became as important as feature velocity.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Outcomes -->
+    <section id="outcomes" class="cs-section">
+      <span class="section-label">07 — Outcomes</span>
+      <h2 class="section-heading">Outcomes</h2>
+      <div class="section-body">
+        <ul class="cs-list">
+          <li>Successful limited customer launch of Dialpad's first agentic AI offering</li>
+          <li>3x organizational investment following validation</li>
+          <li>Expansion of design from 1 → 8 designers</li>
+          <li>Establishment of a scalable AI platform foundation</li>
+          <li>Durable interaction patterns supporting continued product evolution</li>
+        </ul>
+        <div class="cs-prose">
+          <p>The project transformed from an exploratory task force into a core strategic investment for the company.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reflection -->
+    <section id="reflection" class="cs-section">
+      <span class="section-label">08 — Reflection</span>
+      <h2 class="section-heading">Reflection</h2>
+      <div class="section-body">
+        <div class="cs-prose">
+          <p>Designing agentic systems reinforced a central belief for me:</p>
+        </div>
+        <blockquote class="cs-callout">
+          As automation increases, design responsibility deepens.
+        </blockquote>
+        <div class="cs-prose">
+          <p>The work shifts from shaping interfaces to shaping behavior — defining boundaries, preserving agency, and building trust at scale.</p>
+          <p>I aim to lead in ways that strengthen both the product system and the people building it — contributing directly while ensuring the broader structure remains coherent and durable under growth.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</Layout>
+
+<style>
+  /* ── Page shell ─────────────────────────────────────────── */
+  .cs-page {
+    padding-left: calc(8.33% + 15px);
+    box-sizing: border-box;
+  }
+
+  /* ── Sticky header ──────────────────────────────────────── */
+  .cs-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: #fff;
+    padding: 30px 20px 16px calc(8.33% + 15px);
+    margin-left: calc(-8.33% - 15px); /* bleed to left edge */
+  }
+
+  .cs-breadcrumb {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: #000;
+    opacity: 0.4;
+    margin: 0 0 12px 0;
+  }
+
+  .cs-breadcrumb-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .cs-breadcrumb-link:hover {
+    text-decoration: underline;
+  }
+
+  .cs-anchor-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .anchor-link {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: #000;
+    opacity: 0.4;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .anchor-link.active {
+    text-decoration: underline;
+    opacity: 0.4;
+  }
+
+  /* ── Hero ───────────────────────────────────────────────── */
+  .cs-hero {
+    padding: 24px 20px 40px 0;
+  }
+
+  .cs-title-block {
+    margin-bottom: 32px;
+  }
+
+  .cs-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 1.15;
+    margin: 0 0 10px 0;
+    max-width: 720px;
+  }
+
+  .cs-subtitle {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 14px;
+    opacity: 0.5;
+    margin: 0 0 4px 0;
+  }
+
+  .cs-context {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    opacity: 0.4;
+    margin: 0;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 200px 200px;
+    gap: 16px;
+  }
+
+  .hero-panel {
+    background-color: #d9d9d9;
+    border-radius: 24px;
+  }
+
+  .hero-panel-main {
+    grid-row: span 2;
+  }
+
+  /* ── Content sections ───────────────────────────────────── */
+  .cs-section {
+    padding: 80px 20px 80px 0;
+    max-width: 860px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .section-label {
+    display: block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.4;
+    margin-bottom: 20px;
+  }
+
+  .section-heading {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 34px;
+    font-weight: 400;
+    margin: 0 0 24px 0;
+    line-height: 1.2;
+  }
+
+  .section-body {
+    max-width: 700px;
+  }
+
+  /* ── Metadata block ─────────────────────────────────────── */
+  .cs-meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 24px;
+    row-gap: 8px;
+    margin: 0 0 32px 0;
+  }
+
+  .cs-meta dt {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.4;
+    white-space: nowrap;
+    padding-top: 1px;
+  }
+
+  .cs-meta dd {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 14px;
+    opacity: 0.75;
+    margin: 0;
+  }
+
+  /* ── Prose ──────────────────────────────────────────────── */
+  .cs-prose p {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #000;
+    opacity: 0.75;
+    margin: 0 0 20px 0;
+  }
+
+  .cs-prose p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Lists ──────────────────────────────────────────────── */
+  .cs-list {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cs-list li {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    opacity: 0.75;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .cs-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    opacity: 0.4;
+  }
+
+  /* ── Question list ──────────────────────────────────────── */
+  .cs-questions {
+    list-style: none;
+    padding: 0 0 0 24px;
+    margin: 16px 0 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-left: 2px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .cs-questions li {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    opacity: 0.65;
+    font-style: italic;
+  }
+
+  /* ── Numbered contributions ─────────────────────────────── */
+  .cs-contributions {
+    list-style: none;
+    padding: 0;
+    margin: 24px 0;
+    counter-reset: contribution;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .cs-contribution {
+    counter-increment: contribution;
+    padding-left: 40px;
+    position: relative;
+  }
+
+  .cs-contribution::before {
+    content: counter(contribution, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 1px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    opacity: 0.35;
+    letter-spacing: 0.04em;
+  }
+
+  .cs-contribution strong {
+    display: block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 15px;
+    font-weight: 600;
+    opacity: 0.85;
+    margin-bottom: 10px;
+  }
+
+  .cs-contribution .cs-list {
+    margin: 0;
+  }
+
+  /* ── Sub-heading ────────────────────────────────────────── */
+  .cs-subheading {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin: 32px 0 16px 0;
+    line-height: 1.3;
+  }
+
+  /* ── Callout / pull-quote ───────────────────────────────── */
+  .cs-callout {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 20px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #000;
+    opacity: 0.8;
+    border-left: 3px solid rgba(0, 0, 0, 0.2);
+    padding: 4px 0 4px 24px;
+    margin: 28px 0;
+  }
+</style>
+
+<script>
+  const anchorLinks = document.querySelectorAll<HTMLAnchorElement>('#anchor-nav .anchor-link');
+  const targets = document.querySelectorAll<HTMLElement>('#overview, #executive-summary, #strategic-context, #phase-1, #phase-2, #human-agency, #leadership, #outcomes, #reflection');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          anchorLinks.forEach((link) => {
+            if (link.getAttribute('href') === `#${id}`) {
+              link.classList.add('active');
+            } else {
+              link.classList.remove('active');
+            }
+          });
+        }
+      });
+    },
+    { threshold: 0.3 }
+  );
+
+  targets.forEach((t) => observer.observe(t));
+</script>
