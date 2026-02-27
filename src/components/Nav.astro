@@ -1,0 +1,57 @@
+---
+---
+<nav id="site-nav">
+  <a href="#about" class="nav-link active">About</a>
+  <a href="#case-studies" class="nav-link">Case Studies</a>
+  <a href="#contact" class="nav-link">Contact</a>
+</nav>
+
+<style>
+  #site-nav {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .nav-link {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 16px;
+    color: #000;
+    opacity: 0.4;
+    text-decoration: none;
+    line-height: 1;
+  }
+
+  .nav-link.active {
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  const sections = document.querySelectorAll<HTMLElement>('#about, #case-studies, #contact');
+  const navLinks = document.querySelectorAll<HTMLAnchorElement>('#site-nav .nav-link');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          navLinks.forEach((link) => {
+            if (link.getAttribute('href') === `#${id}`) {
+              link.style.textDecoration = 'underline';
+            } else {
+              link.style.textDecoration = 'none';
+            }
+          });
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+
+  sections.forEach((section) => observer.observe(section));
+</script>

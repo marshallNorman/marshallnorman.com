@@ -1,0 +1,117 @@
+---
+const projects = [
+  {
+    name: "Dialpad AI Workspace",
+    role: "Staff Product Designer",
+    year: "2024",
+    description: "Reimagined the core communication experience around AI-powered insights and real-time assistance.",
+    href: "#",
+  },
+  {
+    name: "Design System",
+    role: "Lead Designer",
+    year: "2023",
+    description: "Built a scalable, accessible component library adopted across 12 product teams.",
+    href: "#",
+  },
+];
+---
+<section id="case-studies">
+  <span class="section-label">Case Studies</span>
+  <div class="grid">
+    {projects.map((project) => (
+      <a href={project.href} class="card">
+        <div class="card-image" />
+        <div class="card-overlay">
+          <p class="card-name">{project.name}</p>
+          <p class="card-meta">{project.role} · {project.year}</p>
+          <p class="card-desc">{project.description}</p>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  #case-studies {
+    height: 100vh;
+    scroll-snap-align: start;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .section-label {
+    position: absolute;
+    top: 20px;
+    left: calc(8.33% + 15px);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.4;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    height: 100%;
+    padding: 40px 20px 40px calc(8.33% + 15px);
+    box-sizing: border-box;
+  }
+
+  .card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card-image {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0;
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover .card-image {
+    transform: scale(1.02);
+  }
+
+  .card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .card:hover .card-overlay {
+    opacity: 1;
+  }
+
+  .card-name {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 20px;
+    margin: 0 0 4px 0;
+  }
+
+  .card-meta {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    opacity: 0.75;
+    margin: 0 0 8px 0;
+  }
+
+  .card-desc {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    margin: 0;
+    line-height: 1.5;
+  }
+</style>

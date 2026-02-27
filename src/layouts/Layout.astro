@@ -9,7 +9,10 @@ import '../styles/global.css';
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>Marshall Norman — Product Designer</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
 	</head>
 	<body>
 		<slot />
@@ -17,10 +20,15 @@ import '../styles/global.css';
 </html>
 
 <style>
-	html,
+	html {
+		height: 100%;
+		overflow-y: scroll;
+		scroll-snap-type: y mandatory;
+		scroll-behavior: smooth;
+	}
+
 	body {
 		margin: 0;
-		width: 100%;
 		height: 100%;
 	}
 </style>
