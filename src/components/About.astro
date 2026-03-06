@@ -63,6 +63,7 @@ const EXAMPLES = [
           spellcheck="true"
           placeholder={`e.g. ${EXAMPLES[0]}`}
         />
+        <span id="chat-limit-msg" class="chat-limit-msg" hidden>Use the <a href="#contact">contact section</a> for any more questions</span>
         <button id="chat-send" aria-label="Send message">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -70,6 +71,7 @@ const EXAMPLES = [
           </svg>
         </button>
       </div>
+      <p id="chat-hint" class="chat-hint">5 messages remaining</p>
     </div>
   </div>
 </section>
@@ -255,6 +257,31 @@ const EXAMPLES = [
     flex-shrink: 0;
     background: transparent;
     padding: 0 12px;
+  }
+
+  .chat-hint {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: rgba(0, 0, 0, 0.35);
+    margin: 7px 10px 0;
+    line-height: 1;
+  }
+
+  .chat-hint a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .chat-limit-msg {
+    flex: 1;
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .chat-limit-msg a {
+    color: inherit;
+    text-decoration: underline;
   }
 
   #chat-backdrop {
@@ -674,6 +701,23 @@ const EXAMPLES = [
   }, 6000);
 
   // ── Chat API ──────────────────────────────────────────────
+  const MAX_MESSAGES = 5;
+  let userMessageCount = 0;
+  const hintEl = document.getElementById('chat-hint') as HTMLParagraphElement;
+  const limitMsgEl = document.getElementById('chat-limit-msg') as HTMLSpanElement;
+
+  function updateHint() {
+    const remaining = MAX_MESSAGES - userMessageCount;
+    if (remaining <= 0) {
+      input.hidden = true;
+      sendBtn.style.display = 'none';
+      limitMsgEl.hidden = false;
+      hintEl.hidden = true;
+    } else {
+      hintEl.textContent = `${remaining} message${remaining === 1 ? '' : 's'} remaining`;
+    }
+  }
+
   const conversationHistory: { role: 'user' | 'assistant'; content: string }[] = [];
 
   function appendUserBubble(text: string) {
@@ -694,12 +738,13 @@ const EXAMPLES = [
   }
 
   async function sendMessage(text: string) {
-    if (!text.trim()) return;
+    if (!text.trim() || userMessageCount >= MAX_MESSAGES) return;
 
     input.value = '';
     input.disabled = true;
     sendBtn.disabled = true;
 
+    userMessageCount++;
     appendUserBubble(text);
     conversationHistory.push({ role: 'user', content: text });
 
@@ -756,9 +801,12 @@ const EXAMPLES = [
       bubble.textContent = "Sorry, something went wrong. Try refreshing or reach out directly in the Contact section.";
     }
 
-    input.disabled = false;
-    sendBtn.disabled = false;
-    input.focus();
+    updateHint();
+    if (userMessageCount < MAX_MESSAGES) {
+      input.disabled = false;
+      sendBtn.disabled = false;
+      input.focus();
+    }
   }
 
   sendBtn.addEventListener('click', () => {
