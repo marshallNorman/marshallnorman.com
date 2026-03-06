@@ -56,13 +56,13 @@ const EXAMPLES = [
 
     <div class="input-area">
       <div class="input-wrap" data-glass>
-        <input
+        <textarea
           id="chat-input"
-          type="text"
+          rows="1"
           autocomplete="off"
           spellcheck="true"
           placeholder={`e.g. ${EXAMPLES[0]}`}
-        />
+        ></textarea>
         <span id="chat-limit-msg" class="chat-limit-msg" hidden>Use the <a href="#contact">contact section</a> for any more questions</span>
         <button id="chat-send" aria-label="Send message">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -290,9 +290,9 @@ const EXAMPLES = [
 
   .input-wrap {
     display: flex;
-    align-items: center;
-    height: 42px;
-    padding: 0 10px;
+    align-items: flex-end;
+    min-height: 42px;
+    padding: 7px 10px;
     gap: 8px;
     border-radius: 16px;
   }
@@ -303,10 +303,15 @@ const EXAMPLES = [
     background: transparent;
     font-family: "IBM Plex Serif", Georgia, serif;
     font-size: 14px;
-    line-height: 28px;
+    line-height: 22px;
     color: #000;
     outline: none;
     min-width: 0;
+    resize: none;
+    overflow-y: hidden;
+    max-height: 120px;
+    padding: 0;
+    display: block;
   }
 
   #chat-input::placeholder {
@@ -535,12 +540,22 @@ const EXAMPLES = [
   const backdrop      = document.getElementById('chat-backdrop') as HTMLElement;
   const openBtn       = document.getElementById('chat-open')     as HTMLButtonElement;
   const closeBtn      = document.getElementById('chat-close')    as HTMLButtonElement;
-  const input         = document.getElementById('chat-input')    as HTMLInputElement;
+  const input         = document.getElementById('chat-input')    as HTMLTextAreaElement;
   const sendBtn       = document.getElementById('chat-send')     as HTMLButtonElement;
   const chatContent   = document.getElementById('chat-content')  as HTMLDivElement;
   const messagesEl    = document.getElementById('chat-messages') as HTMLDivElement;
 
   const delay = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
+
+  function autoResize() {
+    input.style.height = 'auto';
+    const maxH = 120;
+    input.style.height = Math.min(input.scrollHeight, maxH) + 'px';
+    input.style.overflowY = input.scrollHeight > maxH ? 'auto' : 'hidden';
+    scrollToBottom();
+  }
+
+  input.addEventListener('input', autoResize);
 
   async function typeInto(el: HTMLElement, text: string, ms = 4) {
     for (const ch of text) {
@@ -741,6 +756,8 @@ const EXAMPLES = [
     if (!text.trim() || userMessageCount >= MAX_MESSAGES) return;
 
     input.value = '';
+    input.style.height = 'auto';
+    input.style.overflowY = 'hidden';
     input.disabled = true;
     sendBtn.disabled = true;
 
@@ -815,7 +832,8 @@ const EXAMPLES = [
   });
 
   input.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       const text = input.value.trim();
       if (text) sendMessage(text);
     }
