@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { ViewTransitions } from 'astro:transitions';
 import Contact from '../components/Contact.astro';
+import { Analytics } from '@vercel/analytics/astro';
 ---
 <!doctype html>
 <html lang="en">
@@ -38,6 +39,7 @@ import Contact from '../components/Contact.astro';
 		</svg>
 		<slot />
 		<Contact />
+		<Analytics />
 	</body>
 </html>
 

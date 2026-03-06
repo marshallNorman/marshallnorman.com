@@ -12,6 +12,7 @@
     "@anthropic-ai/sdk": "^0.78.0",
     "@astrojs/vercel": "^9.0.4",
     "@tailwindcss/vite": "^4.2.1",
+    "@vercel/analytics": "^1.6.1",
     "astro": "^5.17.1",
     "resend": "^6.9.3",
     "tailwindcss": "^4.2.1"
