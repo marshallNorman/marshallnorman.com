@@ -1,27 +1,100 @@
 ---
+const BIO_PARAGRAPHS = [
+  `I've spent over a decade designing complex product systems — from AI platforms to design systems to enterprise SaaS — but the thread running through all of it has always been people. Not users as abstractions, but real humans navigating real complexity. I believe the best design doesn't just solve problems, it earns trust. That belief shapes everything from the guardrails I build into autonomous systems to the way I show up for the designers I mentor.`,
+  `I like to say I lead like a team captain. I set direction, build structure, and make the broader system stronger — but I stay in the work. I don't disappear into strategy while others execute. I think transparency, honesty, and a willingness to be vulnerable are what make collaboration actually work, and I've found that teams move faster and build better when those things are present from the top down.`,
+  `My path has taken me from front-end development at Sparkbox to design leadership at agencies to staff-level product design at Dialpad, where I led the design of their first agentic AI platform. What's carried across every stop is a conviction that as the systems we build become more powerful, our responsibility to keep them human becomes more important — not less.`,
+];
+
+const EXAMPLES = [
+  "Where can I get your resume?",
+  "What kind of work do you do?",
+  "How do you approach design leadership?",
+  "What's your background with AI products?",
+  "How can I get in touch?",
+  "What does your design process look like?",
+];
 ---
+
+<!-- Single snap section: headline left + chat right on desktop -->
 <section id="about">
-  <div class="content">
-    <p class="greeting">Hello. I'm Marshall</p>
-    <p class="intro">
-      I'm a Staff Product Designer at <a href="https://dialpad.com" class="accent-link">Dialpad</a> focused on building intelligent product systems that scale.
-    </p>
+  <!-- Left column: headline -->
+  <div class="left-col">
+    <div class="content">
+      <p class="greeting">Hello. I'm Marshall</p>
+      <p class="intro">
+        I'm a Staff Product Designer at <a href="https://dialpad.com" class="accent-link">Dialpad</a> focused on building intelligent product systems that scale.
+      </p>
+      <p class="site-note">Welcome to my new site. I'm building it when I have time, case studies coming soon!</p>
+      <button id="chat-open" class="chat-trigger" data-glass>
+        <span>I'm working on my site right now, but lets chat!</span>
+        <span class="trigger-arrow" aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Backdrop — mobile only, behind the modal -->
+  <div id="chat-backdrop"></div>
+
+  <!-- Right column: chat — always visible on desktop, bottom sheet on mobile -->
+  <div class="right-col" id="conversation">
+    <button id="chat-close" aria-label="Close chat" data-glass><span>✕</span></button>
+
+    <!-- Desktop CTA (hidden on mobile) -->
+    <div id="desktop-cta" class="desktop-cta">
+      <button class="cta-card" data-glass>
+        <span class="cta-text">I'm working on my site right now. You can learn a bit about me here.</span>
+        <span class="cta-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+        </span>
+      </button>
+    </div>
+
+    <div class="chat-content" id="chat-content">
+      <div class="top-spacer"></div>
+      <div id="chat-messages"></div>
+    </div>
+
+    <div class="input-area">
+      <div class="input-wrap" data-glass>
+        <input
+          id="chat-input"
+          type="text"
+          autocomplete="off"
+          spellcheck="true"
+          placeholder={`e.g. ${EXAMPLES[0]}`}
+        />
+        <button id="chat-send" aria-label="Send message">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </div>
   </div>
 </section>
 
+<div id="bio-data" data-paragraphs={JSON.stringify(BIO_PARAGRAPHS)} hidden></div>
+
 <style>
+  /* ── Desktop: two-column snap section ── */
   #about {
+    display: flex;
+    align-items: stretch;
+    gap: 64px;
     height: 100vh;
     scroll-snap-align: start;
     overflow: hidden;
-    position: relative;
+  }
+
+  .left-col {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding-left: calc(8.33% + 12px);
   }
 
   .content {
-    position: absolute;
-    left: calc(8.33% + 15px);
-    top: 50%;
-    transform: translateY(-50%);
     max-width: 680px;
   }
 
@@ -37,12 +110,666 @@
     opacity: 0.3;
   }
 
-  .intro {
-    opacity: 1;
-  }
-
   .accent-link {
     color: #7c52ff;
     text-decoration: underline;
   }
+
+  .site-note {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    opacity: 0.4;
+    margin: 16px 0 24px 0;
+  }
+
+  /* Hidden on desktop */
+  .chat-trigger { display: none; }
+  #chat-close   { display: none; }
+
+  /* ── Right column (chat) ── */
+  .right-col {
+    display: flex;
+    flex-direction: column;
+    width: 560px;
+    flex-shrink: 0;
+    height: 100vh;
+    padding: 0 calc(8.33% / 2 + 12px) 16px 0;
+  }
+
+  /* ── Desktop CTA ── */
+  .desktop-cta {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    transition: opacity 0.2s ease;
+  }
+
+  .cta-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 24px;
+    border-radius: 12px;
+    width: 100%;
+    cursor: pointer;
+    text-align: left;
+    background: transparent;
+    color: inherit;
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .cta-text {
+    flex: 1;
+  }
+
+  .cta-icon {
+    flex-shrink: 0;
+    opacity: 0.45;
+    display: flex;
+    align-items: center;
+  }
+
+  .chat-content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    scrollbar-width: none;
+    padding: 0 12px;
+  }
+
+  /* Desktop hide/show is handled by a global style below — no scoped rules needed here */
+
+  .chat-content::-webkit-scrollbar {
+    display: none;
+  }
+
+  .top-spacer {
+    flex: 1;
+  }
+
+  #chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 16px;
+  }
+
+  :global(.msg-marshall) {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 14px;
+    line-height: 28px;
+    color: #000;
+    align-self: flex-start;
+    padding-left: 10px;
+    padding-right: 52px;
+  }
+
+  :global(.msg-marshall a) {
+    color: #7c52ff;
+    text-decoration: underline;
+  }
+
+  :global(.msg-user) {
+    font-family: "IBM Plex Mono", "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    align-self: flex-end;
+    background: #000;
+    color: rgba(255, 255, 255, 0.9);
+    border-radius: 18px 18px 4px 18px;
+    padding: 8px 14px;
+    max-width: 80%;
+    margin-right: 10px;
+  }
+
+  :global(.typing-dots) {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    height: 28px;
+  }
+
+  :global(.typing-dots) span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.3);
+    animation: dot-bounce 1.2s infinite;
+  }
+
+  :global(.typing-dots) span:nth-child(2) { animation-delay: 0.2s; }
+  :global(.typing-dots) span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes dot-bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40%           { transform: translateY(-4px); opacity: 1; }
+  }
+
+  .input-area {
+    flex-shrink: 0;
+    background: transparent;
+    padding: 0 12px;
+  }
+
+  #chat-backdrop {
+    display: none;
+  }
+
+  .input-wrap {
+    display: flex;
+    align-items: center;
+    height: 42px;
+    padding: 0 10px;
+    gap: 8px;
+    border-radius: 16px;
+  }
+
+  #chat-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 14px;
+    line-height: 28px;
+    color: #000;
+    outline: none;
+    min-width: 0;
+  }
+
+  #chat-input::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  #chat-input:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  #chat-send {
+    border: none;
+    background: transparent;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 4px;
+    flex-shrink: 0;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+
+  #chat-send:hover  { opacity: 0.6; }
+  #chat-send:active { transform: scale(0.9); }
+
+  #chat-send:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+  }
+
+  /* ── Mid-size (tablets / small laptops) ── */
+  @media (min-width: 769px) and (max-width: 1100px) {
+    .left-col {
+      padding-left: 32px;
+    }
+
+    .right-col {
+      width: 400px;
+      padding-right: 20px;
+    }
+
+    .greeting,
+    .intro {
+      font-size: 26px;
+    }
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 768px) {
+    #about {
+      display: block;
+      height: 100vh;
+      overflow: visible;
+      background: var(--color-surface-primary);
+    }
+
+    .desktop-cta { display: none; }
+
+    /* Vertically center the hero text */
+    .left-col {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0 24px;
+    }
+
+    .content {
+      max-width: 100%;
+    }
+
+    .greeting {
+      font-size: 18px;
+    }
+
+    .intro {
+      font-size: 28px;
+    }
+
+    /* White card button */
+    .chat-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      margin-top: 20px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-family: "IBM Plex Serif", Georgia, serif;
+      font-size: 16px;
+      line-height: 1.4;
+      color: #000;
+      cursor: pointer;
+      text-align: left;
+      box-sizing: border-box;
+    }
+
+    .chat-trigger:hover { opacity: 0.85; }
+
+    .trigger-arrow {
+      flex-shrink: 0;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    #chat-backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 39;
+      background: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    #chat-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Full-screen modal: edge-to-edge, no gaps, no rounded corners */
+    #conversation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      background: var(--color-surface-primary);
+      border-radius: 0;
+      display: none;
+      flex-direction: column;
+      /* override desktop .right-col dimensions */
+      width: auto;
+      height: auto;
+      padding: env(safe-area-inset-top, 0px) 0 0 0;
+      overflow: hidden;
+    }
+
+    /* On mobile the chat body is always visible inside the modal */
+    .chat-content,
+    .input-area {
+      display: flex;
+      opacity: 1;
+    }
+
+    .input-area {
+      display: block;
+    }
+
+    .chat-content {
+      padding: 0 8px;
+    }
+
+    .input-area {
+      padding: 0 8px calc(env(safe-area-inset-bottom, 0px) + 8px);
+    }
+
+    #conversation.open {
+      display: flex;
+    }
+
+    /* Close button inside the sheet */
+    #chat-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      border-radius: 10px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      line-height: 1;
+      z-index: 1;
+    }
+
+    /* Font sizes inside modal */
+    .bio-text {
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    :global(.msg-marshall) {
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    :global(.msg-user) {
+      font-size: 12px;
+    }
+
+    :global(body.chat-open #site-nav) {
+      display: none;
+    }
+  }
 </style>
+
+<script>
+  const EXAMPLES = [
+    "Where can I get your resume?",
+    "What kind of work do you do?",
+    "How do you approach design leadership?",
+    "What's your background with AI products?",
+    "How can I get in touch?",
+    "What does your design process look like?",
+  ];
+
+  let BIO_PARAGRAPHS: string[] = [];
+  try {
+    BIO_PARAGRAPHS = JSON.parse(
+      (document.getElementById('bio-data') as HTMLDivElement).dataset.paragraphs ?? '[]'
+    );
+  } catch (e) {
+    console.error('About: failed to parse bio data', e);
+  }
+
+  const conversation  = document.getElementById('conversation')  as HTMLElement;
+  const backdrop      = document.getElementById('chat-backdrop') as HTMLElement;
+  const openBtn       = document.getElementById('chat-open')     as HTMLButtonElement;
+  const closeBtn      = document.getElementById('chat-close')    as HTMLButtonElement;
+  const input         = document.getElementById('chat-input')    as HTMLInputElement;
+  const sendBtn       = document.getElementById('chat-send')     as HTMLButtonElement;
+  const chatContent   = document.getElementById('chat-content')  as HTMLDivElement;
+  const messagesEl    = document.getElementById('chat-messages') as HTMLDivElement;
+
+  const delay = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
+
+  async function typeInto(el: HTMLElement, text: string, ms = 4) {
+    for (const ch of text) {
+      el.textContent += ch;
+      scrollToBottom();
+      await delay(ms);
+    }
+  }
+
+  function scrollToBottom() {
+    chatContent.scrollTop = chatContent.scrollHeight;
+  }
+
+  // ── Populate chat instantly (mobile) ──────────────────────
+  function populateChatInstant() {
+    if (messagesEl.children.length) return; // already populated
+    BIO_PARAGRAPHS.forEach(para => {
+      const el = document.createElement('div');
+      el.className = 'msg-marshall';
+      el.textContent = para;
+      messagesEl.appendChild(el);
+    });
+    const welcome = document.createElement('div');
+    welcome.className = 'msg-marshall';
+    welcome.textContent = "What would you like to ask me?";
+    messagesEl.appendChild(welcome);
+  }
+
+  // ── Activate chat with typewriter (desktop) ───────────────
+  let chatActivated = false;
+
+  async function activateChat() {
+    if (chatActivated) return;
+    chatActivated = true;
+
+    const ctaEl       = document.getElementById('desktop-cta')     as HTMLElement;
+    const inputAreaEl = document.querySelector('.input-area') as HTMLElement;
+
+    input.disabled   = true;
+    sendBtn.disabled = true;
+
+    // 1. Fade out CTA
+    ctaEl.style.transition = 'opacity 0.2s ease';
+    ctaEl.style.opacity    = '0';
+    ctaEl.style.pointerEvents = 'none';
+    await delay(220);
+    ctaEl.style.display = 'none';
+
+    // 2. Show chat structure at opacity 0
+    chatContent.style.display = 'flex';
+    inputAreaEl.style.display = 'block';
+
+    // 3. Reflow → fade in
+    chatContent.offsetHeight; // force reflow
+    chatContent.style.opacity  = '1';
+    inputAreaEl.style.opacity  = '1';
+
+    await delay(350);
+
+    // 4. Type bio paragraphs
+    for (let i = 0; i < BIO_PARAGRAPHS.length; i++) {
+      const el = document.createElement('div');
+      el.className = 'msg-marshall';
+      messagesEl.appendChild(el);
+      await typeInto(el, BIO_PARAGRAPHS[i], 3);
+      await delay(i < BIO_PARAGRAPHS.length - 1 ? 280 : 180);
+    }
+
+    // 5. Type welcome message
+    const welcome = document.createElement('div');
+    welcome.className = 'msg-marshall';
+    messagesEl.appendChild(welcome);
+    await typeInto(welcome, "What would you like to ask me?", 10);
+
+    // 6. Unlock input
+    input.disabled   = false;
+    sendBtn.disabled = false;
+    input.focus();
+  }
+
+  // ── Click handlers ────────────────────────────────────────
+  const ctaCard = document.querySelector('.cta-card') as HTMLButtonElement | null;
+  const isMobile = () => window.innerWidth <= 768;
+
+  if (ctaCard) {
+    ctaCard.addEventListener('click', () => {
+      if (!isMobile()) activateChat();
+    });
+  }
+
+  // Mobile: open modal + animate greeting (same typewriter as desktop)
+  openBtn.addEventListener('click', () => {
+    conversation.classList.add('open');
+    backdrop.classList.add('open');
+    document.body.classList.add('chat-open');
+    document.body.style.overflow = 'hidden';
+
+    if (!chatActivated) {
+      chatActivated = true;
+      input.disabled = true;
+      sendBtn.disabled = true;
+
+      (async () => {
+        await delay(200); // let modal finish opening
+
+        for (let i = 0; i < BIO_PARAGRAPHS.length; i++) {
+          const el = document.createElement('div');
+          el.className = 'msg-marshall';
+          messagesEl.appendChild(el);
+          scrollToBottom();
+          await typeInto(el, BIO_PARAGRAPHS[i], 3);
+          await delay(i < BIO_PARAGRAPHS.length - 1 ? 280 : 180);
+        }
+
+        const welcome = document.createElement('div');
+        welcome.className = 'msg-marshall';
+        messagesEl.appendChild(welcome);
+        await typeInto(welcome, "What would you like to ask me?", 10);
+
+        input.disabled = false;
+        sendBtn.disabled = false;
+        input.focus();
+      })();
+    } else {
+      input.focus();
+    }
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  function closeModal() {
+    conversation.classList.remove('open');
+    backdrop.classList.remove('open');
+    document.body.classList.remove('chat-open');
+    document.body.style.overflow = '';
+  }
+
+  // ── Close mobile modal when a hash link is tapped ────────
+  messagesEl.addEventListener('click', (e) => {
+    const anchor = (e.target as Element).closest('a');
+    if (!anchor) return;
+    const href = anchor.getAttribute('href') ?? '';
+    if (href.startsWith('#') && window.innerWidth <= 768) {
+      closeModal();
+    }
+  });
+
+  // ── Placeholder cycling ───────────────────────────────────
+  let exampleIdx = 0;
+  setInterval(() => {
+    exampleIdx = (exampleIdx + 1) % EXAMPLES.length;
+    input.placeholder = `e.g. ${EXAMPLES[exampleIdx]}`;
+  }, 6000);
+
+  // ── Chat API ──────────────────────────────────────────────
+  const conversationHistory: { role: 'user' | 'assistant'; content: string }[] = [];
+
+  function appendUserBubble(text: string) {
+    const el = document.createElement('div');
+    el.className = 'msg-user';
+    el.textContent = text;
+    messagesEl.appendChild(el);
+    scrollToBottom();
+  }
+
+  function appendMarshallBubble(): HTMLDivElement {
+    const el = document.createElement('div');
+    el.className = 'msg-marshall';
+    el.innerHTML = '<span class="typing-dots"><span></span><span></span><span></span></span>';
+    messagesEl.appendChild(el);
+    scrollToBottom();
+    return el;
+  }
+
+  async function sendMessage(text: string) {
+    if (!text.trim()) return;
+
+    input.value = '';
+    input.disabled = true;
+    sendBtn.disabled = true;
+
+    appendUserBubble(text);
+    conversationHistory.push({ role: 'user', content: text });
+
+    const bubble = appendMarshallBubble();
+    let responseText = '';
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: conversationHistory }),
+      });
+
+      bubble.innerHTML = '';
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        bubble.textContent = data.error === 'quota'
+          ? "Marshall isn't rich and this thing costs money. If you have more questions email him at marshalldeannorman@gmail.com"
+          : "Sorry, something went wrong. Try refreshing or reach out directly in the Contact section.";
+      } else {
+        const reader = response.body!.getReader();
+        const decoder = new TextDecoder();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          responseText += decoder.decode(value, { stream: true });
+          bubble.textContent = responseText;
+          scrollToBottom();
+        }
+
+        const DELIMITER = '---CONTACT_MSG---';
+        const delimIdx = responseText.indexOf(DELIMITER);
+        let visibleText = responseText;
+        if (delimIdx !== -1) {
+          visibleText = responseText.slice(0, delimIdx).trimEnd();
+          let contactMsg = responseText.slice(delimIdx + DELIMITER.length).trim();
+          // Strip any trailing delimiter the model may have hallucinated
+          const trailingDelim = contactMsg.indexOf(DELIMITER);
+          if (trailingDelim !== -1) contactMsg = contactMsg.slice(0, trailingDelim).trim();
+          if (contactMsg) sessionStorage.setItem('contactPrefill', contactMsg);
+        }
+
+        const linkedHtml = visibleText
+          .replace(/\*\*(.+?)\*\*/gs, '<strong>$1</strong>')
+          .replace(/\*(.+?)\*/gs, '<em>$1</em>')
+          .replace(/_(.+?)_/gs, '<em>$1</em>')
+          .replace(/\[([^\]]+)\]\(((?:https?:\/\/|#|\/)[^)]+)\)/g, '<a href="$2">$1</a>');
+        bubble.innerHTML = linkedHtml;
+
+        conversationHistory.push({ role: 'assistant', content: visibleText });
+      }
+    } catch {
+      bubble.textContent = "Sorry, something went wrong. Try refreshing or reach out directly in the Contact section.";
+    }
+
+    input.disabled = false;
+    sendBtn.disabled = false;
+    input.focus();
+  }
+
+  sendBtn.addEventListener('click', () => {
+    const text = input.value.trim();
+    if (text) sendMessage(text);
+  });
+
+  input.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      const text = input.value.trim();
+      if (text) sendMessage(text);
+    }
+  });
+</script>

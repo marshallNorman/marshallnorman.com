@@ -1,38 +1,148 @@
 ---
+import EyeButton from './EyeButton.astro';
 ---
+<script>
+  function initContact() {
+    // --- prefill ---
+    function applyPrefill(): boolean {
+      const prefill = sessionStorage.getItem('contactPrefill');
+      if (!prefill) return false;
+      const textarea = document.getElementById('message') as HTMLTextAreaElement | null;
+      if (textarea) textarea.value = prefill;
+      sessionStorage.removeItem('contactPrefill');
+      const nameField = document.getElementById('name') as HTMLInputElement | null;
+      if (nameField) nameField.focus();
+      return true;
+    }
+
+    const section = document.getElementById('contact');
+    if (section) {
+      // Try immediately — handles VT navigation where contact is already in view
+      if (!applyPrefill()) {
+        // Not applied yet — watch for contact to scroll into view.
+        // Only disconnect after a prefill is actually found; keep watching otherwise
+        // so the observer stays alive even if contact was visible before the prefill arrived.
+        const observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting && applyPrefill()) {
+            observer.disconnect();
+          }
+        });
+        observer.observe(section);
+      }
+    }
+
+    // --- form submission ---
+    const form = document.getElementById('contact-form') as HTMLFormElement | null;
+    if (!form) return;
+
+    const successEl = document.getElementById('contact-success') as HTMLElement;
+    const submitBtn = form.querySelector('.submit-btn') as HTMLButtonElement;
+    const submitLabel = submitBtn.querySelector('span') ?? submitBtn;
+    const formErrorEl = document.getElementById('form-error') as HTMLElement;
+
+    function showFieldError(id: string, msg: string) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = msg;
+    }
+    function clearErrors() {
+      ['name-error', 'email-error', 'message-error'].forEach(id => showFieldError(id, ''));
+      formErrorEl.textContent = '';
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearErrors();
+
+      const name = (document.getElementById('name') as HTMLInputElement).value.trim();
+      const email = (document.getElementById('email') as HTMLInputElement).value.trim();
+      const message = (document.getElementById('message') as HTMLTextAreaElement).value.trim();
+
+      // Client-side validation
+      let hasError = false;
+      if (!name)    { showFieldError('name-error', 'Name is required.'); hasError = true; }
+      if (!email)   { showFieldError('email-error', 'Email is required.'); hasError = true; }
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showFieldError('email-error', 'Enter a valid email address.'); hasError = true;
+      }
+      if (!message) { showFieldError('message-error', 'Message is required.'); hasError = true; }
+      if (hasError) return;
+
+      // Loading state
+      submitBtn.disabled = true;
+      submitLabel.textContent = 'Sending…';
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, message }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          formErrorEl.textContent = data.error ?? 'Something went wrong.';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send';
+        } else {
+          form.style.display = 'none';
+          successEl.style.display = 'block';
+        }
+      } catch {
+        formErrorEl.textContent = 'Network error — try again or email directly.';
+        submitBtn.disabled = false;
+        submitLabel.textContent = 'Send';
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initContact);
+</script>
 <section id="contact">
+  <EyeButton />
   <div class="content">
     <h2 class="heading">Get in touch.</h2>
-    <!-- TODO: Wire up form action to Formspree or Netlify Forms -->
-    <form action="#" method="POST" class="contact-form">
+    <form id="contact-form" class="contact-form">
       <div class="field">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name" autocomplete="name" required />
+        <div class="field-glass" data-glass>
+          <input type="text" id="name" name="name" autocomplete="name" />
+        </div>
+        <span class="field-error" id="name-error"></span>
       </div>
       <div class="field">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" autocomplete="email" required />
+        <div class="field-glass" data-glass>
+          <input type="email" id="email" name="email" autocomplete="email" />
+        </div>
+        <span class="field-error" id="email-error"></span>
       </div>
       <div class="field">
         <label for="message">Message</label>
-        <textarea id="message" name="message" rows="5" required></textarea>
+        <div class="field-glass" data-glass>
+          <textarea id="message" name="message" rows="5"></textarea>
+        </div>
+        <span class="field-error" id="message-error"></span>
       </div>
-      <button type="submit" class="submit-btn">Send</button>
+      <span id="form-error"></span>
+      <button type="submit" class="submit-btn" data-glass><span>Send</span></button>
     </form>
+    <div id="contact-success">
+      Message sent — I'll be in touch soon.
+    </div>
   </div>
 </section>
 
 <style>
   #contact {
-    height: 100vh;
-    scroll-snap-align: start;
+    min-height: 100vh;
     overflow: hidden;
+    position: relative;
     display: flex;
     align-items: center;
+    scroll-snap-align: start;
   }
 
   .content {
-    margin-left: calc(8.33% + 15px);
+    margin-left: calc(8.33% + 12px);
     max-width: 480px;
     width: 100%;
   }
@@ -47,7 +157,7 @@
   .contact-form {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 12px;
   }
 
   .field {
@@ -64,37 +174,81 @@
     letter-spacing: 0.06em;
   }
 
+  .field-glass {
+    border-radius: 16px;
+  }
+
   input,
   textarea {
     font-family: "IBM Plex Mono", monospace;
     font-size: 15px;
     border: none;
-    border-bottom: 1px solid #000;
     outline: none;
-    padding: 6px 0;
+    padding: 9px 12px;
     background: transparent;
     resize: none;
+    width: 100%;
+    box-sizing: border-box;
+    color: inherit;
   }
 
-  input:focus,
-  textarea:focus {
-    border-bottom-color: #7c52ff;
+  .field-glass:focus-within {
+    border-color: rgba(124, 82, 255, 0.5);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9),
+                0 0 0 3px rgba(124, 82, 255, 0.1);
   }
 
   .submit-btn {
     font-family: "IBM Plex Mono", monospace;
     font-size: 14px;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid #000;
-    padding: 6px 0;
+    border-radius: 16px;
+    padding: 8px 20px;
     cursor: pointer;
-    align-self: flex-start;
     letter-spacing: 0.04em;
+    color: inherit;
+    background: transparent;
+    align-self: flex-start;
+    transition: color 0.2s ease;
   }
 
   .submit-btn:hover {
-    border-bottom-color: #7c52ff;
     color: #7c52ff;
+  }
+
+  .submit-btn:hover::before {
+    background: rgba(255, 255, 255, 0.65);
+  }
+
+  /* Inline field errors */
+  .field-error {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: #c0392b;
+    min-height: 1em;
+  }
+
+  /* Form-level error (above submit) */
+  #form-error {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: #c0392b;
+  }
+
+  @media (max-width: 768px) {
+    .content {
+      margin-left: 0;
+      padding: 0 16px;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+  /* Success state */
+  #contact-success {
+    display: none;
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 18px;
+    line-height: 1.6;
+    opacity: 0.7;
   }
 </style>

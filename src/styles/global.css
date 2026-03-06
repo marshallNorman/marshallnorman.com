@@ -4,4 +4,50 @@
   --font-mono: "IBM Plex Mono", monospace;
   --font-serif: "IBM Plex Serif", Georgia, serif;
   --color-accent: #7c52ff;
+  --color-surface-primary: #f9f9f9;
+}
+
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-blur: blur(20px) saturate(180%);
+  --glass-surface: rgba(255, 255, 255, 0.42);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-specular: inset 0 1px 1px rgba(255, 255, 255, 0.9), 0 2px 10px rgba(0, 0, 0, 0.07);
+  --glass-backdrop: blur(14px) saturate(180%);
+}
+
+/* ── Liquid glass utility ────────────────────── */
+[data-glass] {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-specular);
+}
+
+[data-glass]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  backdrop-filter: var(--glass-backdrop);
+  filter: url(#glass-distortion) saturate(115%) brightness(1.06);
+  background: var(--glass-surface);
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-glass] > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── About: hide chat on desktop until JS activates it ── */
+/* Kept here (not scoped) so inline styles from activateChat() can reliably override */
+@media (min-width: 769px) {
+  #conversation .chat-content,
+  #conversation .input-area {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
 }

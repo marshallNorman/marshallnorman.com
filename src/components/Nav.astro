@@ -1,20 +1,93 @@
 ---
+interface AnchorLink { label: string; href: string; }
+interface Props {
+  activeHref?: string;
+  anchorLinks?: AnchorLink[];
+}
+const { activeHref = "#about", anchorLinks } = Astro.props;
+const hasAnchors = !!anchorLinks?.length;
 ---
-<nav id="site-nav">
-  <a href="#about" class="nav-link active">About</a>
-  <a href="#case-studies" class="nav-link">Case Studies</a>
-  <a href="#contact" class="nav-link">Contact</a>
+<nav id="site-nav" transition:persist data-glass class={hasAnchors ? "has-anchors" : ""}>
+  <a href="#about" class="nav-home" aria-label="Home">
+    <img src="/home.svg" alt="" width="16" height="16" />
+  </a>
+  <div class="nav-main">
+    <a href="#about" class={`nav-link ${activeHref === "#about" ? "active" : ""}`}>About</a>
+    <a href="#case-studies" class={`nav-link ${activeHref === "#case-studies" ? "active" : ""}`}>Case Studies</a>
+    <a href="#contact" class={`nav-link ${activeHref === "#contact" ? "active" : ""}`}>Contact</a>
+  </div>
+  {hasAnchors && (
+    <button class="nav-anchors-toggle" aria-label="Toggle sections" aria-expanded="false">
+      Sections
+    </button>
+  )}
+  <div class={`nav-anchors${hasAnchors ? " visible" : ""}`}>
+    {anchorLinks?.map(link => (
+      <a href={link.href} class="anchor-link">{link.label}</a>
+    ))}
+  </div>
 </nav>
 
 <style>
   #site-nav {
     position: fixed;
-    top: 20px;
-    left: 20px;
+    top: 16px;
+    left: 16px;
+    bottom: auto;
+    right: auto;
     z-index: 50;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 24px;
+    row-gap: 0;
+    align-items: start;
+    padding: 8px 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: row-gap 0.25s ease;
+  }
+
+  #site-nav.has-anchors {
+    row-gap: 8px;
+  }
+
+  .nav-home {
+    grid-column: 1;
+    grid-row: 1;
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    align-items: center;
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
+  }
+
+  .nav-home img {
+    transition: width 0.25s ease, height 0.25s ease;
+  }
+
+  .nav-home:hover {
+    opacity: 0.8;
+  }
+
+  .nav-main {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .nav-anchors {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .nav-anchors.visible {
+    opacity: 1;
   }
 
   .nav-link {
@@ -24,34 +97,294 @@
     opacity: 0.4;
     text-decoration: none;
     line-height: 1;
+    transition: font-size 0.25s ease;
+  }
+
+  #site-nav.scrolled .nav-link {
+    font-size: 12px;
+  }
+
+  #site-nav.scrolled .nav-home img {
+    width: 12px;
+    height: 12px;
   }
 
   .nav-link.active {
     text-decoration: underline;
   }
+
+  .anchor-link {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: #000;
+    opacity: 0.4;
+    text-decoration: none;
+    white-space: nowrap;
+    line-height: 1;
+    transition: font-size 0.25s ease;
+  }
+
+  .anchor-link.active {
+    text-decoration: underline;
+    opacity: 0.4;
+  }
+
+  #site-nav.scrolled .anchor-link {
+    font-size: 10px;
+  }
+
+  .nav-anchors-toggle {
+    display: none; /* hidden on desktop */
+  }
+
+  @media (max-width: 768px) {
+    #site-nav {
+      top: auto;
+      bottom: 8px;
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      grid-template-columns: auto 1fr auto; /* add 3rd col for toggle */
+    }
+
+    .nav-anchors-toggle {
+      display: flex;
+      grid-column: 3;
+      grid-row: 1;
+      align-items: center;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      opacity: 0.5;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0 0 0 8px;
+      color: inherit;
+    }
+
+    /* hide the always-visible anchor row; replace with toggle */
+    .nav-anchors,
+    .nav-anchors.visible {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      gap: 0;
+      background: rgba(255, 255, 255, 0.55);
+      -webkit-backdrop-filter: blur(14px) saturate(180%);
+      backdrop-filter: blur(14px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9), 0 2px 10px rgba(0, 0, 0, 0.07);
+      border-radius: 8px;
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.25s ease;
+    }
+
+    #site-nav.anchors-open .nav-anchors {
+      max-height: 600px;
+      opacity: 1;
+      pointer-events: auto;
+      padding: 10px 12px;
+    }
+
+    .anchor-link {
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .anchor-link:last-child { border-bottom: none; }
+
+    /* smaller main links to fit home + 3 links + toggle */
+    .nav-link { font-size: 13px; }
+    .nav-main { gap: 16px; }
+  }
+
 </style>
 
 <script>
-  const sections = document.querySelectorAll<HTMLElement>('#about, #case-studies, #contact');
-  const navLinks = document.querySelectorAll<HTMLAnchorElement>('#site-nav .nav-link');
+  // Scroll listener registered once to avoid accumulation across page loads
+  let scrollListenerAdded = false;
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = entry.target.id;
-          navLinks.forEach((link) => {
-            if (link.getAttribute('href') === `#${id}`) {
-              link.style.textDecoration = 'underline';
-            } else {
-              link.style.textDecoration = 'none';
-            }
+  function smoothScrollTo(target: HTMLElement) {
+    const html = document.documentElement;
+    html.style.scrollSnapType = 'none';
+    target.scrollIntoView({ behavior: 'smooth' });
+    let fallback: ReturnType<typeof setTimeout>;
+    const restore = () => { html.style.scrollSnapType = ''; clearTimeout(fallback); };
+    html.addEventListener('scrollend', restore, { once: true });
+    fallback = setTimeout(restore, 1000);
+  }
+
+  function init() {
+    const nav = document.getElementById('site-nav');
+    if (!nav) return;
+
+    const navLinks = nav.querySelectorAll<HTMLAnchorElement>('.nav-link');
+
+    if (!scrollListenerAdded) {
+      scrollListenerAdded = true;
+      window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 0);
+        if (window.scrollY === 0) {
+          nav.querySelectorAll<HTMLAnchorElement>('.nav-link').forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#about');
           });
         }
-      });
-    },
-    { threshold: 0.5 }
-  );
+      }, { passive: true });
+    }
 
-  sections.forEach((section) => observer.observe(section));
+    const onHomePage = window.location.pathname === '/';
+
+    // Home button: rewrite href and apply same smooth-scroll as nav-links
+    const homeLink = nav.querySelector<HTMLAnchorElement>('.nav-home');
+    if (homeLink) {
+      homeLink.href = onHomePage ? '#about' : '/#about';
+      homeLink.addEventListener('click', (e) => {
+        const href = homeLink.getAttribute('href');
+        if (!href || !href.startsWith('#')) return;
+        const target = document.getElementById(href.slice(1));
+        if (!target) return;
+        e.preventDefault();
+        smoothScrollTo(target);
+      });
+    }
+
+    if (navLinks.length > 0) {
+      // Rewrite main nav hrefs for cross-page navigation.
+      // Home page → "#about" (JS smooth-scroll). Any other page → "/#about" (ViewTransitions).
+      navLinks.forEach(link => {
+        const href = link.getAttribute('href') || '';
+        // Normalize: "/#about" → "#about", "#about" → "#about"
+        const hash = href.startsWith('/') ? href.slice(1) : href;
+        if (hash.startsWith('#')) {
+          link.href = onHomePage ? hash : '/' + hash;
+        }
+      });
+
+      navLinks.forEach((link) => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          if (!href || !href.startsWith('#')) return;
+          const target = document.getElementById(href.slice(1));
+          if (!target) return;
+          e.preventDefault();
+          smoothScrollTo(target);
+        });
+      });
+
+      const sections = document.querySelectorAll<HTMLElement>('#about, #case-studies, #contact');
+      if (sections.length > 0) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const id = entry.target.id;
+                navLinks.forEach((link) => {
+                  link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                });
+              }
+            });
+          },
+          { threshold: 0.5 }
+        );
+        sections.forEach((section) => observer.observe(section));
+      }
+    }
+
+    // Mobile anchor-menu toggle
+    const toggle = nav.querySelector<HTMLButtonElement>('.nav-anchors-toggle');
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        const open = nav.classList.toggle('anchors-open');
+        toggle.setAttribute('aria-expanded', String(open));
+      });
+      // close menu when an anchor is tapped
+      nav.querySelectorAll<HTMLAnchorElement>('.anchor-link').forEach(link => {
+        link.addEventListener('click', () => {
+          nav.classList.remove('anchors-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+
+    const anchorLinks = nav.querySelectorAll<HTMLAnchorElement>('.anchor-link');
+    if (anchorLinks.length > 0) {
+      const ids = Array.from(anchorLinks)
+        .map(l => l.getAttribute('href')?.slice(1))
+        .filter(Boolean) as string[];
+      const targets = document.querySelectorAll<HTMLElement>(ids.map(id => `#${id}`).join(', '));
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            anchorLinks.forEach(link => {
+              link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
+            });
+          }
+        });
+      }, { threshold: 0.3 });
+
+      targets.forEach(t => observer.observe(t));
+    }
+  }
+
+  // Sync persisted nav state before each page swap
+  let swapHandlerAdded = false;
+  function setupSwapHandler() {
+    if (swapHandlerAdded) return;
+    swapHandlerAdded = true;
+
+    document.addEventListener('astro:before-swap', (e) => {
+      const nav = document.getElementById('site-nav');
+      if (!nav) return;
+      const newNav = (e as Event & { newDocument: Document }).newDocument.getElementById('site-nav');
+      if (!newNav) return;
+
+      // Sync active main link
+      const newActiveHref = newNav.querySelector('.nav-link.active')?.getAttribute('href') ?? null;
+      nav.querySelectorAll<HTMLAnchorElement>('.nav-link').forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === newActiveHref);
+      });
+
+      // Sync anchor links
+      const anchorsDiv = nav.querySelector<HTMLElement>('.nav-anchors');
+      if (!anchorsDiv) return;
+      const newAnchorsDiv = newNav.querySelector('.nav-anchors');
+      const newLinks = newAnchorsDiv ? Array.from(newAnchorsDiv.children) : [];
+
+      if (newLinks.length > 0) {
+        // Populate then fade in
+        anchorsDiv.replaceChildren(...newLinks.map(l => l.cloneNode(true) as Node));
+        anchorsDiv.offsetHeight; // force reflow so transition fires
+        nav.classList.add('has-anchors');
+        anchorsDiv.classList.add('visible');
+      } else {
+        // Fade out, then clear after transition
+        anchorsDiv.classList.remove('visible');
+        nav.classList.remove('has-anchors');
+        let done = false;
+        const clear = () => { if (!done) { done = true; anchorsDiv.replaceChildren(); } };
+        anchorsDiv.addEventListener('transitionend', clear, { once: true });
+        setTimeout(clear, 350);
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    setupSwapHandler();
+    init();
+
+    // After a cross-page nav to e.g. /#about, scroll to the target section.
+    const hash = window.location.hash;
+    if (hash) {
+      const target = document.getElementById(hash.slice(1));
+      if (target) {
+        requestAnimationFrame(() => smoothScrollTo(target));
+      }
+    }
+  });
 </script>

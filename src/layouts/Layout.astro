@@ -1,21 +1,43 @@
 ---
 import '../styles/global.css';
+import { ViewTransitions } from 'astro:transitions';
+import Contact from '../components/Contact.astro';
 ---
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, viewport-fit=cover" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Marshall Norman — Product Designer</title>
+		<meta name="description" content="Marshall Norman is a Staff Product Designer specializing in AI platforms, design systems, and enterprise SaaS. Based in Dayton, Ohio." />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://marshallnorman.com" />
+		<meta property="og:title" content="Marshall Norman — Product Designer" />
+		<meta property="og:description" content="Staff Product Designer at Dialpad focused on building intelligent product systems that scale." />
+		<meta property="og:image" content="https://marshallnorman.com/og-image.png" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="Marshall Norman — Product Designer" />
+		<meta name="twitter:description" content="Staff Product Designer at Dialpad focused on building intelligent product systems that scale." />
+		<meta name="twitter:image" content="https://marshallnorman.com/og-image.png" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+		<ViewTransitions />
 	</head>
 	<body>
+		<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+			<defs>
+				<filter id="glass-distortion" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGBLinear">
+					<feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" result="noise" />
+					<feDisplacementMap in="SourceGraphic" in2="noise" scale="22" xChannelSelector="R" yChannelSelector="G" />
+				</filter>
+			</defs>
+		</svg>
 		<slot />
+		<Contact />
 	</body>
 </html>
 
@@ -30,5 +52,6 @@ import '../styles/global.css';
 	body {
 		margin: 0;
 		height: 100%;
+		background-color: #f9f9f9;
 	}
 </style>

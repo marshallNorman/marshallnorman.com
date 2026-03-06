@@ -1,0 +1,481 @@
+---
+import { readdirSync } from 'fs';
+import { join } from 'path';
+
+const imagesDir = join(process.cwd(), 'public', 'images');
+const photos = readdirSync(imagesDir)
+  .filter(f => /\.(jpg|jpeg|png)$/i.test(f))
+  .sort()
+  .map(f => `/images/${encodeURIComponent(f)}`);
+---
+
+<button id="eye-btn" aria-label="Open personal section" data-glass>
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path id="eye-lid" d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" />
+    <path id="eye-pupil" d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" />
+  </svg>
+</button>
+
+<div id="eye-modal" aria-hidden="true" aria-modal="true" role="dialog">
+  <div class="modal-content">
+
+    <header class="modal-header">
+      <span class="modal-wordmark">Marshall Norman — Human, husband, dad, explorer, nice guy (I think)</span>
+      <button id="modal-close" aria-label="Close" data-glass><span><span class="close-label">Close&nbsp;&nbsp;</span>✕</span></button>
+    </header>
+
+    <div class="modal-body">
+
+      <section class="interest-block">
+        <div class="section-rule">
+          <span class="section-num">00</span>
+          <span class="section-label">Get to know me!</span>
+          <div class="rule-line"></div>
+        </div>
+        <h2>You found it!</h2>
+        <div class="interest-split">
+          <div class="interest-text">
+            <p>
+              I talk so much about how important connection and human-ness is in the
+              tech space, I figure it's important to put some of that on my website as well.
+              I'll update this section of my site periodically with new books, music, art, photos,
+              non-work related things. Thanks for visiting and I'd love to talk about any of this stuff
+              with anyone who is interested!
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="interest-block">
+        <div class="section-rule">
+          <span class="section-num">01</span>
+          <span class="section-label">Film</span>
+          <div class="rule-line"></div>
+        </div>
+        <h2>Favorite films.</h2>
+        <div class="interest-cols">
+          <p>
+            I love movies. Especially ones where you can tell that the artists, 
+            writers, and directors were able to execute their vision without any outside
+            interference. Movies like Lord of The Rings (of course), Dune (Lynch's AND 
+            Villanueva's versions), Blade Runner/Blade Runner 2049, Pan's Labyrinth,
+            almost anything by Kubrick, Ridley Scott, James Cameron.
+          </p>
+          <p>
+            A good movie can just take you out of your space for a while and let your mind
+            explore new worlds and possibilities. Imagination is such a powerful thing.
+          </p>
+        </div>
+      </section>
+
+      <section class="interest-block">
+        <div class="section-rule">
+          <span class="section-num">02</span>
+          <span class="section-label">Reading</span>
+          <div class="rule-line"></div>
+        </div>
+        <h2>What I'm reading.</h2>
+        <div class="interest-cols">
+          <p>
+            Coming soon!
+          </p>
+        </div>
+      </section>
+
+      <section class="modal-photos">
+        <div class="section-rule">
+          <span class="section-num">03</span>
+          <span class="section-label">Photography</span>
+          <div class="rule-line"></div>
+        </div>
+        <h2>What I see.</h2>
+        <p class="photos-intro">
+          One of my greatest joys in life is traveling with my wife and two daughters.
+          I try my best to document the quiet moments of life and capture the warmth and wonder that I feel.
+          Enjoy some examples!
+        </p>
+        <div class="photo-grid">
+          {photos.map((src) => (
+            <img src={src} alt="" loading="lazy" decoding="async" />
+          ))}
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ── Button ─────────────────────────────────── */
+  #eye-btn {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    z-index: 100;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a1a1a;
+    padding: 0;
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
+  }
+
+  #eye-btn:hover {
+    opacity: 1;
+  }
+
+  #eye-btn:hover #eye-lid,
+  #eye-btn:hover #eye-pupil {
+    animation-play-state: paused;
+  }
+
+  /* ── Eye animation ───────────────────────────── */
+  @keyframes eye-lid {
+    0%, 80%   { d: path("M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"); }
+    85%        { d: path("M1 12C1 12 5 12 12 12C19 12 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"); }
+    88%        { d: path("M1 12C1 12 5 20 12 20C19 20 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"); }
+    91%        { d: path("M1 12C1 12 5 12 12 12C19 12 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"); }
+    95%, 100%  { d: path("M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"); }
+  }
+
+  @keyframes eye-pupil {
+    0%, 15%   { d: path("M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"); }
+    25%, 35%  { d: path("M9 15C10.6569 15 12 13.6569 12 12C12 10.3431 10.6569 9 9 9C7.34315 9 6 10.3431 6 12C6 13.6569 7.34315 15 9 15Z"); }
+    45%, 55%  { d: path("M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"); }
+    65%, 75%  { d: path("M15 15C16.6569 15 18 13.6569 18 12C18 10.3431 16.6569 9 15 9C13.3431 9 12 10.3431 12 12C12 13.6569 13.3431 15 15 15Z"); }
+    85%, 100% { d: path("M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"); }
+  }
+
+  @keyframes eye-pupil-fade {
+    0%, 83%   { opacity: 1; }
+    87%, 92%  { opacity: 0; }
+    96%, 100% { opacity: 1; }
+  }
+
+  #eye-lid {
+    animation: eye-lid 5s ease-in-out infinite;
+  }
+
+  #eye-pupil {
+    animation: eye-pupil 5s ease-in-out infinite, eye-pupil-fade 5s ease-in-out infinite;
+  }
+
+  /* ── Modal shell ─────────────────────────────── */
+  #eye-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: #f9f9f9;
+    overflow-y: auto;
+    clip-path: circle(0px at var(--cx, calc(100% - 44px)) var(--cy, calc(100% - 44px)));
+    transition: clip-path 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+
+  #eye-modal[data-open] {
+    clip-path: circle(200vmax at var(--cx, calc(100% - 44px)) var(--cy, calc(100% - 44px)));
+    pointer-events: auto;
+  }
+
+  /* ── Modal content fade ──────────────────────── */
+  .modal-content {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #eye-modal[data-open] .modal-content {
+    opacity: 1;
+    transition: opacity 0.25s ease 0.3s;
+  }
+
+  /* ── Header ──────────────────────────────────── */
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 32px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    background: #f9f9f9;
+    z-index: 10;
+  }
+
+  .modal-wordmark {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    opacity: 0.5;
+  }
+
+  #modal-close {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    opacity: 0.4;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: opacity 0.2s ease;
+    color: inherit;
+    background: transparent;
+  }
+
+  #modal-close:hover {
+    opacity: 1;
+  }
+
+  /* ── Body ────────────────────────────────────── */
+  .modal-body {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 64px 32px 80px;
+    box-sizing: border-box;
+    flex: 1;
+  }
+
+  /* ── Section rule ────────────────────────────── */
+  .section-rule {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .section-num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    opacity: 0.35;
+    flex-shrink: 0;
+  }
+
+  .section-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    opacity: 0.35;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .rule-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  /* ── Interest blocks ─────────────────────────── */
+  .interest-block {
+    margin-bottom: 72px;
+  }
+
+  .interest-block h2,
+  .modal-photos h2 {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 400;
+    margin: 0 0 32px 0;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  /* Music: asymmetric split */
+  .interest-split {
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: 48px;
+    align-items: start;
+    max-width: 900px;
+  }
+
+  .interest-text p {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 16px;
+    line-height: 1.75;
+    margin: 0;
+    opacity: 0.75;
+  }
+
+  /* Album placeholder */
+  .album-placeholder {
+    width: 220px;
+    height: 220px;
+    border: 1px dashed rgba(0, 0, 0, 0.15);
+    background: rgba(0, 0, 0, 0.02);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .album-placeholder span {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.3;
+    text-align: center;
+    padding: 12px;
+    line-height: 1.6;
+  }
+
+  /* 2-col text blocks */
+  .interest-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    max-width: 900px;
+  }
+
+  .interest-cols p {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 16px;
+    line-height: 1.75;
+    margin: 0;
+    opacity: 0.75;
+  }
+
+  .interest-cols em {
+    font-style: italic;
+  }
+
+  /* ── Photos section ──────────────────────────── */
+  .modal-photos {
+    /* full-bleed photo grid */
+  }
+
+  .photos-intro {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 16px;
+    line-height: 1.75;
+    opacity: 0.75;
+    max-width: 700px;
+    margin: 0 0 40px 0;
+  }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+  }
+
+  .photo-grid img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  /* ── Mobile ──────────────────────────────────── */
+  @media (max-width: 768px) {
+    #eye-btn {
+      bottom: 52px;
+      right: 12px;
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+    }
+
+    .modal-body {
+      padding: 48px 20px 60px;
+    }
+
+    .interest-split,
+    .interest-cols {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .album-placeholder {
+      width: 160px;
+      height: 160px;
+    }
+
+    .interest-block h2 {
+      font-size: 1.75rem;
+    }
+
+    .photo-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .close-label {
+      display: none;
+    }
+
+    #modal-close {
+      padding: 4px 8px;
+    }
+  }
+</style>
+
+<script>
+  // Keydown listener registered once — not inside initEyeButton to avoid accumulation
+  let keydownRegistered = false;
+
+  function initEyeButton() {
+    const btn = document.getElementById('eye-btn') as HTMLButtonElement;
+    const modal = document.getElementById('eye-modal') as HTMLElement;
+    const closeBtn = document.getElementById('modal-close') as HTMLButtonElement;
+
+    if (!btn || !modal || !closeBtn) return;
+
+    function openModal() {
+      const rect = btn.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      modal.style.setProperty('--cx', `${cx}px`);
+      modal.style.setProperty('--cy', `${cy}px`);
+      modal.setAttribute('data-open', '');
+      modal.removeAttribute('aria-hidden');
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      modal.scrollTop = 0;
+    }
+
+    function closeModal() {
+      const scrollY = parseInt(document.body.style.top || '0') * -1;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY);
+      modal.removeAttribute('data-open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    btn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+
+    if (!keydownRegistered) {
+      keydownRegistered = true;
+      document.addEventListener('keydown', (e) => {
+        const m = document.getElementById('eye-modal');
+        if (e.key === 'Escape' && m?.hasAttribute('data-open')) {
+          const scrollY = parseInt(document.body.style.top || '0') * -1;
+          document.body.style.position = '';
+          document.body.style.top = '';
+          document.body.style.width = '';
+          window.scrollTo(0, scrollY);
+          m.removeAttribute('data-open');
+          m.setAttribute('aria-hidden', 'true');
+        }
+      });
+    }
+  }
+
+  document.addEventListener('astro:page-load', initEyeButton);
+</script>

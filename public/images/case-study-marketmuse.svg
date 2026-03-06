@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <!-- Scaling MarketMuse's Design Practice — case study illustration -->
+  <!-- Topic cluster network: hub-and-spoke content graph in MarketMuse blue -->
+  <!-- One central hub (the lone designer) with 5 orbital clusters -->
+
+  <!-- ── Background ── -->
+  <rect width="800" height="500" fill="#f0f7ff"/>
+
+  <!-- ── Authority rings around hub (faint, dashed — suggest topical coverage) ── -->
+  <g fill="none" stroke="rgba(8,129,226,0.05)" stroke-dasharray="3,4">
+    <circle cx="340" cy="250" r="48"/>
+    <circle cx="340" cy="250" r="80"/>
+    <circle cx="340" cy="250" r="116"/>
+  </g>
+
+  <!-- ── Cross-cluster edges (dashed — loose inter-topic connections) ── -->
+  <g fill="none" stroke="rgba(8,129,226,0.07)" stroke-width="0.6" stroke-dasharray="4,4">
+    <!-- Cluster A ↔ Cluster B (upper band connection) -->
+    <line x1="158" y1="125" x2="555" y2="118"/>
+    <!-- Cluster C ↔ Cluster D (lower band connection) -->
+    <line x1="138" y1="378" x2="568" y2="388"/>
+    <!-- Cluster B ↔ Cluster E (right-side chain) -->
+    <line x1="555" y1="118" x2="698" y2="245"/>
+  </g>
+
+  <!-- ── Hub → cluster anchor edges ── -->
+  <g fill="none" stroke="rgba(8,129,226,0.10)" stroke-width="0.9">
+    <line x1="340" y1="250" x2="158" y2="125"/>
+    <line x1="340" y1="250" x2="555" y2="118"/>
+    <line x1="340" y1="250" x2="138" y2="378"/>
+    <line x1="340" y1="250" x2="568" y2="388"/>
+    <line x1="340" y1="250" x2="698" y2="245"/>
+  </g>
+
+  <!-- ── Intra-cluster edges ── -->
+  <!-- Cluster A (upper-left) -->
+  <g fill="none" stroke="rgba(8,129,226,0.12)" stroke-width="0.8">
+    <line x1="158" y1="125" x2="108" y2="92"/>
+    <line x1="158" y1="125" x2="198" y2="90"/>
+    <line x1="158" y1="125" x2="125" y2="160"/>
+    <line x1="158" y1="125" x2="188" y2="168"/>
+    <line x1="158" y1="125" x2="108" y2="148"/>
+  </g>
+  <!-- Cluster B (upper-right) -->
+  <g fill="none" stroke="rgba(8,129,226,0.12)" stroke-width="0.8">
+    <line x1="555" y1="118" x2="508" y2="82"/>
+    <line x1="555" y1="118" x2="598" y2="88"/>
+    <line x1="555" y1="118" x2="530" y2="150"/>
+    <line x1="555" y1="118" x2="588" y2="158"/>
+    <line x1="555" y1="118" x2="618" y2="120"/>
+  </g>
+  <!-- Cluster C (lower-left) -->
+  <g fill="none" stroke="rgba(8,129,226,0.12)" stroke-width="0.8">
+    <line x1="138" y1="378" x2="92"  y2="342"/>
+    <line x1="138" y1="378" x2="180" y2="340"/>
+    <line x1="138" y1="378" x2="98"  y2="412"/>
+    <line x1="138" y1="378" x2="172" y2="415"/>
+    <line x1="138" y1="378" x2="198" y2="382"/>
+  </g>
+  <!-- Cluster D (lower-right) -->
+  <g fill="none" stroke="rgba(8,129,226,0.12)" stroke-width="0.8">
+    <line x1="568" y1="388" x2="518" y2="352"/>
+    <line x1="568" y1="388" x2="612" y2="352"/>
+    <line x1="568" y1="388" x2="538" y2="422"/>
+    <line x1="568" y1="388" x2="608" y2="428"/>
+    <line x1="568" y1="388" x2="662" y2="388"/>
+  </g>
+  <!-- Cluster E (far-right, small) -->
+  <g fill="none" stroke="rgba(8,129,226,0.11)" stroke-width="0.8">
+    <line x1="698" y1="245" x2="658" y2="215"/>
+    <line x1="698" y1="245" x2="728" y2="218"/>
+    <line x1="698" y1="245" x2="718" y2="272"/>
+  </g>
+
+  <!-- ── Satellite nodes ── -->
+  <!-- Cluster A -->
+  <circle cx="108" cy="92"  r="6" fill="rgba(53,159,244,0.14)"/>
+  <circle cx="198" cy="90"  r="7" fill="rgba(53,159,244,0.14)"/>
+  <circle cx="125" cy="160" r="8" fill="rgba(53,159,244,0.14)"/>
+  <circle cx="188" cy="168" r="5" fill="rgba(56,218,139,0.20)"/>  <!-- green: shipped -->
+  <circle cx="108" cy="148" r="6" fill="rgba(53,159,244,0.12)"/>
+
+  <!-- Cluster B -->
+  <circle cx="508" cy="82"  r="7" fill="rgba(53,159,244,0.14)"/>
+  <circle cx="598" cy="88"  r="8" fill="rgba(56,218,139,0.20)"/>  <!-- green: shipped -->
+  <circle cx="530" cy="150" r="6" fill="rgba(53,159,244,0.13)"/>
+  <circle cx="588" cy="158" r="7" fill="rgba(53,159,244,0.14)"/>
+  <circle cx="618" cy="120" r="5" fill="rgba(53,159,244,0.11)"/>
+
+  <!-- Cluster C -->
+  <circle cx="92"  cy="342" r="6" fill="rgba(53,159,244,0.13)"/>
+  <circle cx="180" cy="340" r="7" fill="rgba(53,159,244,0.14)"/>
+  <circle cx="98"  cy="412" r="5" fill="rgba(53,159,244,0.11)"/>
+  <circle cx="172" cy="415" r="8" fill="rgba(53,159,244,0.14)"/>
+  <circle cx="198" cy="382" r="5" fill="rgba(53,159,244,0.12)"/>
+
+  <!-- Cluster D -->
+  <circle cx="518" cy="352" r="7" fill="rgba(53,159,244,0.14)"/>
+  <circle cx="612" cy="352" r="8" fill="rgba(53,159,244,0.14)"/>
+  <circle cx="538" cy="422" r="6" fill="rgba(53,159,244,0.12)"/>
+  <circle cx="608" cy="428" r="9" fill="rgba(56,218,139,0.20)"/>  <!-- green: shipped -->
+  <circle cx="662" cy="388" r="6" fill="rgba(53,159,244,0.13)"/>
+
+  <!-- Cluster E -->
+  <circle cx="658" cy="215" r="5" fill="rgba(53,159,244,0.12)"/>
+  <circle cx="728" cy="218" r="6" fill="rgba(53,159,244,0.13)"/>
+  <circle cx="718" cy="272" r="5" fill="rgba(53,159,244,0.11)"/>
+
+  <!-- ── Cluster anchor nodes ── -->
+  <circle cx="158" cy="125" r="14" fill="rgba(8,129,226,0.17)"/>
+  <circle cx="555" cy="118" r="15" fill="rgba(8,129,226,0.17)"/>
+  <circle cx="138" cy="378" r="13" fill="rgba(8,129,226,0.16)"/>
+  <circle cx="568" cy="388" r="16" fill="rgba(8,129,226,0.18)"/>
+  <circle cx="698" cy="245" r="10" fill="rgba(8,129,226,0.14)"/>
+
+  <!-- ── Hub node (lone designer / design system — the connective center) ── -->
+  <circle cx="340" cy="250" r="22" fill="rgba(8,129,226,0.22)"/>
+
+</svg>

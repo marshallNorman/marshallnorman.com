@@ -4,28 +4,20 @@ import Nav from '../../components/Nav.astro';
 ---
 
 <Layout>
-  <Nav activeHref="#case-studies" />
+  <div class="cs-topo-bg" aria-hidden="true"></div>
+  <Nav activeHref="#case-studies" anchorLinks={[
+    { label: "Overview", href: "#overview" },
+    { label: "Executive Summary", href: "#executive-summary" },
+    { label: "Strategic Context", href: "#strategic-context" },
+    { label: "Phase 1", href: "#phase-1" },
+    { label: "Phase 2", href: "#phase-2" },
+    { label: "Human Agency", href: "#human-agency" },
+    { label: "Leadership", href: "#leadership" },
+    { label: "Outcomes", href: "#outcomes" },
+    { label: "Reflection", href: "#reflection" },
+  ]} />
 
   <div class="cs-page">
-    <!-- Sticky case header: breadcrumb + anchor nav -->
-    <header class="cs-header">
-      <p class="cs-breadcrumb">
-        <a href="/#case-studies" class="cs-breadcrumb-link">Case Studies</a>
-        {" / Designing Dialpad's Agentic AI Platform"}
-      </p>
-      <nav class="cs-anchor-nav" id="anchor-nav">
-        <a href="#overview" class="anchor-link active">Overview</a>
-        <a href="#executive-summary" class="anchor-link">Executive Summary</a>
-        <a href="#strategic-context" class="anchor-link">Strategic Context</a>
-        <a href="#phase-1" class="anchor-link">Phase 1</a>
-        <a href="#phase-2" class="anchor-link">Phase 2</a>
-        <a href="#human-agency" class="anchor-link">Human Agency</a>
-        <a href="#leadership" class="anchor-link">Leadership</a>
-        <a href="#outcomes" class="anchor-link">Outcomes</a>
-        <a href="#reflection" class="anchor-link">Reflection</a>
-      </nav>
-    </header>
-
     <!-- Hero / Overview -->
     <section id="overview" class="cs-hero">
       <div class="cs-title-block">
@@ -42,8 +34,7 @@ import Nav from '../../components/Nav.astro';
 
     <!-- Executive Summary -->
     <section id="executive-summary" class="cs-section">
-      <span class="section-label">01 — Executive Summary</span>
-      <h2 class="section-heading">Executive Summary</h2>
+      <h2 class="section-label">01 — Executive Summary</h2>
       <div class="section-body">
         <dl class="cs-meta">
           <dt>Role</dt>
@@ -62,8 +53,7 @@ import Nav from '../../components/Nav.astro';
 
     <!-- Strategic Context -->
     <section id="strategic-context" class="cs-section">
-      <span class="section-label">02 — Strategic Context</span>
-      <h2 class="section-heading">Strategic Context</h2>
+      <h2 class="section-label">02 — Strategic Context</h2>
       <div class="section-body">
         <div class="cs-prose">
           <p>Agentic AI capabilities were rapidly maturing in 2024, and expectations around automation in SaaS products were shifting just as quickly. Dialpad saw an opportunity — and a necessity — to move beyond assistive AI toward autonomous task execution inside communication workflows.</p>
@@ -83,8 +73,7 @@ import Nav from '../../components/Nav.astro';
 
     <!-- Phase 1 -->
     <section id="phase-1" class="cs-section">
-      <span class="section-label">03 — Phase 1</span>
-      <h2 class="section-heading">Phase 1: Defining the Agent Model (0 → 1)</h2>
+      <h2 class="section-label">03 — Phase 1</h2>
       <div class="section-body">
         <div class="cs-prose">
           <p>As the sole designer on the initial task force, my responsibility was to define how agents would exist, behave, and be managed inside the platform.</p>
@@ -122,6 +111,97 @@ import Nav from '../../components/Nav.astro';
             </ul>
           </li>
         </ol>
+
+        <!-- Fig. 01 — SVG: Agent creation workflow (3-panel light) -->
+        <div class="cs-image-block">
+          <svg class="cs-fig" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="960" height="540" fill="#f0f0f0"/>
+            <!-- Panel dividers -->
+            <line x1="320" y1="40" x2="320" y2="500" stroke="#d0d0d0" stroke-width="1"/>
+            <line x1="640" y1="40" x2="640" y2="500" stroke="#d0d0d0" stroke-width="1"/>
+            <!-- Panel 1: Role & Scope -->
+            <rect x="32" y="72" width="256" height="400" rx="6" fill="#fff"/>
+            <text x="160" y="58" font-family="IBM Plex Mono, monospace" font-size="11" fill="#000" opacity="0.35" text-anchor="middle" letter-spacing="0.08em">ROLE &amp; SCOPE</text>
+            <!-- form rows -->
+            <rect x="52" y="100" width="216" height="28" rx="4" fill="#f7f7f7"/>
+            <line x1="52" y1="118" x2="268" y2="118" stroke="#e0e0e0" stroke-width="1"/>
+            <rect x="52" y="148" width="216" height="28" rx="4" fill="#f7f7f7"/>
+            <line x1="52" y1="166" x2="268" y2="166" stroke="#e0e0e0" stroke-width="1"/>
+            <rect x="52" y="196" width="216" height="28" rx="4" fill="#f7f7f7"/>
+            <line x1="52" y1="214" x2="268" y2="214" stroke="#e0e0e0" stroke-width="1"/>
+            <rect x="52" y="244" width="100" height="28" rx="4" fill="#f7f7f7"/>
+            <rect x="168" y="244" width="100" height="28" rx="4" fill="#f7f7f7"/>
+            <rect x="52" y="296" width="216" height="60" rx="4" fill="#f7f7f7"/>
+            <!-- label stubs -->
+            <rect x="52" y="90" width="60" height="6" rx="2" fill="#d0d0d0"/>
+            <rect x="52" y="138" width="80" height="6" rx="2" fill="#d0d0d0"/>
+            <rect x="52" y="186" width="50" height="6" rx="2" fill="#d0d0d0"/>
+            <rect x="52" y="234" width="70" height="6" rx="2" fill="#d0d0d0"/>
+            <rect x="52" y="286" width="90" height="6" rx="2" fill="#d0d0d0"/>
+            <!-- active indicator -->
+            <rect x="52" y="376" width="216" height="36" rx="4" fill="#111"/>
+            <text x="160" y="399" font-family="IBM Plex Mono, monospace" font-size="11" fill="#fff" opacity="0.8" text-anchor="middle">Continue</text>
+
+            <!-- Panel 2: Trigger Conditions -->
+            <rect x="352" y="72" width="256" height="400" rx="6" fill="#fff"/>
+            <text x="480" y="58" font-family="IBM Plex Mono, monospace" font-size="11" fill="#000" opacity="0.35" text-anchor="middle" letter-spacing="0.08em">TRIGGER CONDITIONS</text>
+            <rect x="372" y="100" width="216" height="28" rx="4" fill="#f7f7f7"/>
+            <line x1="372" y1="118" x2="588" y2="118" stroke="#e0e0e0" stroke-width="1"/>
+            <!-- toggle rows -->
+            <rect x="372" y="148" width="216" height="36" rx="4" fill="#f7f7f7"/>
+            <rect x="372" y="196" width="216" height="36" rx="4" fill="#f7f7f7"/>
+            <rect x="372" y="244" width="216" height="36" rx="4" fill="#f7f7f7"/>
+            <rect x="372" y="292" width="216" height="36" rx="4" fill="#f7f7f7"/>
+            <!-- toggle pills -->
+            <rect x="556" y="158" width="24" height="14" rx="7" fill="#111"/>
+            <circle cx="572" cy="165" r="5" fill="#fff"/>
+            <rect x="556" y="206" width="24" height="14" rx="7" fill="#d0d0d0"/>
+            <circle cx="560" cy="213" r="5" fill="#fff"/>
+            <rect x="556" y="254" width="24" height="14" rx="7" fill="#111"/>
+            <circle cx="572" cy="261" r="5" fill="#fff"/>
+            <rect x="556" y="302" width="24" height="14" rx="7" fill="#d0d0d0"/>
+            <circle cx="560" cy="309" r="5" fill="#fff"/>
+            <!-- label stubs -->
+            <rect x="372" y="158" width="80" height="6" rx="2" fill="#d0d0d0"/>
+            <rect x="372" y="206" width="60" height="6" rx="2" fill="#d0d0d0"/>
+            <rect x="372" y="254" width="100" height="6" rx="2" fill="#d0d0d0"/>
+            <rect x="372" y="302" width="70" height="6" rx="2" fill="#d0d0d0"/>
+            <rect x="372" y="376" width="216" height="36" rx="4" fill="#f0f0f0"/>
+
+            <!-- Panel 3: Guardrails -->
+            <rect x="672" y="72" width="256" height="400" rx="6" fill="#fff"/>
+            <text x="800" y="58" font-family="IBM Plex Mono, monospace" font-size="11" fill="#000" opacity="0.35" text-anchor="middle" letter-spacing="0.08em">GUARDRAILS</text>
+            <!-- slider rows -->
+            <rect x="692" y="100" width="216" height="8" rx="4" fill="#e8e8e8"/>
+            <rect x="692" y="100" width="140" height="8" rx="4" fill="#111"/>
+            <circle cx="832" cy="104" r="8" fill="#fff" stroke="#111" stroke-width="2"/>
+            <rect x="692" y="138" width="216" height="8" rx="4" fill="#e8e8e8"/>
+            <rect x="692" y="138" width="80" height="8" rx="4" fill="#111"/>
+            <circle cx="772" cy="142" r="8" fill="#fff" stroke="#111" stroke-width="2"/>
+            <rect x="692" y="176" width="216" height="8" rx="4" fill="#e8e8e8"/>
+            <rect x="692" y="176" width="190" height="8" rx="4" fill="#111"/>
+            <circle cx="882" cy="180" r="8" fill="#fff" stroke="#111" stroke-width="2"/>
+            <!-- label stubs above sliders -->
+            <rect x="692" y="86" width="60" height="6" rx="2" fill="#d0d0d0"/>
+            <rect x="692" y="124" width="80" height="6" rx="2" fill="#d0d0d0"/>
+            <rect x="692" y="162" width="70" height="6" rx="2" fill="#d0d0d0"/>
+            <!-- warning zone -->
+            <rect x="692" y="216" width="216" height="60" rx="4" fill="#fff8e8" stroke="#e8c84a" stroke-width="1"/>
+            <rect x="704" y="228" width="40" height="6" rx="2" fill="#c8a030" opacity="0.6"/>
+            <rect x="704" y="242" width="180" height="4" rx="2" fill="#d0d0d0"/>
+            <rect x="704" y="252" width="140" height="4" rx="2" fill="#d0d0d0"/>
+            <!-- action buttons -->
+            <rect x="692" y="296" width="100" height="32" rx="4" fill="#f0f0f0"/>
+            <rect x="808" y="296" width="100" height="32" rx="4" fill="#111"/>
+            <text x="858" y="317" font-family="IBM Plex Mono, monospace" font-size="10" fill="#fff" opacity="0.8" text-anchor="middle">Save</text>
+            <!-- step indicator -->
+            <circle cx="752" cy="430" r="5" fill="#111"/>
+            <circle cx="780" cy="430" r="5" fill="#111"/>
+            <circle cx="808" cy="430" r="5" fill="#111" opacity="0.3"/>
+          </svg>
+          <p class="cs-image-caption">Fig. 01 — Agent creation workflow: role scoping, trigger conditions, and guardrail controls. Production screens redacted.</p>
+        </div>
+
         <div class="cs-prose">
           <p>Throughout this phase, I worked closely with Product and Engineering to balance ambition with feasibility under a 10-month timeline. Many early decisions shaped long-term architecture, so clarity and durability were critical.</p>
           <p>The result was a limited customer launch that validated both demand and direction.</p>
@@ -130,13 +210,15 @@ import Nav from '../../components/Nav.astro';
     </section>
 
     <!-- Phase 2 -->
-    <section id="phase-2" class="cs-section">
-      <span class="section-label">04 — Phase 2</span>
-      <h2 class="section-heading">Phase 2: Scaling from Product to Platform</h2>
+    <section id="phase-2" class="cs-section cs-section--wide">
+      <h2 class="section-label">04 — Phase 2</h2>
       <div class="section-body">
-        <div class="cs-prose">
-          <p>Following the initial launch, Dialpad tripled investment in the initiative. The team expanded from 50 to 150 people. Design grew from 1 to 8 designers under my oversight.</p>
-          <p>My role shifted from sole contributor to system steward — while still maintaining IC ownership on high-impact areas.</p>
+        <div class="cs-split">
+          <div class="cs-prose">
+            <p>Following the initial launch, Dialpad tripled investment in the initiative. The team expanded from 50 to 150 people. Design grew from 1 to 8 designers under my oversight.</p>
+            <p>My role shifted from sole contributor to system steward — while still maintaining IC ownership on high-impact areas.</p>
+          </div>
+          <div class="cs-split-stat" aria-hidden="true">1→8</div>
         </div>
         <h3 class="cs-subheading">Scaling the Design System for Agents</h3>
         <div class="cs-prose">
@@ -150,6 +232,99 @@ import Nav from '../../components/Nav.astro';
           <li>Analytics and performance monitoring</li>
           <li>Versioning and iteration systems</li>
         </ul>
+      </div>
+
+      <!-- Fig. 02 — SVG: Orchestration Canvas (dark, wide bleed) -->
+      <div class="cs-image-block cs-image-block--bleed">
+        <svg class="cs-fig cs-fig--dark" viewBox="0 0 1200 480" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="1200" height="480" fill="#111"/>
+          <!-- Grid dots -->
+          {Array.from({length: 24}, (_, col) =>
+            Array.from({length: 10}, (_, row) => (
+              <circle cx={col * 50 + 25} cy={row * 48 + 24} r="1" fill="#ffffff" opacity="0.06"/>
+            ))
+          )}
+
+          <!-- Connection lines -->
+          <line x1="200" y1="240" x2="360" y2="160" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+          <line x1="200" y1="240" x2="360" y2="320" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+          <line x1="360" y1="160" x2="520" y2="240" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+          <line x1="360" y1="320" x2="520" y2="240" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+          <line x1="520" y1="240" x2="700" y2="180" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+          <line x1="520" y1="240" x2="700" y2="300" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+          <line x1="700" y1="180" x2="860" y2="140" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+          <line x1="700" y1="180" x2="860" y2="220" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+          <line x1="700" y1="300" x2="860" y2="280" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+          <line x1="700" y1="300" x2="860" y2="360" stroke="#ffffff" stroke-width="1" opacity="0.2"/>
+          <line x1="860" y1="140" x2="1020" y2="200" stroke="#ffffff" stroke-width="1" opacity="0.15"/>
+          <line x1="860" y1="220" x2="1020" y2="200" stroke="#ffffff" stroke-width="1" opacity="0.15"/>
+          <line x1="860" y1="280" x2="1020" y2="320" stroke="#ffffff" stroke-width="1" opacity="0.15"/>
+          <line x1="860" y1="360" x2="1020" y2="320" stroke="#ffffff" stroke-width="1" opacity="0.15"/>
+          <line x1="1020" y1="200" x2="1160" y2="240" stroke="#ffffff" stroke-width="1" opacity="0.1"/>
+          <line x1="1020" y1="320" x2="1160" y2="240" stroke="#ffffff" stroke-width="1" opacity="0.1"/>
+
+          <!-- Entry node -->
+          <circle cx="200" cy="240" r="28" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.5"/>
+          <circle cx="200" cy="240" r="8" fill="#ffffff" opacity="0.7"/>
+          <text x="200" y="282" font-family="IBM Plex Mono, monospace" font-size="10" fill="#ffffff" opacity="0.4" text-anchor="middle">Entry</text>
+
+          <!-- Router node -->
+          <rect x="476" y="216" width="88" height="48" rx="6" fill="none" stroke="#4a9eff" stroke-width="1.5" opacity="0.7"/>
+          <text x="520" y="244" font-family="IBM Plex Mono, monospace" font-size="10" fill="#4a9eff" opacity="0.9" text-anchor="middle">Router</text>
+          <text x="520" y="256" font-family="IBM Plex Mono, monospace" font-size="8" fill="#ffffff" opacity="0.3" text-anchor="middle">decision</text>
+
+          <!-- Agent nodes -->
+          <circle cx="360" cy="160" r="32" fill="#1a1a1a" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+          <text x="360" y="156" font-family="IBM Plex Mono, monospace" font-size="9" fill="#ffffff" opacity="0.7" text-anchor="middle">Agent</text>
+          <text x="360" y="168" font-family="IBM Plex Mono, monospace" font-size="8" fill="#ffffff" opacity="0.35" text-anchor="middle">support</text>
+
+          <circle cx="360" cy="320" r="32" fill="#1a1a1a" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+          <text x="360" y="316" font-family="IBM Plex Mono, monospace" font-size="9" fill="#ffffff" opacity="0.7" text-anchor="middle">Agent</text>
+          <text x="360" y="328" font-family="IBM Plex Mono, monospace" font-size="8" fill="#ffffff" opacity="0.35" text-anchor="middle">sales</text>
+
+          <circle cx="700" cy="180" r="32" fill="#1a1a1a" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+          <text x="700" y="176" font-family="IBM Plex Mono, monospace" font-size="9" fill="#ffffff" opacity="0.7" text-anchor="middle">Agent</text>
+          <text x="700" y="188" font-family="IBM Plex Mono, monospace" font-size="8" fill="#ffffff" opacity="0.35" text-anchor="middle">primary</text>
+
+          <circle cx="700" cy="300" r="32" fill="#1a1a1a" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+          <text x="700" y="296" font-family="IBM Plex Mono, monospace" font-size="9" fill="#ffffff" opacity="0.7" text-anchor="middle">Agent</text>
+          <text x="700" y="308" font-family="IBM Plex Mono, monospace" font-size="8" fill="#ffffff" opacity="0.35" text-anchor="middle">fallback</text>
+
+          <!-- Integration nodes (rect style) -->
+          <rect x="824" y="116" width="72" height="48" rx="4" fill="#0d2a1a" stroke="#2dcc70" stroke-width="1" opacity="0.8"/>
+          <text x="860" y="138" font-family="IBM Plex Mono, monospace" font-size="9" fill="#2dcc70" opacity="0.9" text-anchor="middle">Integration</text>
+          <text x="860" y="150" font-family="IBM Plex Mono, monospace" font-size="8" fill="#ffffff" opacity="0.3" text-anchor="middle">CRM</text>
+
+          <rect x="824" y="196" width="72" height="48" rx="4" fill="#0d2a1a" stroke="#2dcc70" stroke-width="1" opacity="0.8"/>
+          <text x="860" y="218" font-family="IBM Plex Mono, monospace" font-size="9" fill="#2dcc70" opacity="0.9" text-anchor="middle">Integration</text>
+          <text x="860" y="230" font-family="IBM Plex Mono, monospace" font-size="8" fill="#ffffff" opacity="0.3" text-anchor="middle">calendar</text>
+
+          <rect x="824" y="256" width="72" height="48" rx="4" fill="#0d2a1a" stroke="#2dcc70" stroke-width="1" opacity="0.8"/>
+          <text x="860" y="278" font-family="IBM Plex Mono, monospace" font-size="9" fill="#2dcc70" opacity="0.9" text-anchor="middle">Integration</text>
+          <text x="860" y="290" font-family="IBM Plex Mono, monospace" font-size="8" fill="#ffffff" opacity="0.3" text-anchor="middle">MCP</text>
+
+          <rect x="824" y="336" width="72" height="48" rx="4" fill="#0d2a1a" stroke="#2dcc70" stroke-width="1" opacity="0.6"/>
+          <text x="860" y="358" font-family="IBM Plex Mono, monospace" font-size="9" fill="#2dcc70" opacity="0.7" text-anchor="middle">Integration</text>
+          <text x="860" y="370" font-family="IBM Plex Mono, monospace" font-size="8" fill="#ffffff" opacity="0.3" text-anchor="middle">webhook</text>
+
+          <!-- Output node -->
+          <circle cx="1020" cy="200" r="22" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+          <text x="1020" y="204" font-family="IBM Plex Mono, monospace" font-size="9" fill="#ffffff" opacity="0.5" text-anchor="middle">Output</text>
+          <circle cx="1020" cy="320" r="22" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+          <text x="1020" y="324" font-family="IBM Plex Mono, monospace" font-size="9" fill="#ffffff" opacity="0.5" text-anchor="middle">Output</text>
+
+          <!-- Terminal node -->
+          <circle cx="1160" cy="240" r="20" fill="#ffffff" opacity="0.08"/>
+          <circle cx="1160" cy="240" r="6" fill="#ffffff" opacity="0.3"/>
+
+          <!-- Version badge -->
+          <rect x="32" y="24" width="72" height="20" rx="3" fill="#ffffff" opacity="0.06"/>
+          <text x="68" y="38" font-family="IBM Plex Mono, monospace" font-size="9" fill="#ffffff" opacity="0.4" text-anchor="middle">v2.4.1</text>
+        </svg>
+        <p class="cs-image-caption">Fig. 02 — Drag-and-drop orchestration canvas: multi-agent workflow with integration nodes, routing logic, and version controls. Production screens redacted.</p>
+      </div>
+
+      <div class="section-body">
         <div class="cs-prose">
           <p>To prevent fragmentation as new designers joined, I:</p>
         </div>
@@ -168,8 +343,7 @@ import Nav from '../../components/Nav.astro';
 
     <!-- Human Agency -->
     <section id="human-agency" class="cs-section">
-      <span class="section-label">05 — Human Agency</span>
-      <h2 class="section-heading">Designing for Human Agency</h2>
+      <h2 class="section-label">05 — Human Agency</h2>
       <div class="section-body">
         <div class="cs-prose">
           <p>In highly automated environments, the hardest problems are behavioral, not visual.</p>
@@ -181,6 +355,70 @@ import Nav from '../../components/Nav.astro';
           <li>How do we communicate uncertainty?</li>
           <li>What happens when an agent fails?</li>
         </ul>
+
+        <!-- Fig. 03 — SVG: Human oversight interface (dark purple-tinted) -->
+        <div class="cs-image-block">
+          <svg class="cs-fig" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="960" height="540" fill="#1a1a2e"/>
+
+            <!-- Left panel: action log -->
+            <rect x="40" y="40" width="440" height="460" rx="8" fill="#0f0f1e" stroke="#ffffff" stroke-width="0.5" opacity="0.3"/>
+            <text x="60" y="72" font-family="IBM Plex Mono, monospace" font-size="10" fill="#ffffff" opacity="0.35" letter-spacing="0.1em">ACTION LOG</text>
+            <line x1="40" y1="84" x2="480" y2="84" stroke="#ffffff" stroke-width="0.5" opacity="0.1"/>
+
+            <!-- Log entries -->
+            {[
+              { y: 112, label: "Agent initiated call routing", status: "done", time: "09:42:03" },
+              { y: 152, label: "CRM lookup — account #4821", status: "done", time: "09:42:04" },
+              { y: 192, label: "Sentiment classified: neutral", status: "done", time: "09:42:06" },
+              { y: 232, label: "Escalation threshold — 0.68", status: "warn", time: "09:42:09" },
+              { y: 272, label: "Drafting response template…", status: "active", time: "09:42:11" },
+              { y: 312, label: "Awaiting approval to send", status: "pending", time: "—" },
+            ].map(({ y, label, status, time }) => (
+              <>
+                <rect x="60" y={y} width={status === 'done' ? 8 : status === 'active' ? 8 : status === 'warn' ? 8 : 8} height="8" rx="2"
+                  fill={status === 'done' ? '#2dcc70' : status === 'active' ? '#4a9eff' : status === 'warn' ? '#e8c84a' : '#ffffff'}
+                  opacity={status === 'pending' ? 0.15 : 0.8}/>
+                <rect x="80" y={y + 1} width={status === 'pending' ? 160 : 220} height="6" rx="2"
+                  fill="#ffffff" opacity={status === 'pending' ? 0.15 : status === 'active' ? 0.7 : 0.4}/>
+                <text x="440" y={y + 8} font-family="IBM Plex Mono, monospace" font-size="9" fill="#ffffff" opacity="0.2" text-anchor="end">{time}</text>
+              </>
+            ))}
+
+            <!-- Right panel: confidence + interrupt -->
+            <rect x="500" y="40" width="420" height="460" rx="8" fill="#0f0f1e" stroke="#ffffff" stroke-width="0.5" opacity="0.3"/>
+            <text x="520" y="72" font-family="IBM Plex Mono, monospace" font-size="10" fill="#ffffff" opacity="0.35" letter-spacing="0.1em">CONFIDENCE</text>
+            <line x1="500" y1="84" x2="920" y2="84" stroke="#ffffff" stroke-width="0.5" opacity="0.1"/>
+
+            <!-- Confidence arc / ring -->
+            <circle cx="710" cy="200" r="80" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.06"/>
+            <circle cx="710" cy="200" r="80" fill="none" stroke="#4a9eff" stroke-width="6"
+              stroke-dasharray="334" stroke-dashoffset="84"
+              stroke-linecap="round"
+              transform="rotate(-90 710 200)" opacity="0.7"/>
+            <text x="710" y="194" font-family="IBM Plex Serif, serif" font-size="36" fill="#ffffff" opacity="0.8" text-anchor="middle">68%</text>
+            <text x="710" y="216" font-family="IBM Plex Mono, monospace" font-size="10" fill="#ffffff" opacity="0.3" text-anchor="middle">confidence</text>
+
+            <!-- Threshold bar -->
+            <text x="520" y="330" font-family="IBM Plex Mono, monospace" font-size="9" fill="#ffffff" opacity="0.3" letter-spacing="0.06em">ESCALATION THRESHOLD</text>
+            <rect x="520" y="342" width="380" height="6" rx="3" fill="#ffffff" opacity="0.08"/>
+            <rect x="520" y="342" width="258" height="6" rx="3" fill="#e8c84a" opacity="0.7"/>
+            <line x1="750" y1="336" x2="750" y2="356" stroke="#e8c84a" stroke-width="1" opacity="0.5" stroke-dasharray="2 2"/>
+            <text x="750" y="368" font-family="IBM Plex Mono, monospace" font-size="8" fill="#e8c84a" opacity="0.5" text-anchor="middle">threshold</text>
+
+            <!-- Interrupt button -->
+            <rect x="520" y="400" width="172" height="52" rx="6" fill="#c0392b" opacity="0.9"/>
+            <text x="606" y="421" font-family="IBM Plex Mono, monospace" font-size="11" fill="#fff" text-anchor="middle" font-weight="600">Interrupt</text>
+            <text x="606" y="437" font-family="IBM Plex Mono, monospace" font-size="9" fill="#fff" opacity="0.6" text-anchor="middle">stop agent</text>
+
+            <!-- Override button -->
+            <rect x="708" y="400" width="192" height="52" rx="6" fill="#ffffff" opacity="0.07" stroke="#ffffff" stroke-width="0.5"/>
+            <text x="804" y="421" font-family="IBM Plex Mono, monospace" font-size="11" fill="#fff" text-anchor="middle" opacity="0.7">Take Over</text>
+            <text x="804" y="437" font-family="IBM Plex Mono, monospace" font-size="9" fill="#fff" opacity="0.3" text-anchor="middle">manual control</text>
+          </svg>
+          <p class="cs-image-caption">Fig. 03 — Agent action log mid-task, with interrupt and override controls alongside a confidence indicator. Production screens redacted.</p>
+        </div>
+
         <blockquote class="cs-callout">
           I believe that as systems become more autonomous, preserving human agency becomes the core design responsibility.
         </blockquote>
@@ -201,8 +439,7 @@ import Nav from '../../components/Nav.astro';
 
     <!-- Leadership -->
     <section id="leadership" class="cs-section">
-      <span class="section-label">06 — Leadership</span>
-      <h2 class="section-heading">Leadership &amp; Influence</h2>
+      <h2 class="section-label">06 — Leadership</h2>
       <div class="section-body">
         <div class="cs-prose">
           <p>Beyond product design, I contributed to the broader initiative by:</p>
@@ -222,16 +459,26 @@ import Nav from '../../components/Nav.astro';
 
     <!-- Outcomes -->
     <section id="outcomes" class="cs-section">
-      <span class="section-label">07 — Outcomes</span>
-      <h2 class="section-heading">Outcomes</h2>
+      <h2 class="section-label">07 — Outcomes</h2>
       <div class="section-body">
-        <ul class="cs-list">
-          <li>Successful limited customer launch of Dialpad's first agentic AI offering</li>
-          <li>3x organizational investment following validation</li>
-          <li>Expansion of design from 1 → 8 designers</li>
-          <li>Establishment of a scalable AI platform foundation</li>
-          <li>Durable interaction patterns supporting continued product evolution</li>
-        </ul>
+        <div class="cs-stat-grid">
+          <div class="cs-stat">
+            <p class="cs-stat-value">3×</p>
+            <p class="cs-stat-label">Organizational investment post-launch</p>
+          </div>
+          <div class="cs-stat">
+            <p class="cs-stat-value">1→8</p>
+            <p class="cs-stat-label">Designers under my oversight</p>
+          </div>
+          <div class="cs-stat">
+            <p class="cs-stat-value">10mo</p>
+            <p class="cs-stat-label">Initial 0→1 timeline</p>
+          </div>
+          <div class="cs-stat">
+            <p class="cs-stat-value">50→150</p>
+            <p class="cs-stat-label">Team headcount growth</p>
+          </div>
+        </div>
         <div class="cs-prose">
           <p>The project transformed from an exploratory task force into a core strategic investment for the company.</p>
         </div>
@@ -240,8 +487,7 @@ import Nav from '../../components/Nav.astro';
 
     <!-- Reflection -->
     <section id="reflection" class="cs-section">
-      <span class="section-label">08 — Reflection</span>
-      <h2 class="section-heading">Reflection</h2>
+      <h2 class="section-label">08 — Reflection</h2>
       <div class="section-body">
         <div class="cs-prose">
           <p>Designing agentic systems reinforced a central belief for me:</p>
@@ -259,59 +505,84 @@ import Nav from '../../components/Nav.astro';
   </div>
 </Layout>
 
+<script>
+  function placeBreadcrumbs() {
+    const page = document.querySelector('.cs-page') as HTMLElement | null;
+    if (!page) return;
+
+    // Clear any previously placed breadcrumbs
+    page.querySelectorAll('.cs-breadcrumb').forEach(el => el.remove());
+
+    const totalHeight = page.scrollHeight;
+    const start = 600;
+    const interval = 1200;
+
+    for (let top = start; top < totalHeight; top += interval) {
+      const el = document.createElement('p');
+      el.className = 'cs-breadcrumb';
+      el.innerHTML = '<a href="/#case-studies" class="cs-breadcrumb-link">Case Studies</a> / Designing Dialpad\'s Agentic AI Platform';
+      el.style.top = `${top}px`;
+      page.appendChild(el);
+    }
+  }
+
+  // Place on load, then again once fonts are ready (they affect page height)
+  placeBreadcrumbs();
+  document.fonts?.ready.then(placeBreadcrumbs);
+</script>
+
 <style>
+  /* ── Page-level theme overrides ─────────────────────────── */
+  :global(body) {
+    background-color: #f1ede6;
+  }
+
+  .cs-topo-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-image: url('/images/case-study-dialpad.svg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+
   /* ── Page shell ─────────────────────────────────────────── */
   .cs-page {
-    padding-left: calc(8.33% + 15px);
+    padding-left: calc(8.33% + 12px);
+    padding-top: 80px;
     box-sizing: border-box;
+    position: relative;
+    overflow-x: clip;
+    z-index: 1;
   }
 
-  /* ── Sticky header ──────────────────────────────────────── */
-  .cs-header {
-    position: sticky;
-    top: 0;
-    z-index: 40;
-    background: #fff;
-    padding: 30px 20px 16px calc(8.33% + 15px);
-    margin-left: calc(-8.33% - 15px); /* bleed to left edge */
-  }
-
-  .cs-breadcrumb {
+  :global(.cs-breadcrumb) {
+    position: absolute;
+    left: 20px;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
     font-family: "IBM Plex Mono", monospace;
     font-size: 12px;
     color: #000;
     opacity: 0.4;
-    margin: 0 0 12px 0;
+    margin: 0;
+    pointer-events: none;
   }
 
-  .cs-breadcrumb-link {
+  :global(.cs-breadcrumb a) {
     color: inherit;
     text-decoration: none;
+    pointer-events: auto;
   }
 
-  .cs-breadcrumb-link:hover {
+  :global(.cs-breadcrumb a:hover) {
     text-decoration: underline;
   }
 
-  .cs-anchor-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-
-  .anchor-link {
-    font-family: "IBM Plex Mono", monospace;
-    font-size: 12px;
-    color: #000;
-    opacity: 0.4;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-
-  .anchor-link.active {
-    text-decoration: underline;
-    opacity: 0.4;
-  }
 
   /* ── Hero ───────────────────────────────────────────────── */
   .cs-hero {
@@ -353,41 +624,59 @@ import Nav from '../../components/Nav.astro';
   }
 
   .hero-panel {
-    background-color: #d9d9d9;
+    background-color: #e2d8cc;
     border-radius: 24px;
   }
 
   .hero-panel-main {
     grid-row: span 2;
+    background-image: url('/images/case-study-dialpad.svg');
+    background-size: cover;
+    background-position: center;
+    background-color: #f1ede6;
+  }
+
+  .hero-panel-top-right {
+    background-color: #ddd3c5;
+  }
+
+  .hero-panel-bottom-right {
+    background-color: #d4c9ba;
   }
 
   /* ── Content sections ───────────────────────────────────── */
   .cs-section {
     padding: 80px 20px 80px 0;
     max-width: 860px;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .cs-section--wide {
+    max-width: none;
   }
 
   .section-label {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     font-family: "IBM Plex Mono", monospace;
     font-size: 12px;
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     opacity: 0.4;
-    margin-bottom: 20px;
+    margin: 0 0 20px 0;
   }
 
-  .section-heading {
-    font-family: "IBM Plex Serif", Georgia, serif;
-    font-size: 34px;
-    font-weight: 400;
-    margin: 0 0 24px 0;
-    line-height: 1.2;
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(152, 112, 70, 0.3);
   }
 
   .section-body {
     max-width: 700px;
+    padding-left: 41px;
   }
 
   /* ── Metadata block ─────────────────────────────────────── */
@@ -459,20 +748,39 @@ import Nav from '../../components/Nav.astro';
   /* ── Question list ──────────────────────────────────────── */
   .cs-questions {
     list-style: none;
-    padding: 0 0 0 24px;
-    margin: 16px 0 24px 0;
+    padding: 0;
+    margin: 28px 0;
+    counter-reset: question;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    border-left: 2px solid rgba(0, 0, 0, 0.08);
   }
 
   .cs-questions li {
-    font-family: "IBM Plex Mono", monospace;
-    font-size: 14px;
-    line-height: 1.6;
-    opacity: 0.65;
+    counter-increment: question;
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 20px;
     font-style: italic;
+    line-height: 1.4;
+    color: #000;
+    padding: 18px 0 18px 32px;
+    border-bottom: 1px solid rgba(152, 112, 70, 0.15);
+    position: relative;
+  }
+
+  .cs-questions li:first-child {
+    border-top: 1px solid rgba(152, 112, 70, 0.15);
+  }
+
+  .cs-questions li::before {
+    content: counter(question, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 20px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-style: normal;
+    opacity: 0.3;
+    letter-spacing: 0.04em;
   }
 
   /* ── Numbered contributions ─────────────────────────────── */
@@ -528,39 +836,150 @@ import Nav from '../../components/Nav.astro';
   /* ── Callout / pull-quote ───────────────────────────────── */
   .cs-callout {
     font-family: "IBM Plex Serif", Georgia, serif;
-    font-size: 20px;
+    font-size: 24px;
     font-style: italic;
     font-weight: 400;
-    line-height: 1.5;
+    line-height: 1.45;
+    color: #f1ede6;
+    background: rgb(62, 46, 34);
+    padding: 40px 40px 40px 41px;
+    margin: 40px 0 40px -41px;
+    width: calc(100% + 41px);
+    box-sizing: border-box;
+  }
+
+  /* ── Image blocks ───────────────────────────────────────── */
+  .cs-image-block {
+    margin: 40px 0 40px -41px;
+    width: calc(100% + 41px);
+  }
+
+  .cs-image-block--bleed {
+    margin-left: 0;
+    width: calc(100vw - (8.33% + 12px));
+  }
+
+  .cs-fig {
+    width: 100%;
+    display: block;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  .cs-fig--dark {
+    border-radius: 4px;
+  }
+
+  .cs-image-caption {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    line-height: 1.6;
     color: #000;
-    opacity: 0.8;
-    border-left: 3px solid rgba(0, 0, 0, 0.2);
-    padding: 4px 0 4px 24px;
-    margin: 28px 0;
+    opacity: 0.45;
+    margin: 0;
+    padding-left: 41px;
+  }
+
+  /* ── Phase 2 split layout ───────────────────────────────── */
+  .cs-split {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: start;
+  }
+
+  .cs-split-stat {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 96px;
+    font-weight: 400;
+    line-height: 1;
+    opacity: 0.08;
+    white-space: nowrap;
+    margin-right: -20px;
+  }
+
+  /* ── Outcomes stat grid ─────────────────────────────────── */
+  .cs-stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin: 32px 0;
+    border-top: 1px solid rgba(152, 112, 70, 0.2);
+  }
+
+  .cs-stat {
+    padding: 28px 0;
+    border-bottom: 1px solid rgba(152, 112, 70, 0.2);
+  }
+
+  .cs-stat-value {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 56px;
+    font-weight: 400;
+    line-height: 1;
+    margin: 0 0 8px 0;
+  }
+
+  .cs-stat-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    opacity: 0.4;
+    margin: 0;
+  }
+
+  /* ── Mobile ─────────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    /* Page shell */
+    .cs-page {
+      padding-left: 0;
+    }
+    :global(.cs-breadcrumb) { display: none; }
+
+    /* Hero */
+    .cs-hero { padding: 24px 20px 40px 20px; }
+    .cs-title { font-size: 30px; }
+    .hero-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: 180px 110px 110px;
+      gap: 12px;
+    }
+    .hero-panel-main { grid-row: span 1; }
+
+    /* Sections & body */
+    .cs-section { padding: 48px 20px 48px 20px; }
+    .section-body {
+      padding-left: 0;
+      max-width: 100%;
+    }
+
+    /* Typography */
+    .cs-prose p { font-size: 14px; }
+    .cs-questions li { font-size: 17px; padding: 14px 0 14px 28px; }
+    .cs-questions li::before { top: 16px; }
+    .cs-subheading { font-size: 19px; margin: 24px 0 12px; }
+    .cs-callout { font-size: 19px; line-height: 1.5; }
+
+    /* Callout & image blocks — full bleed to screen edges */
+    .cs-callout {
+      margin: 28px -20px;
+      width: calc(100% + 40px);
+      padding: 28px 20px;
+    }
+    .cs-image-block {
+      margin: 28px -20px;
+      width: calc(100% + 40px);
+    }
+    .cs-image-caption { padding-left: 20px; }
+    .cs-image-block--bleed {
+      margin-left: -20px;
+      width: calc(100% + 40px);
+    }
+
+    /* Phase 2 split: collapse, hide decorative stat */
+    .cs-split { display: block; }
+    .cs-split-stat { display: none; }
+
+    /* Outcomes stat grid: keep 2 columns, shrink numbers */
+    .cs-stat-value { font-size: 40px; }
   }
 </style>
-
-<script>
-  const anchorLinks = document.querySelectorAll<HTMLAnchorElement>('#anchor-nav .anchor-link');
-  const targets = document.querySelectorAll<HTMLElement>('#overview, #executive-summary, #strategic-context, #phase-1, #phase-2, #human-agency, #leadership, #outcomes, #reflection');
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = entry.target.id;
-          anchorLinks.forEach((link) => {
-            if (link.getAttribute('href') === `#${id}`) {
-              link.classList.add('active');
-            } else {
-              link.classList.remove('active');
-            }
-          });
-        }
-      });
-    },
-    { threshold: 0.3 }
-  );
-
-  targets.forEach((t) => observer.observe(t));
-</script>

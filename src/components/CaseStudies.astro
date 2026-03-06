@@ -1,29 +1,52 @@
 ---
 const projects = [
   {
-    name: "Dialpad AI Workspace",
+    name: "Designing Dialpad's Agentic AI Platform",
     role: "Staff Product Designer",
-    year: "2024",
-    description: "Reimagined the core communication experience around AI-powered insights and real-time assistance.",
+    year: "2024-2026",
+    description: "Defined a unified agent model that moved beyond reactive feature shipping — aligning product, engineering, and leadership around a coherent AI vision.",
     href: "#",
+    image: "/images/case-study-dialpad.svg",
+    logo: "/images/dialpad-wordmark.svg",
+    comingSoon: true,
   },
   {
-    name: "Design System",
+    name: "Rebuilding Dialtone",
     role: "Lead Designer",
-    year: "2023",
-    description: "Built a scalable, accessible component library adopted across 12 product teams.",
+    year: "2022-2023",
+    description: "Complete overhaul of the Dialtone design system to elevate Dialpad's visual language. Addressed everything from base styles to interaction paradigms.",
     href: "#",
+    image: "/images/case-study-dialtone.svg",
+    comingSoon: true,
+  },
+  {
+    name: "Scaling MarketMuse's Design Practice",
+    role: "Senior Product Designer",
+    year: "2019-2020",
+    description: "As the sole designer at a fast moving company, I worked to develop a design system while also building the product.",
+    href: "#",
+    image: "/images/case-study-marketmuse.svg",
+    comingSoon: true,
   },
 ];
 ---
 <section id="case-studies">
-  <span class="section-label">Case Studies</span>
+  <h2 class="section-heading">Case Studies</h2>
   <div class="grid">
-    {projects.map((project) => (
-      <a href={project.href} class="card">
-        <div class="card-image" />
+    {projects.map((project, i) => (
+      <a href={project.comingSoon ? undefined : project.href} class="card">
+        <div
+          class="card-image"
+          style={project.image ? `background-image: url('${project.image}'); background-size: cover; background-position: center;` : undefined}
+        />
+        {project.logo && (
+          <img class="card-logo" src={project.logo} alt={project.name} />
+        )}
         <div class="card-overlay">
-          <p class="card-name">{project.name}</p>
+          <p class="card-name">
+            {project.name}
+            {project.comingSoon && <span class="badge">Coming soon</span>}
+          </p>
           <p class="card-meta">{project.role} · {project.year}</p>
           <p class="card-desc">{project.description}</p>
         </div>
@@ -33,31 +56,50 @@ const projects = [
 </section>
 
 <style>
+  /* ── Base (desktop) ── */
   #case-studies {
     height: 100vh;
     scroll-snap-align: start;
     overflow: hidden;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding-top: 40px;
   }
 
-  .section-label {
-    position: absolute;
-    top: 20px;
-    left: calc(8.33% + 15px);
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     font-family: "IBM Plex Mono", monospace;
     font-size: 12px;
+    font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     opacity: 0.4;
+    margin: 0;
+    padding: 20px 20px 0;
+  }
+
+  .section-heading::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.2);
   }
 
   .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     gap: 16px;
-    height: 100%;
-    padding: 40px 20px 40px calc(8.33% + 15px);
+    flex: 1;
+    padding: 20px;
     box-sizing: border-box;
+    min-height: 0;
+  }
+
+  .card:first-child {
+    grid-row: span 2;
   }
 
   .card {
@@ -66,6 +108,7 @@ const projects = [
     overflow: hidden;
     text-decoration: none;
     color: inherit;
+    border-radius: 24px;
   }
 
   .card-image {
@@ -73,6 +116,7 @@ const projects = [
     height: 100%;
     background-color: #f0f0f0;
     transition: transform 0.3s ease;
+    border-radius: 24px;
   }
 
   .card:hover .card-image {
@@ -85,20 +129,30 @@ const projects = [
     left: 0;
     right: 0;
     padding: 24px;
-    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
-    color: #fff;
-    opacity: 0;
-    transition: opacity 0.25s ease;
-  }
-
-  .card:hover .card-overlay {
-    opacity: 1;
+    color: #333333;
   }
 
   .card-name {
     font-family: "IBM Plex Serif", Georgia, serif;
     font-size: 20px;
     margin: 0 0 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(80,70,60,0.6);
+    border: 1px solid rgba(80,70,60,0.25);
+    border-radius: 4px;
+    padding: 2px 7px;
+    white-space: nowrap;
   }
 
   .card-meta {
@@ -113,5 +167,49 @@ const projects = [
     font-size: 13px;
     margin: 0;
     line-height: 1.5;
+  }
+
+  .card-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(180px, 35%, 300px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── Mobile — must come last so it overrides base rules above ── */
+  @media (max-width: 768px) {
+    #case-studies {
+      height: auto;
+      min-height: 100vh;
+      overflow: visible;
+      padding-top: 0;
+    }
+
+    .grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+    }
+
+    .card:first-child {
+      grid-row: span 1;
+    }
+
+    /* Tall enough for image + overlay text to both be fully visible */
+    .card {
+      min-height: 260px;
+    }
+
+    .card-logo {
+      display: none;
+    }
+
+    .card-image {
+      height: 100%;
+      position: absolute;
+      inset: 0;
+    }
   }
 </style>
