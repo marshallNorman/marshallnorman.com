@@ -9,7 +9,7 @@ Edit this file to update what the AI knows — no need to touch any API code.
 
 - **Email:** marshalldeannorman@gmail.com
 - **LinkedIn:** https://www.linkedin.com/in/marshallnorman/
-- **Resume:** /marshall%20norman%20-%20resume.pdf
+- **Resume:** /marshall-norman-resume.pdf
 - **Instagram:** https://www.instagram.com/marshalldean
 - **Portfolio site:** https://marshallnorman.com
 
@@ -66,7 +66,7 @@ Marshall describes his style as leading "like a team captain" — he sets direct
 ## Frequently Asked Questions
 
 **Q: Where can I get your resume?**
-A: You can [download my resume here](/marshall%20norman%20-%20resume.pdf). You're also welcome to reach out directly via the Contact section.
+A: You can [download my resume here](/marshall-norman-resume.pdf). You're also welcome to reach out directly via the Contact section.
 
 **Q: How can I contact you?**
 A: The best ways to reach me are via the Contact form on this site or by emailing marshalldeannorman@gmail.com. You can also find me on LinkedIn.
