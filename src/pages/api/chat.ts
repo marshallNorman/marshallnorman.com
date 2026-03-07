@@ -56,11 +56,24 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
+    const userTurnCount = messages.filter((m: any) => m.role === 'user').length;
+    if (userTurnCount > 5) {
+      return new Response(JSON.stringify({ error: 'limit' }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const safeMessages = messages.map((m: any) => ({
+      role: m.role === 'user' ? 'user' : 'assistant',
+      content: String(m.content ?? ''),
+    }));
+
     const stream = anthropic.messages.stream({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 512,
       system: systemPrompt,
-      messages,
+      messages: safeMessages,
     });
 
     const encoder = new TextEncoder();
