@@ -68,6 +68,7 @@ const hasAnchors = !!anchorLinks?.length;
   /* On has-anchors desktop: main pill shows only the back button */
   #site-nav.has-anchors .nav-main-pill {
     display: flex;
+    flex-direction: row;
     align-items: center;
   }
   #site-nav.has-anchors .nav-main,
@@ -206,6 +207,7 @@ const hasAnchors = !!anchorLinks?.length;
     /* Main pill: hug contents by default (anchor pages) */
     .nav-main-pill {
       display: flex;
+      flex-direction: row;
       align-items: center;
       flex-shrink: 0;
     }
@@ -276,6 +278,16 @@ const hasAnchors = !!anchorLinks?.length;
       border: none;
       cursor: pointer;
       color: inherit;
+      transition: font-size 0.25s ease, padding 0.25s ease;
+    }
+
+    /* Scrolled: shrink back button and sections toggle like home-page nav links */
+    #site-nav.scrolled .nav-back {
+      font-size: 11px;
+    }
+    #site-nav.scrolled .nav-anchors-toggle {
+      font-size: 9px;
+      padding: 6px 10px;
     }
 
     /* Popover — full width of the sections pill */
@@ -309,7 +321,7 @@ const hasAnchors = !!anchorLinks?.length;
     }
 
     .nav-anchors-popover .anchor-link {
-      padding: 9px 0;
+      padding: 13px 0;
       border-bottom: 1px solid rgba(0,0,0,0.06);
     }
     .nav-anchors-popover .anchor-link:last-child { border-bottom: none; }
