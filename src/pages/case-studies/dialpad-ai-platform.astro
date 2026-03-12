@@ -24,7 +24,7 @@ const heroSvg = readFileSync(join(process.cwd(), 'public/images/hero-illustratio
     <!-- Staggered headline — matches Figma layout -->
     <div class="hero-text-area">
       <div class="hero-headline">
-        <h1 class="cs-title">Designing an Agentic AI Platform<br/>from the Ground Up</h1>
+        <h1 class="cs-title">Designing an <em class="cs-title-accent">Agentic AI</em> Platform<br/>from the Ground Up</h1>
       </div>
       <div class="hero-subhead">
         <div class="hero-divider" aria-hidden="true"></div>
@@ -946,6 +946,11 @@ const heroSvg = readFileSync(join(process.cwd(), 'public/images/hero-illustratio
     font-weight: 400;
     line-height: 1.15;
     margin: 0;
+  }
+
+  .cs-title-accent {
+    color: #EC4D26;
+    font-style: italic;
   }
 
   .hero-subhead {
