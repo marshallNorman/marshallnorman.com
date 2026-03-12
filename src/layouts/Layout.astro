@@ -32,8 +32,8 @@ import Analytics from '@vercel/analytics/astro';
 		<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
 			<defs>
 				<filter id="glass-distortion" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGBLinear">
-					<feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" result="noise" />
-					<feDisplacementMap in="SourceGraphic" in2="noise" scale="22" xChannelSelector="R" yChannelSelector="G" />
+					<feTurbulence type="turbulence" baseFrequency="0.012 0.008" numOctaves="3" result="noise" />
+					<feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G" />
 				</filter>
 			</defs>
 		</svg>

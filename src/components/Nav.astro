@@ -7,26 +7,40 @@ interface Props {
 const { activeHref = "#about", anchorLinks } = Astro.props;
 const hasAnchors = !!anchorLinks?.length;
 ---
-<nav id="site-nav" transition:persist data-glass class={hasAnchors ? "has-anchors" : ""}>
-  <a href="#about" class="nav-home" aria-label="Home">
-    <img src="/home.svg" alt="" width="16" height="16" />
-  </a>
-  <div class="nav-main">
-    <a href="#about" class={`nav-link ${activeHref === "#about" ? "active" : ""}`}>About</a>
-    <a href="#case-studies" class={`nav-link ${activeHref === "#case-studies" ? "active" : ""}`}>Case Studies</a>
-    <a href="#contact" class={`nav-link ${activeHref === "#contact" ? "active" : ""}`}>Contact</a>
-  </div>
+<div id="site-nav" transition:persist class={hasAnchors ? "has-anchors" : ""}>
+  <nav class="nav-main-pill" data-glass>
+    <a href="#about" class="nav-home" aria-label="Home">
+      <img src="/home.svg" alt="Home" width="16" height="16" />
+    </a>
+    <div class="nav-main">
+      <a href="#about" class={`nav-link ${activeHref === "#about" ? "active" : ""}`}>About</a>
+      <a href="#case-studies" class={`nav-link ${activeHref === "#case-studies" ? "active" : ""}`}>Case Studies</a>
+      <a href="#contact" class={`nav-link ${activeHref === "#contact" ? "active" : ""}`}>Contact</a>
+    </div>
+    {hasAnchors && (
+      <a href="/#case-studies" class="nav-back">← Back</a>
+    )}
+    <div class={`nav-anchors${hasAnchors ? " visible" : ""}`}>
+      {anchorLinks?.map(link => (
+        <a href={link.href} class="anchor-link">{link.label}</a>
+      ))}
+    </div>
+  </nav>
+
   {hasAnchors && (
-    <button class="nav-anchors-toggle" aria-label="Toggle sections" aria-expanded="false">
-      Sections
-    </button>
+    <div class="nav-sections-pill" data-glass>
+      <span class="nav-sections-label">Sections:</span>
+      <button class="nav-anchors-toggle" aria-label="Toggle sections" aria-expanded="false">
+        Sections
+      </button>
+      <div class="nav-anchors-popover">
+        {anchorLinks?.map(link => (
+          <a href={link.href} class="anchor-link">{link.label}</a>
+        ))}
+      </div>
+    </div>
   )}
-  <div class={`nav-anchors${hasAnchors ? " visible" : ""}`}>
-    {anchorLinks?.map(link => (
-      <a href={link.href} class="anchor-link">{link.label}</a>
-    ))}
-  </div>
-</nav>
+</div>
 
 <style>
   #site-nav {
@@ -36,6 +50,16 @@ const hasAnchors = !!anchorLinks?.length;
     bottom: auto;
     right: auto;
     z-index: 50;
+  }
+
+  /* Desktop has-anchors: two pills side by side, same height */
+  #site-nav.has-anchors {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .nav-main-pill {
     display: grid;
     grid-template-columns: auto 1fr;
     column-gap: 24px;
@@ -47,8 +71,73 @@ const hasAnchors = !!anchorLinks?.length;
     transition: row-gap 0.25s ease;
   }
 
-  #site-nav.has-anchors {
-    row-gap: 8px;
+  /* On has-anchors desktop: main pill shows only the back button */
+  #site-nav.has-anchors .nav-main-pill {
+    display: flex;
+    align-items: center;
+  }
+  #site-nav.has-anchors .nav-home,
+  #site-nav.has-anchors .nav-main,
+  #site-nav.has-anchors .nav-anchors,
+  #site-nav.has-anchors .nav-anchors.visible {
+    display: none;
+  }
+
+  /* Back button — hidden by default, shown on desktop has-anchors */
+  .nav-back {
+    display: none;
+  }
+  #site-nav.has-anchors .nav-back {
+    display: flex;
+    align-items: center;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 16px;
+    color: #000;
+    opacity: 0.4;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: font-size 0.25s ease;
+  }
+  #site-nav.scrolled .nav-back {
+    font-size: 12px;
+  }
+
+  /* Sections pill: hidden by default, shown on desktop has-anchors */
+  .nav-sections-pill {
+    display: none;
+  }
+  #site-nav.has-anchors .nav-sections-pill {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 8px;
+    gap: 16px;
+  }
+
+  /* Toggle button hidden on desktop — links show directly */
+  .nav-anchors-toggle {
+    display: none;
+  }
+
+  /* "Sections:" label — desktop only */
+  .nav-sections-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: #000;
+    opacity: 0.5;
+    white-space: nowrap;
+    transition: font-size 0.25s ease;
+  }
+  #site-nav.scrolled .nav-sections-label {
+    font-size: 10px;
+  }
+
+  /* Anchor links inline in sections pill on desktop */
+  .nav-anchors-popover {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
   }
 
   .nav-home {
@@ -133,42 +222,105 @@ const hasAnchors = !!anchorLinks?.length;
     font-size: 10px;
   }
 
-  .nav-anchors-toggle {
-    display: none; /* hidden on desktop */
-  }
-
   @media (max-width: 768px) {
+    /* Wrapper spans the bottom of the viewport */
     #site-nav {
       top: auto;
-      bottom: 8px;
-      left: 50%;
-      right: auto;
-      transform: translateX(-50%);
-      grid-template-columns: auto 1fr auto; /* add 3rd col for toggle */
+      bottom: 12px;
+      left: 12px;
+      right: 12px;
+      transform: none;
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
     }
 
+    /* Main pill: hug contents by default (anchor pages) */
+    .nav-main-pill {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    /* Home page (no anchors): pill spans full width, links centered */
+    #site-nav:not(.has-anchors) .nav-main-pill {
+      flex: 1;
+    }
+    #site-nav:not(.has-anchors) .nav-home {
+      display: none;
+    }
+    #site-nav:not(.has-anchors) .nav-main {
+      flex: 1;
+      justify-content: space-around;
+      gap: 0;
+    }
+
+    /* On anchor pages: hide home icon + main links, show back button */
+    #site-nav.has-anchors .nav-home,
+    #site-nav.has-anchors .nav-main {
+      display: none;
+    }
+
+    /* Back button */
+    .nav-back {
+      display: none; /* hidden on desktop and non-anchor pages */
+    }
+    #site-nav.has-anchors .nav-back {
+      display: flex;
+      align-items: center;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 13px;
+      color: #000;
+      opacity: 0.5;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    /* Hide desktop inline anchor row on mobile */
+    .nav-anchors,
+    .nav-anchors.visible {
+      display: none;
+    }
+
+    /* Hide desktop-only label on mobile */
+    .nav-sections-label {
+      display: none;
+    }
+
+    /* Sections pill — fills remaining space, whole pill is tappable */
+    .nav-sections-pill {
+      display: flex;
+      align-items: stretch;
+      position: relative;
+      flex: 1;
+      border-radius: 8px;
+      overflow: visible;
+      padding: 0;
+    }
+
+    /* Toggle button fills the entire pill */
     .nav-anchors-toggle {
       display: flex;
-      grid-column: 3;
-      grid-row: 1;
       align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 8px 12px;
       font-family: "IBM Plex Mono", monospace;
       font-size: 11px;
       opacity: 0.5;
       background: none;
       border: none;
       cursor: pointer;
-      padding: 0 0 0 8px;
       color: inherit;
     }
 
-    /* hide the always-visible anchor row; replace with toggle */
-    .nav-anchors,
-    .nav-anchors.visible {
+    /* Popover — full width of the sections pill */
+    .nav-anchors-popover {
       position: absolute;
       bottom: calc(100% + 8px);
       left: 0;
       right: 0;
+      display: flex;
       flex-direction: column;
       gap: 0;
       background: rgba(255, 255, 255, 0.55);
@@ -185,24 +337,19 @@ const hasAnchors = !!anchorLinks?.length;
       transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.25s ease;
     }
 
-    #site-nav.anchors-open .nav-anchors {
+    .nav-sections-pill.anchors-open .nav-anchors-popover {
       max-height: 600px;
       opacity: 1;
       pointer-events: auto;
       padding: 10px 12px;
     }
 
-    .anchor-link {
+    .nav-anchors-popover .anchor-link {
       padding: 9px 0;
       border-bottom: 1px solid rgba(0,0,0,0.06);
     }
-    .anchor-link:last-child { border-bottom: none; }
-
-    /* smaller main links to fit home + 3 links + toggle */
-    .nav-link { font-size: 13px; }
-    .nav-main { gap: 16px; }
+    .nav-anchors-popover .anchor-link:last-child { border-bottom: none; }
   }
-
 </style>
 
 <script>
@@ -255,10 +402,8 @@ const hasAnchors = !!anchorLinks?.length;
 
     if (navLinks.length > 0) {
       // Rewrite main nav hrefs for cross-page navigation.
-      // Home page → "#about" (JS smooth-scroll). Any other page → "/#about" (ViewTransitions).
       navLinks.forEach(link => {
         const href = link.getAttribute('href') || '';
-        // Normalize: "/#about" → "#about", "#about" → "#about"
         const hash = href.startsWith('/') ? href.slice(1) : href;
         if (hash.startsWith('#')) {
           link.href = onHomePage ? hash : '/' + hash;
@@ -295,25 +440,41 @@ const hasAnchors = !!anchorLinks?.length;
       }
     }
 
-    // Mobile anchor-menu toggle
+    // Mobile sections pill toggle
     const toggle = nav.querySelector<HTMLButtonElement>('.nav-anchors-toggle');
-    if (toggle) {
-      toggle.addEventListener('click', () => {
-        const open = nav.classList.toggle('anchors-open');
+    const sectionsPill = nav.querySelector<HTMLElement>('.nav-sections-pill');
+    if (toggle && sectionsPill) {
+      const closePopover = () => {
+        sectionsPill.classList.remove('anchors-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      };
+
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const open = sectionsPill.classList.toggle('anchors-open');
         toggle.setAttribute('aria-expanded', String(open));
       });
-      // close menu when an anchor is tapped
+
+      // close when an anchor is tapped
       nav.querySelectorAll<HTMLAnchorElement>('.anchor-link').forEach(link => {
-        link.addEventListener('click', () => {
-          nav.classList.remove('anchors-open');
-          toggle.setAttribute('aria-expanded', 'false');
-        });
+        link.addEventListener('click', closePopover);
+      });
+
+      // close when clicking anywhere outside the sections pill
+      document.addEventListener('click', (e) => {
+        if (!sectionsPill.contains(e.target as Node)) {
+          closePopover();
+        }
       });
     }
 
-    const anchorLinks = nav.querySelectorAll<HTMLAnchorElement>('.anchor-link');
-    if (anchorLinks.length > 0) {
-      const ids = Array.from(anchorLinks)
+    const anchorLinks = nav.querySelectorAll<HTMLAnchorElement>('.nav-anchors-popover .anchor-link, .nav-anchors .anchor-link');
+    const uniqueAnchors = Array.from(new Set(Array.from(anchorLinks).map(l => l.getAttribute('href'))))
+      .map(href => nav.querySelector<HTMLAnchorElement>(`.anchor-link[href="${href}"]`))
+      .filter(Boolean) as HTMLAnchorElement[];
+
+    if (uniqueAnchors.length > 0) {
+      const ids = uniqueAnchors
         .map(l => l.getAttribute('href')?.slice(1))
         .filter(Boolean) as string[];
       const targets = document.querySelectorAll<HTMLElement>(ids.map(id => `#${id}`).join(', '));
@@ -321,7 +482,7 @@ const hasAnchors = !!anchorLinks?.length;
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            anchorLinks.forEach(link => {
+            nav.querySelectorAll<HTMLAnchorElement>('.anchor-link').forEach(link => {
               link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
             });
           }
@@ -350,26 +511,36 @@ const hasAnchors = !!anchorLinks?.length;
         link.classList.toggle('active', link.getAttribute('href') === newActiveHref);
       });
 
-      // Sync anchor links
+      // Sync desktop inline anchor row
       const anchorsDiv = nav.querySelector<HTMLElement>('.nav-anchors');
-      if (!anchorsDiv) return;
       const newAnchorsDiv = newNav.querySelector('.nav-anchors');
       const newLinks = newAnchorsDiv ? Array.from(newAnchorsDiv.children) : [];
 
       if (newLinks.length > 0) {
-        // Populate then fade in
-        anchorsDiv.replaceChildren(...newLinks.map(l => l.cloneNode(true) as Node));
-        anchorsDiv.offsetHeight; // force reflow so transition fires
+        anchorsDiv?.replaceChildren(...newLinks.map(l => l.cloneNode(true) as Node));
+        anchorsDiv?.offsetHeight; // force reflow
         nav.classList.add('has-anchors');
-        anchorsDiv.classList.add('visible');
+        anchorsDiv?.classList.add('visible');
       } else {
-        // Fade out, then clear after transition
-        anchorsDiv.classList.remove('visible');
+        anchorsDiv?.classList.remove('visible');
         nav.classList.remove('has-anchors');
         let done = false;
-        const clear = () => { if (!done) { done = true; anchorsDiv.replaceChildren(); } };
-        anchorsDiv.addEventListener('transitionend', clear, { once: true });
+        const clear = () => { if (!done) { done = true; anchorsDiv?.replaceChildren(); } };
+        anchorsDiv?.addEventListener('transitionend', clear, { once: true });
         setTimeout(clear, 350);
+      }
+
+      // Sync mobile popover anchor list
+      const popoverDiv = nav.querySelector<HTMLElement>('.nav-anchors-popover');
+      const newPopoverDiv = newNav.querySelector('.nav-anchors-popover');
+      const newPopoverLinks = newPopoverDiv ? Array.from(newPopoverDiv.children) : [];
+      if (newPopoverLinks.length > 0) {
+        popoverDiv?.replaceChildren(...newPopoverLinks.map(l => l.cloneNode(true) as Node));
+      } else {
+        popoverDiv?.replaceChildren();
+        // Also hide the sections pill if no anchors on new page
+        const sectionsPill = nav.querySelector<HTMLElement>('.nav-sections-pill');
+        sectionsPill?.classList.remove('anchors-open');
       }
     });
   }

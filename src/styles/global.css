@@ -30,15 +30,23 @@
   inset: 0;
   -webkit-backdrop-filter: var(--glass-backdrop);
   backdrop-filter: var(--glass-backdrop);
-  filter: url(#glass-distortion) saturate(115%) brightness(1.06);
-  background: var(--glass-surface);
+  filter: url(#glass-distortion);
   pointer-events: none;
   z-index: 0;
 }
 
+[data-glass]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.22);
+  pointer-events: none;
+  z-index: 1;
+}
+
 [data-glass] > * {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 /* ── About: hide chat on desktop until JS activates it ── */

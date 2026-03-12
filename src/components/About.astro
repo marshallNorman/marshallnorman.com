@@ -740,6 +740,20 @@ const EXAMPLES = [
 
   const conversationHistory: { role: 'user' | 'assistant'; content: string }[] = [];
 
+  let beaconSent = false;
+
+  function sendBeacon() {
+    if (beaconSent || conversationHistory.length === 0) return;
+    beaconSent = true;
+    const blob = new Blob([JSON.stringify(conversationHistory)], { type: 'application/json' });
+    navigator.sendBeacon('/api/log-chat', blob);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') sendBeacon();
+  });
+  window.addEventListener('pagehide', sendBeacon);
+
   function appendUserBubble(text: string) {
     const el = document.createElement('div');
     el.className = 'msg-user';

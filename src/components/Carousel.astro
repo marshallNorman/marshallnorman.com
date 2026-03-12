@@ -1,0 +1,96 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<div class:list={['carousel-root', className]} data-carousel>
+  <div class="carousel-clip">
+    <div class="carousel-track">
+      <slot />
+    </div>
+  </div>
+  <div class="carousel-dots" aria-hidden="true"></div>
+</div>
+
+<style>
+  .carousel-root {
+    position: relative;
+  }
+  .carousel-clip {
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  .carousel-track {
+    display: flex;
+    transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .carousel-dots button {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    padding: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  :global(.carousel-slide) {
+    min-width: 100%;
+    flex-shrink: 0;
+  }
+</style>
+
+<script>
+  function initCarousels() {
+    document.querySelectorAll<HTMLElement>('[data-carousel]').forEach(root => {
+      const track = root.querySelector<HTMLElement>('.carousel-track');
+      const dotsContainer = root.querySelector<HTMLElement>('.carousel-dots');
+      const slides = root.querySelectorAll<HTMLElement>('.carousel-slide');
+      if (!track || !dotsContainer || !slides.length) return;
+
+      const total = slides.length;
+      let current = 0;
+      let startX = 0;
+      const THRESH = 40;
+
+      dotsContainer.innerHTML = '';
+      slides.forEach((_, i) => {
+        const btn = document.createElement('button');
+        btn.setAttribute('aria-label', `Slide ${i + 1}`);
+        btn.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(btn);
+      });
+      const dots = dotsContainer.querySelectorAll<HTMLButtonElement>('button');
+
+      function goTo(idx: number) {
+        if (idx < 0 || idx >= total) return;
+        current = idx;
+        track!.style.transform = `translateX(-${idx * 100}%)`;
+        dots.forEach((d, i) => {
+          d.style.background = i === idx ? 'rgba(0,0,0,0.60)' : 'transparent';
+          d.style.border = i === idx ? 'none' : '1.5px solid rgba(0,0,0,0.30)';
+        });
+      }
+
+      const clip = root.querySelector<HTMLElement>('.carousel-clip')!;
+      clip.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+      clip.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - startX;
+        if (dx < -THRESH) goTo(current + 1);
+        else if (dx > THRESH) goTo(current - 1);
+      }, { passive: true });
+
+      goTo(0);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initCarousels);
+</script>
