@@ -9,9 +9,6 @@ const hasAnchors = !!anchorLinks?.length;
 ---
 <div id="site-nav" transition:persist class={hasAnchors ? "has-anchors" : ""}>
   <nav class="nav-main-pill" data-glass>
-    <a href="#about" class="nav-home" aria-label="Home">
-      <img src="/home.svg" alt="Home" width="16" height="16" />
-    </a>
     <div class="nav-main">
       <a href="#about" class={`nav-link ${activeHref === "#about" ? "active" : ""}`}>About</a>
       <a href="#case-studies" class={`nav-link ${activeHref === "#case-studies" ? "active" : ""}`}>Case Studies</a>
@@ -60,15 +57,12 @@ const hasAnchors = !!anchorLinks?.length;
   }
 
   .nav-main-pill {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    column-gap: 24px;
-    row-gap: 0;
-    align-items: start;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     padding: 8px 12px;
     border-radius: 8px;
     white-space: nowrap;
-    transition: row-gap 0.25s ease;
   }
 
   /* On has-anchors desktop: main pill shows only the back button */
@@ -76,7 +70,6 @@ const hasAnchors = !!anchorLinks?.length;
     display: flex;
     align-items: center;
   }
-  #site-nav.has-anchors .nav-home,
   #site-nav.has-anchors .nav-main,
   #site-nav.has-anchors .nav-anchors,
   #site-nav.has-anchors .nav-anchors.visible {
@@ -140,34 +133,13 @@ const hasAnchors = !!anchorLinks?.length;
     gap: 16px;
   }
 
-  .nav-home {
-    grid-column: 1;
-    grid-row: 1;
-    display: flex;
-    align-items: center;
-    opacity: 0.4;
-    transition: opacity 0.2s ease;
-  }
-
-  .nav-home img {
-    transition: width 0.25s ease, height 0.25s ease;
-  }
-
-  .nav-home:hover {
-    opacity: 0.8;
-  }
-
   .nav-main {
-    grid-column: 2;
-    grid-row: 1;
     display: flex;
     gap: 24px;
     align-items: center;
   }
 
   .nav-anchors {
-    grid-column: 2;
-    grid-row: 2;
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
@@ -177,6 +149,7 @@ const hasAnchors = !!anchorLinks?.length;
 
   .nav-anchors.visible {
     opacity: 1;
+    margin-top: 6px;
   }
 
   .nav-link {
@@ -191,11 +164,6 @@ const hasAnchors = !!anchorLinks?.length;
 
   #site-nav.scrolled .nav-link {
     font-size: 12px;
-  }
-
-  #site-nav.scrolled .nav-home img {
-    width: 12px;
-    height: 12px;
   }
 
   .nav-link.active {
@@ -246,17 +214,13 @@ const hasAnchors = !!anchorLinks?.length;
     #site-nav:not(.has-anchors) .nav-main-pill {
       flex: 1;
     }
-    #site-nav:not(.has-anchors) .nav-home {
-      display: none;
-    }
     #site-nav:not(.has-anchors) .nav-main {
       flex: 1;
       justify-content: space-around;
       gap: 0;
     }
 
-    /* On anchor pages: hide home icon + main links, show back button */
-    #site-nav.has-anchors .nav-home,
+    /* On anchor pages: hide main links, show back button */
     #site-nav.has-anchors .nav-main {
       display: none;
     }
@@ -355,6 +319,8 @@ const hasAnchors = !!anchorLinks?.length;
 <script>
   // Scroll listener registered once to avoid accumulation across page loads
   let scrollListenerAdded = false;
+  // AbortController to clean up init() listeners on each navigation
+  let initController: AbortController | null = null;
 
   function smoothScrollTo(target: HTMLElement) {
     const html = document.documentElement;
@@ -367,6 +333,10 @@ const hasAnchors = !!anchorLinks?.length;
   }
 
   function init() {
+    initController?.abort();
+    initController = new AbortController();
+    const { signal } = initController;
+
     const nav = document.getElementById('site-nav');
     if (!nav) return;
 
@@ -386,20 +356,6 @@ const hasAnchors = !!anchorLinks?.length;
 
     const onHomePage = window.location.pathname === '/';
 
-    // Home button: rewrite href and apply same smooth-scroll as nav-links
-    const homeLink = nav.querySelector<HTMLAnchorElement>('.nav-home');
-    if (homeLink) {
-      homeLink.href = onHomePage ? '#about' : '/#about';
-      homeLink.addEventListener('click', (e) => {
-        const href = homeLink.getAttribute('href');
-        if (!href || !href.startsWith('#')) return;
-        const target = document.getElementById(href.slice(1));
-        if (!target) return;
-        e.preventDefault();
-        smoothScrollTo(target);
-      });
-    }
-
     if (navLinks.length > 0) {
       // Rewrite main nav hrefs for cross-page navigation.
       navLinks.forEach(link => {
@@ -417,8 +373,9 @@ const hasAnchors = !!anchorLinks?.length;
           const target = document.getElementById(href.slice(1));
           if (!target) return;
           e.preventDefault();
+          history.pushState(null, '', href);
           smoothScrollTo(target);
-        });
+        }, { signal });
       });
 
       const sections = document.querySelectorAll<HTMLElement>('#about, #case-studies, #contact');
@@ -453,11 +410,11 @@ const hasAnchors = !!anchorLinks?.length;
         e.stopPropagation();
         const open = sectionsPill.classList.toggle('anchors-open');
         toggle.setAttribute('aria-expanded', String(open));
-      });
+      }, { signal });
 
       // close when an anchor is tapped
       nav.querySelectorAll<HTMLAnchorElement>('.anchor-link').forEach(link => {
-        link.addEventListener('click', closePopover);
+        link.addEventListener('click', closePopover, { signal });
       });
 
       // close when clicking anywhere outside the sections pill
@@ -465,7 +422,7 @@ const hasAnchors = !!anchorLinks?.length;
         if (!sectionsPill.contains(e.target as Node)) {
           closePopover();
         }
-      });
+      }, { signal });
     }
 
     const anchorLinks = nav.querySelectorAll<HTMLAnchorElement>('.nav-anchors-popover .anchor-link, .nav-anchors .anchor-link');
@@ -541,6 +498,25 @@ const hasAnchors = !!anchorLinks?.length;
         // Also hide the sections pill if no anchors on new page
         const sectionsPill = nav.querySelector<HTMLElement>('.nav-sections-pill');
         sectionsPill?.classList.remove('anchors-open');
+      }
+
+      // Sync ← Back link
+      const navBack = nav.querySelector<HTMLAnchorElement>('.nav-back');
+      const newNavBack = newNav.querySelector<HTMLAnchorElement>('.nav-back');
+      if (newNavBack && !navBack) {
+        const anchorsDiv = nav.querySelector<HTMLElement>('.nav-anchors');
+        anchorsDiv?.before(newNavBack.cloneNode(true));
+      } else if (!newNavBack && navBack) {
+        navBack.remove();
+      }
+
+      // Sync mobile sections pill
+      const sectionsPillEl = nav.querySelector<HTMLElement>('.nav-sections-pill');
+      const newSectionsPillEl = newNav.querySelector<HTMLElement>('.nav-sections-pill');
+      if (newSectionsPillEl && !sectionsPillEl) {
+        nav.appendChild(newSectionsPillEl.cloneNode(true));
+      } else if (!newSectionsPillEl && sectionsPillEl) {
+        sectionsPillEl.remove();
       }
     });
   }
