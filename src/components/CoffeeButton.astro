@@ -1,0 +1,276 @@
+---
+const EXPERIMENTS = [
+  {
+    title: "8-Bit Adventure",
+    description: "A retro-inspired 8-bit game, built just for fun.",
+    href: "/experiments/8bit",
+  }
+];
+---
+
+<button id="coffee-btn" aria-label="Open experiments" data-glass>
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+    <line x1="6" y1="1" x2="6" y2="4"/>
+    <line x1="10" y1="1" x2="10" y2="4"/>
+    <line x1="14" y1="1" x2="14" y2="4"/>
+  </svg>
+</button>
+
+<div id="exp-modal" aria-hidden="true" aria-modal="true" role="dialog">
+  <div class="exp-modal-content">
+
+    <header class="exp-modal-header">
+      <span class="exp-modal-wordmark">Marshall Norman — Experiments</span>
+      <button id="exp-modal-close" aria-label="Close" data-glass>
+        <span><span class="exp-close-label">Close&nbsp;&nbsp;</span>✕</span>
+      </button>
+    </header>
+
+    <div class="exp-modal-body">
+      <div class="exp-grid">
+        {EXPERIMENTS.map((exp) => (
+          <div class="exp-card">
+            <h2 class="exp-card-title">{exp.title}</h2>
+            <p class="exp-card-desc">{exp.description}</p>
+            <a href={exp.href} target="_blank" data-glass class="exp-launch">Launch</a>
+          </div>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  /* ── Button ─────────────────────────────────── */
+  #coffee-btn {
+    position: absolute;
+    bottom: 72px;
+    right: 24px;
+    z-index: 100;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a1a1a;
+    padding: 0;
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
+  }
+
+  #coffee-btn:hover {
+    opacity: 1;
+  }
+
+  /* ── Modal shell ─────────────────────────────── */
+  #exp-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: #f9f9f9;
+    overflow-y: auto;
+    clip-path: circle(0px at var(--cx, calc(100% - 44px)) var(--cy, calc(100% - 92px)));
+    transition: clip-path 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+
+  #exp-modal[data-open] {
+    clip-path: circle(200vmax at var(--cx, calc(100% - 44px)) var(--cy, calc(100% - 92px)));
+    pointer-events: auto;
+  }
+
+  /* ── Content fade ────────────────────────────── */
+  .exp-modal-content {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #exp-modal[data-open] .exp-modal-content {
+    opacity: 1;
+    transition: opacity 0.25s ease 0.3s;
+  }
+
+  /* ── Header ──────────────────────────────────── */
+  .exp-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 32px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    background: #f9f9f9;
+    z-index: 10;
+  }
+
+  .exp-modal-wordmark {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    opacity: 0.5;
+  }
+
+  #exp-modal-close {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    opacity: 0.4;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: opacity 0.2s ease;
+    color: inherit;
+    background: transparent;
+  }
+
+  #exp-modal-close:hover {
+    opacity: 1;
+  }
+
+  /* ── Body ────────────────────────────────────── */
+  .exp-modal-body {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 64px 32px 80px;
+    box-sizing: border-box;
+    flex: 1;
+  }
+
+  /* ── Grid ────────────────────────────────────── */
+  .exp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  /* ── Card ────────────────────────────────────── */
+  .exp-card {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .exp-card-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .exp-card-desc {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 15px;
+    opacity: 0.65;
+    line-height: 1.65;
+    margin: 0;
+    flex: 1;
+  }
+
+  .exp-launch {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    align-self: flex-start;
+    text-decoration: none;
+    color: inherit;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Mobile ──────────────────────────────────── */
+  @media (max-width: 768px) {
+    #coffee-btn {
+      bottom: 100px;
+      right: 12px;
+    }
+
+    .exp-modal-header {
+      padding: 16px 20px;
+    }
+
+    .exp-modal-body {
+      padding: 48px 20px 60px;
+    }
+
+    .exp-close-label {
+      display: none;
+    }
+
+    #exp-modal-close {
+      padding: 4px 8px;
+    }
+  }
+</style>
+
+<script>
+  let coffeeKeydownRegistered = false;
+
+  function initCoffeeButton() {
+    const btn = document.getElementById('coffee-btn') as HTMLButtonElement;
+    const modal = document.getElementById('exp-modal') as HTMLElement;
+    const closeBtn = document.getElementById('exp-modal-close') as HTMLButtonElement;
+
+    if (!btn || !modal || !closeBtn) return;
+
+    function openModal() {
+      const rect = btn.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      modal.style.setProperty('--cx', `${cx}px`);
+      modal.style.setProperty('--cy', `${cy}px`);
+      modal.setAttribute('data-open', '');
+      modal.removeAttribute('aria-hidden');
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      modal.scrollTop = 0;
+    }
+
+    function closeModal() {
+      const scrollY = parseInt(document.body.style.top || '0') * -1;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY);
+      modal.removeAttribute('data-open');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    btn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+
+    if (!coffeeKeydownRegistered) {
+      coffeeKeydownRegistered = true;
+      document.addEventListener('keydown', (e) => {
+        const m = document.getElementById('exp-modal');
+        if (e.key === 'Escape' && m?.hasAttribute('data-open')) {
+          const scrollY = parseInt(document.body.style.top || '0') * -1;
+          document.body.style.position = '';
+          document.body.style.top = '';
+          document.body.style.width = '';
+          window.scrollTo(0, scrollY);
+          m.removeAttribute('data-open');
+          m.setAttribute('aria-hidden', 'true');
+        }
+      });
+    }
+  }
+
+  document.addEventListener('astro:page-load', initCoffeeButton);
+</script>

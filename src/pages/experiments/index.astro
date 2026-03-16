@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+---
+<Layout>
+  <Nav />
+  <main class="exp-index">
+    <h1>Experiments</h1>
+  </main>
+</Layout>
+
+<style>
+  .exp-index {
+    padding: 80px 32px;
+    font-family: "IBM Plex Serif", Georgia, serif;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 400;
+    margin: 0;
+  }
+</style>
