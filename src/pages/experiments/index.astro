@@ -6,6 +6,20 @@ import Nav from '../../components/Nav.astro';
   <Nav />
   <main class="exp-index">
     <h1>Experiments</h1>
+    <ul class="exp-list">
+      <li>
+        <a href="/experiments/8bit">
+          <span class="exp-name">8-Bit Adventure</span>
+          <span class="exp-desc">A tiny canvas game with a grid, a character, and enemies.</span>
+        </a>
+      </li>
+      <li>
+        <a href="/experiments/food-profiler">
+          <span class="exp-name">Food Profiler</span>
+          <span class="exp-desc">Coming soon.</span>
+        </a>
+      </li>
+    </ul>
   </main>
 </Layout>
 
@@ -18,6 +32,44 @@ import Nav from '../../components/Nav.astro';
   h1 {
     font-size: clamp(2rem, 5vw, 4rem);
     font-weight: 400;
+    margin: 0 0 48px;
+  }
+
+  .exp-list {
+    list-style: none;
     margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .exp-list a {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    padding: 16px 0;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .exp-list li:last-child a {
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .exp-list a:hover .exp-name {
+    text-decoration: underline;
+  }
+
+  .exp-name {
+    font-size: 1.1rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .exp-desc {
+    font-size: 0.9rem;
+    opacity: 0.5;
   }
 </style>

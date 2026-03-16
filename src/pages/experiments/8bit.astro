@@ -2,15 +2,225 @@
 import ExperimentLayout from '../../layouts/ExperimentLayout.astro';
 ---
 <ExperimentLayout title="8-Bit Adventure">
-  <canvas id="game-canvas" width="800" height="600"></canvas>
+  <canvas id="game-canvas"></canvas>
 </ExperimentLayout>
 
 <style>
   #game-canvas {
-    max-width: 100%;
-    max-height: 100%;
     display: block;
-    background: #000;
+    width: 85%;
+    max-width: 1200px;
+    max-height: 860px;
+    aspect-ratio: 1200 / 860;
+    background: #e8e8e8;
     border-radius: 4px;
   }
 </style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const canvas = document.getElementById('game-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d')!;
+
+    const rect = canvas.getBoundingClientRect();
+    canvas.width  = Math.round(rect.width);
+    canvas.height = Math.round(rect.height);
+
+    const CELL        = 12;
+    const PLAYER_SIZE = 2;   // grid cells (24×24px)
+    const ENEMY_SIZE  = 2;   // grid cells (24×24px)
+    const GRID_COLOR  = 'rgba(0,0,0,0.06)';
+    const BG_COLOR    = '#e8e8e8';
+    const FLASH_DURATION = 750; // ms to flash after hit
+    const FLASH_INTERVAL = 100; // ms per flash toggle
+
+    const cols = Math.floor(canvas.width  / CELL);
+    const rows = Math.floor(canvas.height / CELL);
+
+    type Dir = 'up' | 'down' | 'left' | 'right';
+
+    const DIRS: Record<Dir, { dx: number; dy: number }> = {
+      up:    { dx:  0, dy: -1 },
+      down:  { dx:  0, dy:  1 },
+      left:  { dx: -1, dy:  0 },
+      right: { dx:  1, dy:  0 },
+    };
+
+    const player = {
+      x: Math.floor(cols / 2),
+      y: Math.floor(rows / 2),
+      facing: 'right' as Dir,
+    };
+
+    type EnemyType = 'red' | 'purple' | 'orange';
+    const ENEMY_COLORS: Record<EnemyType, string> = {
+      red:    '#e63946',
+      purple: '#9b5de5',
+      orange: '#f4a261',
+    };
+    const ENEMY_HP: Record<EnemyType, number> = {
+      red:    3,
+      purple: 2,
+      orange: 1,
+    };
+
+    interface Enemy {
+      x: number;
+      y: number;
+      type: EnemyType;
+      hp: number;
+      hitAt: number | null; // timestamp of last hit, null if not flashing
+    }
+
+    const enemies: Enemy[] = [
+      { x: Math.floor(cols * 0.25), y: Math.floor(rows * 0.3),  type: 'red',    hp: 3, hitAt: null },
+      { x: Math.floor(cols * 0.65), y: Math.floor(rows * 0.25), type: 'purple', hp: 2, hitAt: null },
+      { x: Math.floor(cols * 0.5),  y: Math.floor(rows * 0.65), type: 'orange', hp: 1, hitAt: null },
+    ];
+
+    const ATTACK_DURATION = 150;
+    let attack: { x: number; y: number; dir: Dir; born: number } | null = null;
+
+    const keys = new Set<string>();
+    let spaceConsumed = false;
+    let lastMoveTime = 0;
+    const MOVE_INTERVAL = 120;
+
+    document.addEventListener('keydown', (e) => {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+        e.preventDefault();
+      }
+      if (e.key === ' ' && !spaceConsumed) {
+        spaceConsumed = true;
+        const ax = player.facing === 'right' ? player.x + PLAYER_SIZE
+                 : player.facing === 'left'  ? player.x - PLAYER_SIZE
+                 : player.x;
+        const ay = player.facing === 'down'  ? player.y + PLAYER_SIZE
+                 : player.facing === 'up'    ? player.y - PLAYER_SIZE
+                 : player.y;
+        attack = { x: ax, y: ay, dir: player.facing, born: performance.now() };
+      }
+      keys.add(e.key);
+    });
+
+    document.addEventListener('keyup', (e) => {
+      keys.delete(e.key);
+      if (e.key === ' ') spaceConsumed = false;
+    });
+
+    function rectsOverlap(ax: number, ay: number, aw: number, bx: number, by: number, bw: number) {
+      return ax < bx + bw && ax + aw > bx && ay < by + bw && ay + aw > by;
+    }
+
+    function processMovement(now: number) {
+      if (now - lastMoveTime < MOVE_INTERVAL) return;
+      const order: [string, Dir][] = [
+        ['ArrowUp', 'up'], ['ArrowDown', 'down'],
+        ['ArrowLeft', 'left'], ['ArrowRight', 'right'],
+      ];
+      for (const [key, dir] of order) {
+        if (keys.has(key)) {
+          const { dx, dy } = DIRS[dir];
+          player.x = Math.max(0, Math.min(cols - PLAYER_SIZE, player.x + dx));
+          player.y = Math.max(0, Math.min(rows - PLAYER_SIZE, player.y + dy));
+          player.facing = dir;
+          lastMoveTime = now;
+          break;
+        }
+      }
+    }
+
+    // Track which attacks have already hit each enemy to avoid re-triggering
+    const hitThisAttack = new Set<Enemy>();
+
+    function processAttack(now: number) {
+      if (!attack) return;
+
+      if (now - attack.born >= ATTACK_DURATION) {
+        attack = null;
+        hitThisAttack.clear();
+        return;
+      }
+
+      const { dx, dy } = DIRS[attack.dir];
+
+      for (const enemy of enemies) {
+        if (hitThisAttack.has(enemy)) continue;
+        if (!rectsOverlap(attack.x, attack.y, PLAYER_SIZE, enemy.x, enemy.y, ENEMY_SIZE)) continue;
+
+        hitThisAttack.add(enemy);
+        enemy.hp -= 1;
+        enemy.hitAt = now;
+        // Push back 2 grid spaces in the attack direction
+        enemy.x = Math.max(0, Math.min(cols - ENEMY_SIZE, enemy.x + dx * 2));
+        enemy.y = Math.max(0, Math.min(rows - ENEMY_SIZE, enemy.y + dy * 2));
+      }
+
+    }
+
+    function processEnemies(now: number) {
+      for (let i = enemies.length - 1; i >= 0; i--) {
+        const e = enemies[i];
+        if (e.hitAt === null) continue;
+        if (now - e.hitAt >= FLASH_DURATION) {
+          if (e.hp <= 0) enemies.splice(i, 1);
+          else e.hitAt = null;
+        }
+      }
+    }
+
+    function drawGrid() {
+      ctx.fillStyle = BG_COLOR;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = GRID_COLOR;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let x = 0; x <= canvas.width; x += CELL) {
+        ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height);
+      }
+      for (let y = 0; y <= canvas.height; y += CELL) {
+        ctx.moveTo(0, y); ctx.lineTo(canvas.width, y);
+      }
+      ctx.stroke();
+    }
+
+    function draw(now: number) {
+      drawGrid();
+
+      // Enemies
+      for (const enemy of enemies) {
+        let visible = true;
+        if (enemy.hitAt !== null) {
+          const elapsed = now - enemy.hitAt;
+          // Flash: toggle visibility every FLASH_INTERVAL ms
+          visible = Math.floor(elapsed / FLASH_INTERVAL) % 2 === 0;
+        }
+        if (visible) {
+          ctx.fillStyle = ENEMY_COLORS[enemy.type];
+          ctx.fillRect(enemy.x * CELL, enemy.y * CELL, ENEMY_SIZE * CELL, ENEMY_SIZE * CELL);
+        }
+      }
+
+      // Attack flash
+      if (attack) {
+        ctx.fillStyle = '#f9c74f';
+        ctx.fillRect(attack.x * CELL, attack.y * CELL, PLAYER_SIZE * CELL, PLAYER_SIZE * CELL);
+      }
+
+      // Player
+      ctx.fillStyle = '#1a1a1a';
+      ctx.fillRect(player.x * CELL, player.y * CELL, PLAYER_SIZE * CELL, PLAYER_SIZE * CELL);
+    }
+
+    function loop(now: number) {
+      processMovement(now);
+      processAttack(now);
+      processEnemies(now);
+      draw(now);
+      requestAnimationFrame(loop);
+    }
+
+    requestAnimationFrame(loop);
+  });
+</script>
