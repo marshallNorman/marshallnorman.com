@@ -849,6 +849,9 @@ const heroSvg = readFileSync(join(process.cwd(), 'public/images/hero-illustratio
     const illustration = document.querySelector('.hero-illustration') as HTMLElement | null;
     if (!svg || !illustration) return;
 
+    // Reset so animation replays on each visit
+    svg.classList.remove('anim-ready');
+
     function check() {
       const bottom = illustration.getBoundingClientRect().bottom;
       if (bottom <= window.innerHeight) {
@@ -857,8 +860,9 @@ const heroSvg = readFileSync(join(process.cwd(), 'public/images/hero-illustratio
       }
     }
     window.addEventListener('scroll', check, { passive: true });
+    check(); // run immediately in case illustration is already in view
   }
-  setupAnimTrigger();
+  document.addEventListener('astro:page-load', setupAnimTrigger);
 </script>
 
 
