@@ -122,7 +122,7 @@ const photos = readdirSync(imagesDir)
     color: #1a1a1a;
     padding: 0;
     opacity: 0.4;
-    transition: opacity 0.2s ease;
+    transition: var(--transition-hover);
   }
 
   #eye-btn:hover {
@@ -219,7 +219,7 @@ const photos = readdirSync(imagesDir)
     opacity: 0.4;
     padding: 4px 10px;
     border-radius: 6px;
-    transition: opacity 0.2s ease;
+    transition: var(--transition-hover);
     color: inherit;
     background: transparent;
   }
