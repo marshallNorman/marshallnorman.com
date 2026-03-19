@@ -33,16 +33,14 @@ while true; do
 
   CURRENT="${TRACK}|${ARTIST}|${ALBUM}"
 
-  # Fetch iTunes data only when track changes
+  # Fetch iTunes data and push to KV only when track changes
   if [[ "$CURRENT" != "$LAST_TRACK" ]]; then
     ITUNES_JSON=$(curl -s "https://itunes.apple.com/search?term=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]+' '+sys.argv[2]))" "$TRACK" "$ARTIST")&entity=song&limit=1" 2>/dev/null)
     ART_URL=$(echo "$ITUNES_JSON" | python3 -c "import json,sys; d=json.load(sys.stdin); r=d.get('results',[]); print(r[0].get('artworkUrl100','').replace('100x100bb','600x600bb') if r else '')" 2>/dev/null)
     ALBUM_URL=$(echo "$ITUNES_JSON" | python3 -c "import json,sys; d=json.load(sys.stdin); r=d.get('results',[]); print(r[0].get('collectionViewUrl','') if r else '')" 2>/dev/null)
     LAST_TRACK="$CURRENT"
-  fi
 
-  # Always push every cycle to keep KV entry alive
-  PAYLOAD=$(python3 -c "
+    PAYLOAD=$(python3 -c "
 import json, sys
 print(json.dumps({
   'track':    sys.argv[1],
@@ -52,14 +50,15 @@ print(json.dumps({
   'albumUrl': sys.argv[5],
 }))" "$TRACK" "$ARTIST" "$ALBUM" "$ART_URL" "$ALBUM_URL")
 
-  HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-    -X POST "$WORKER_URL/update" \
-    -H "Authorization: Bearer $BRIDGE_TOKEN" \
-    -H "Content-Type: application/json" \
-    -d "$PAYLOAD")
+    HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+      -X POST "$WORKER_URL/update" \
+      -H "Authorization: Bearer $BRIDGE_TOKEN" \
+      -H "Content-Type: application/json" \
+      -d "$PAYLOAD")
 
-  if [[ "$HTTP_STATUS" != "200" ]]; then
-    echo "$(date -u +%FT%TZ) push failed (HTTP $HTTP_STATUS): $TRACK — $ARTIST" >&2
+    if [[ "$HTTP_STATUS" != "200" ]]; then
+      echo "$(date -u +%FT%TZ) push failed (HTTP $HTTP_STATUS): $TRACK — $ARTIST" >&2
+    fi
   fi
 
   sleep 10

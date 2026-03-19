@@ -16,7 +16,7 @@ export default {
       await env.NOW_PLAYING.put(
         'current',
         JSON.stringify({ track, artist, album, albumArt, albumUrl, timestamp: Date.now() }),
-        { expirationTtl: 60 }
+        { expirationTtl: 300 }
       );
       return Response.json({ ok: true });
     }
