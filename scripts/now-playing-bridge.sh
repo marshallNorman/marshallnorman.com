@@ -19,14 +19,24 @@ if [[ -z "$WORKER_URL" || -z "$BRIDGE_TOKEN" ]]; then
 fi
 
 LAST_TRACK=""
+WAS_PLAYING=false
 
 while true; do
   TRACK=$(osascript -e 'tell application "Music" to if player state is playing then get name of current track' 2>/dev/null)
   ARTIST=$(osascript -e 'tell application "Music" to if player state is playing then get artist of current track' 2>/dev/null)
   ALBUM=$(osascript -e 'tell application "Music" to if player state is playing then get album of current track' 2>/dev/null)
 
-  # Skip if nothing is playing
+  # If nothing is playing, push a stop signal once on transition then idle
   if [[ -z "$TRACK" ]]; then
+    if [[ "$WAS_PLAYING" == "true" ]]; then
+      curl -s -o /dev/null \
+        -X POST "$WORKER_URL/update" \
+        -H "Authorization: Bearer $BRIDGE_TOKEN" \
+        -H "Content-Type: application/json" \
+        -d '{"isPlaying":false}'
+      WAS_PLAYING=false
+      LAST_TRACK=""
+    fi
     sleep 10
     continue
   fi
@@ -39,6 +49,7 @@ while true; do
     ART_URL=$(echo "$ITUNES_JSON" | python3 -c "import json,sys; d=json.load(sys.stdin); r=d.get('results',[]); print(r[0].get('artworkUrl100','').replace('100x100bb','600x600bb') if r else '')" 2>/dev/null)
     ALBUM_URL=$(echo "$ITUNES_JSON" | python3 -c "import json,sys; d=json.load(sys.stdin); r=d.get('results',[]); print(r[0].get('collectionViewUrl','') if r else '')" 2>/dev/null)
     LAST_TRACK="$CURRENT"
+    WAS_PLAYING=true
 
     PAYLOAD=$(python3 -c "
 import json, sys

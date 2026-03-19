@@ -12,10 +12,15 @@ export default {
       if (auth !== `Bearer ${env.BRIDGE_TOKEN}`) {
         return new Response('Unauthorized', { status: 401 });
       }
-      const { track, artist, album, albumArt, albumUrl } = await request.json<any>();
+      const body = await request.json<any>();
+      if (body.isPlaying === false) {
+        await env.NOW_PLAYING.delete('current');
+        return Response.json({ ok: true });
+      }
+      const { track, artist, album, albumArt, albumUrl } = body;
       await env.NOW_PLAYING.put(
         'current',
-        JSON.stringify({ track, artist, album, albumArt, albumUrl, timestamp: Date.now() }),
+        JSON.stringify({ track, artist, album, albumArt, albumUrl }),
         { expirationTtl: 300 }
       );
       return Response.json({ ok: true });
@@ -26,9 +31,6 @@ export default {
       const cors = { 'Access-Control-Allow-Origin': '*' };
       if (!raw) return Response.json({ isPlaying: false }, { headers: cors });
       const data = JSON.parse(raw);
-      if (Date.now() - data.timestamp > 25_000) {
-        return Response.json({ isPlaying: false }, { headers: cors });
-      }
       return Response.json({ isPlaying: true, ...data }, { headers: cors });
     }
 
