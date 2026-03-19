@@ -1,0 +1,245 @@
+<a id="now-playing" data-glass aria-live="polite" aria-label="Now playing" target="_blank" rel="noopener noreferrer">
+  <!-- Playing state: album art + equalizer bars -->
+  <img class="np-art" src="" alt="" aria-hidden="true" />
+  <span class="np-bars" aria-hidden="true">
+    <span></span><span></span><span></span>
+  </span>
+  <span class="np-track"></span>
+  <span class="np-sep">—</span>
+  <span class="np-artist"></span>
+
+  <!-- Idle state -->
+  <span class="np-idle-icon" aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="9" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="12" cy="12" r="3" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <span class="np-idle-text">marshall isn't listening to anything right now</span>
+</a>
+
+<style>
+  #now-playing {
+    position: absolute;
+    bottom: 24px;
+    right: 76px;
+    z-index: 100;
+    height: 40px;
+    padding: 0 14px 0 5px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    max-width: calc(100vw - 120px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-decoration: none;
+    cursor: default;
+  }
+
+  #now-playing.visible {
+    opacity: 0.75;
+    pointer-events: auto;
+  }
+
+  #now-playing.playing {
+    cursor: pointer;
+  }
+
+  #now-playing:hover {
+    opacity: 1;
+  }
+
+  /* Fast fade-out when content is swapping */
+  #now-playing.np-updating {
+    opacity: 0 !important;
+    transition: opacity 0.15s ease !important;
+  }
+
+  /* Album art */
+  .np-art {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: rgba(0, 0, 0, 0.06);
+    display: none;
+  }
+
+  .np-art.loaded {
+    display: block;
+  }
+
+  /* Animated equalizer bars */
+  .np-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 12px;
+    flex-shrink: 0;
+  }
+
+  .np-bars span {
+    display: block;
+    width: 2px;
+    background: #1a1a1a;
+    border-radius: 1px;
+    transform-origin: bottom;
+  }
+
+  .np-bars span:nth-child(1) { animation: bar 1.1s ease-in-out infinite; }
+  .np-bars span:nth-child(2) { animation: bar 0.9s ease-in-out infinite 0.15s; }
+  .np-bars span:nth-child(3) { animation: bar 1.3s ease-in-out infinite 0.3s; }
+
+  @keyframes bar {
+    0%, 100% { height: 4px; }
+    50%       { height: 12px; }
+  }
+
+  .np-track {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: #1a1a1a;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+  }
+
+  .np-sep {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: #1a1a1a;
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+
+  .np-artist {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: #1a1a1a;
+    opacity: 0.6;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+  }
+
+  /* Idle state */
+  .np-idle-icon {
+    display: none;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.4;
+  }
+
+  .np-idle-text {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: #1a1a1a;
+    opacity: 0.6;
+    display: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Show idle elements when not playing */
+  #now-playing:not(.playing) .np-idle-icon { display: flex; }
+  #now-playing:not(.playing) .np-idle-text { display: block; }
+
+  /* Hide playing elements when not playing */
+  #now-playing:not(.playing) .np-art,
+  #now-playing:not(.playing) .np-bars,
+  #now-playing:not(.playing) .np-track,
+  #now-playing:not(.playing) .np-sep,
+  #now-playing:not(.playing) .np-artist { display: none; }
+
+  @media (max-width: 768px) {
+    #now-playing {
+      bottom: 52px;
+      right: 60px;
+      max-width: calc(100vw - 80px);
+    }
+
+    .np-track { max-width: 120px; }
+    .np-artist { max-width: 100px; }
+  }
+</style>
+
+<script>
+  // Your Apple Music profile URL
+  const APPLE_MUSIC_PROFILE = 'https://music.apple.com/profile/marshalldean';
+
+  let lastKey: string | null = null;
+
+  function applyData(el: HTMLAnchorElement, data: any) {
+    if (data.isPlaying) {
+      (el.querySelector('.np-track') as HTMLElement).textContent = data.track ?? '';
+      (el.querySelector('.np-artist') as HTMLElement).textContent = data.artist ?? '';
+
+      const img = el.querySelector('.np-art') as HTMLImageElement;
+      if (data.albumArt) {
+        img.src = data.albumArt;
+        img.alt = data.album ?? '';
+        img.onload = () => img.classList.add('loaded');
+        img.onerror = () => img.classList.remove('loaded');
+      } else {
+        img.classList.remove('loaded');
+      }
+
+      el.href = data.albumUrl || '#';
+      el.classList.add('playing');
+    } else {
+      el.classList.remove('playing');
+      el.href = APPLE_MUSIC_PROFILE;
+    }
+  }
+
+  async function pollNowPlaying() {
+    const el = document.getElementById('now-playing') as HTMLAnchorElement | null;
+    if (!el) return;
+
+    try {
+      const res = await fetch('/api/now-playing.json');
+      const data = await res.json();
+
+      const newKey = data.isPlaying ? `playing:${data.track}:${data.artist}` : 'idle';
+      const isFirstLoad = !el.classList.contains('visible');
+      const contentChanged = lastKey !== null && lastKey !== newKey;
+
+      if (contentChanged && !isFirstLoad) {
+        // Fade out, swap, fade back in
+        el.classList.add('np-updating');
+        await new Promise(r => setTimeout(r, 160));
+        applyData(el, data);
+        el.classList.remove('np-updating');
+      } else {
+        applyData(el, data);
+      }
+
+      lastKey = newKey;
+      el.classList.add('visible');
+    } catch {
+      el.classList.remove('playing');
+      el.href = APPLE_MUSIC_PROFILE;
+      el.classList.add('visible');
+    }
+  }
+
+  function initNowPlaying() {
+    lastKey = null;
+    pollNowPlaying();
+    const interval = setInterval(pollNowPlaying, 10_000);
+    document.addEventListener('astro:before-preparation', () => clearInterval(interval), { once: true });
+  }
+
+  document.addEventListener('astro:page-load', initNowPlaying);
+</script>

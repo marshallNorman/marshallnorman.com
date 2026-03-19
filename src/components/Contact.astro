@@ -1,5 +1,6 @@
 ---
 import EyeButton from './EyeButton.astro';
+import NowPlaying from './NowPlaying.astro';
 ---
 <script>
   function initContact() {
@@ -97,6 +98,7 @@ import EyeButton from './EyeButton.astro';
   document.addEventListener('astro:page-load', initContact);
 </script>
 <section id="contact">
+  <NowPlaying />
   <EyeButton />
   <div class="content">
     <h2 class="heading">Get in touch.</h2>
