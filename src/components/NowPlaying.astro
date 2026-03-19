@@ -37,7 +37,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-decoration: none;
-    cursor: default;
+    cursor: pointer;
   }
 
   #now-playing.visible {
@@ -45,11 +45,11 @@
     pointer-events: auto;
   }
 
-  #now-playing.playing {
-    cursor: pointer;
+  #now-playing:hover {
+    opacity: 1;
   }
 
-  #now-playing:hover {
+  #now-playing:not(.playing):hover .np-idle-icon {
     opacity: 1;
   }
 
