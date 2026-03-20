@@ -4,9 +4,7 @@
   <span class="np-bars" aria-hidden="true">
     <span></span><span></span><span></span>
   </span>
-  <span class="np-track"></span>
-  <span class="np-sep">—</span>
-  <span class="np-artist"></span>
+  <span class="np-track-wrap"><span class="np-track-inner"><span class="np-track"></span><span class="np-sep">—</span><span class="np-artist"></span></span></span>
 
   <!-- Idle state -->
   <span class="np-idle-icon" aria-hidden="true">
@@ -86,6 +84,7 @@
   .np-bars span {
     display: block;
     width: 2px;
+    height: 12px;
     background: #1a1a1a;
     border-radius: 1px;
     transform-origin: bottom;
@@ -96,8 +95,24 @@
   .np-bars span:nth-child(3) { animation: bar 1.3s ease-in-out infinite 0.3s; }
 
   @keyframes bar {
-    0%, 100% { height: 4px; }
-    50%       { height: 12px; }
+    0%, 100% { transform: scaleY(0.33); }
+    50%       { transform: scaleY(1); }
+  }
+
+  .np-track-wrap {
+    overflow: hidden;
+    flex-shrink: 1;
+  }
+
+  .np-track-inner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .np-track-inner.marquee {
+    animation: marquee-scroll 4s ease-in-out 1s infinite alternate;
   }
 
   .np-track {
@@ -105,9 +120,11 @@
     font-size: 11px;
     letter-spacing: 0.02em;
     color: #1a1a1a;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 180px;
+  }
+
+  @keyframes marquee-scroll {
+    0%, 15%   { transform: translateX(0); }
+    85%, 100% { transform: translateX(var(--marquee-offset)); }
   }
 
   .np-sep {
@@ -124,9 +141,6 @@
     letter-spacing: 0.02em;
     color: #1a1a1a;
     opacity: 0.6;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 140px;
   }
 
   /* Idle state */
@@ -159,19 +173,22 @@
   /* Hide playing elements when not playing */
   #now-playing:not(.playing) .np-art,
   #now-playing:not(.playing) .np-bars,
-  #now-playing:not(.playing) .np-track,
-  #now-playing:not(.playing) .np-sep,
-  #now-playing:not(.playing) .np-artist { display: none; }
+  #now-playing:not(.playing) .np-track-wrap { display: none; }
 
   @media (max-width: 768px) {
     #now-playing {
       bottom: 52px;
+      left: 16px;
       right: 60px;
-      max-width: calc(100vw - 80px);
+      max-width: none;
     }
 
-    .np-track { max-width: 120px; }
-    .np-artist { max-width: 100px; }
+    .np-track-wrap {
+      flex: 1;
+      min-width: 0;
+      max-width: none;
+    }
+
   }
 </style>
 
@@ -180,6 +197,21 @@
   const APPLE_MUSIC_PROFILE = 'https://music.apple.com/profile/marshalldean';
 
   let lastKey: string | null = null;
+
+  function updateMarquee(el: HTMLAnchorElement) {
+    const wrap = el.querySelector('.np-track-wrap') as HTMLElement | null;
+    const inner = el.querySelector('.np-track-inner') as HTMLElement | null;
+    if (!wrap || !inner) return;
+    inner.classList.remove('marquee');
+    inner.style.removeProperty('--marquee-offset');
+    requestAnimationFrame(() => {
+      const overflow = inner.scrollWidth - wrap.clientWidth;
+      if (overflow > 2) {
+        inner.style.setProperty('--marquee-offset', `-${overflow}px`);
+        inner.classList.add('marquee');
+      }
+    });
+  }
 
   function applyData(el: HTMLAnchorElement, data: any) {
     if (data.isPlaying) {
@@ -202,6 +234,7 @@
       el.classList.remove('playing');
       el.href = APPLE_MUSIC_PROFILE;
     }
+    updateMarquee(el);
   }
 
   async function pollNowPlaying() {
