@@ -1,8 +1,6 @@
 ---
 const BIO_PARAGRAPHS = [
-  `I've spent over a decade designing complex product systems — from AI platforms to design systems to enterprise SaaS — but the thread running through all of it has always been people. Not users as abstractions, but real humans navigating real complexity. I believe the best design doesn't just solve problems, it earns trust. That belief shapes everything from the guardrails I build into autonomous systems to the way I show up for the designers I mentor.`,
-  `I like to say I lead like a team captain. I set direction, build structure, and make the broader system stronger — but I stay in the work. I don't disappear into strategy while others execute. I think transparency, honesty, and a willingness to be vulnerable are what make collaboration actually work, and I've found that teams move faster and build better when those things are present from the top down.`,
-  `My path has taken me from front-end development at Sparkbox to design leadership at agencies to staff-level product design at Dialpad, where I led the design of their first agentic AI platform. What's carried across every stop is a conviction that as the systems we build become more powerful, our responsibility to keep them human becomes more important — not less.`,
+  `Hi, I'm Marshall's virtual assistant. Marshall has spent over a decade designing complex product systems — AI platforms, design systems, enterprise SaaS — but the thread running through all of it has always been people. Real humans navigating real complexity. He believes the best design earns trust, and that belief shapes everything from the guardrails he builds into autonomous systems to how he shows up for the designers he mentors. His path has taken him from front-end development at Sparkbox to staff-level product design at Dialpad, where he led their first agentic AI platform — and what's carried across every stop is a conviction that as the systems we build become more powerful, our responsibility to keep them human becomes more important, not less.`,
 ];
 
 const EXAMPLES = [
@@ -72,20 +70,23 @@ const EXAMPLES = [
 
     <div class="input-area">
       <div class="input-wrap" data-glass>
-        <textarea
-          id="chat-input"
-          rows="1"
-          autocomplete="off"
-          spellcheck="true"
-          placeholder={`e.g. ${EXAMPLES[0]}`}
-        ></textarea>
-        <span id="chat-limit-msg" class="chat-limit-msg" hidden>Use the <a href="#contact">contact section</a> for any more questions</span>
-        <button id="chat-send" aria-label="Send message">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="22" y1="2" x2="11" y2="13"></line>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-          </svg>
-        </button>
+        <div id="chat-suggestions"></div>
+        <div class="input-row">
+          <textarea
+            id="chat-input"
+            rows="1"
+            autocomplete="off"
+            spellcheck="true"
+            placeholder={`e.g. ${EXAMPLES[0]}`}
+          ></textarea>
+          <span id="chat-limit-msg" class="chat-limit-msg" hidden>Use the <a href="#contact">contact section</a> for any more questions</span>
+          <button id="chat-send" aria-label="Send message">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
       </div>
       <p id="chat-hint" class="chat-hint">5 messages remaining</p>
     </div>
@@ -364,11 +365,88 @@ const EXAMPLES = [
 
   .input-wrap {
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
     min-height: 42px;
     padding: 7px 10px;
-    gap: 8px;
     border-radius: 16px;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+  }
+
+  #chat-suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    transition: max-height 0.35s ease, opacity 0.25s ease, padding-bottom 0.35s ease, margin-bottom 0.35s ease;
+  }
+
+  #chat-suggestions.visible {
+    max-height: 200px;
+    opacity: 1;
+    padding-bottom: 10px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  :global(.suggestions-label) {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.3);
+    margin-bottom: 4px;
+  }
+
+  :global(.suggestion-chip) {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: 14px;
+    line-height: 22px;
+    color: rgba(0, 0, 0, 0.4);
+    background: none;
+    border: none;
+    padding: 3px 0;
+    cursor: pointer;
+    text-align: left;
+    transition: color 0.15s;
+  }
+
+  :global(.suggestion-chip:hover) {
+    color: #000;
+  }
+
+  :global(.msg-skeleton) {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding: 4px 52px 4px 10px;
+  }
+
+  :global(.skel-line) {
+    display: block;
+    height: 11px;
+    border-radius: 6px;
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.06) 25%,
+      rgba(0, 0, 0, 0.11) 50%,
+      rgba(0, 0, 0, 0.06) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
   }
 
   #chat-input {
@@ -605,6 +683,18 @@ const EXAMPLES = [
     "What does your design process look like?",
   ];
 
+  const QUESTION_POOL = [
+    "What's Marshall's design philosophy when it comes to AI products?",
+    "How does Marshall approach leading a design team?",
+    "Tell me about Marshall's work at Dialpad.",
+    "What does Marshall's design process look like?",
+    "How has Marshall's front-end background shaped how he designs?",
+    "What kind of opportunities is Marshall looking for?",
+    "How can I get in touch with Marshall?",
+    "Where can I find Marshall's resume?",
+    "What has Marshall worked on outside of Dialpad?",
+  ];
+
   let BIO_PARAGRAPHS: string[] = [];
   try {
     BIO_PARAGRAPHS = JSON.parse(
@@ -633,18 +723,108 @@ const EXAMPLES = [
     scrollToBottom();
   }
 
-  input.addEventListener('input', autoResize);
-
-  async function typeInto(el: HTMLElement, text: string, ms = 4) {
-    for (const ch of text) {
-      el.textContent += ch;
-      scrollToBottom();
-      await delay(ms);
-    }
-  }
+  input.addEventListener('input', () => {
+    if (input.value.length > 0) hideSuggestions();
+    autoResize();
+  });
 
   function scrollToBottom() {
     chatContent.scrollTop = chatContent.scrollHeight;
+  }
+
+  function createSkeleton(): HTMLElement {
+    const el = document.createElement('div');
+    el.className = 'msg-skeleton';
+    [88, 76, 84, 70, 56].forEach(w => {
+      const line = document.createElement('span');
+      line.className = 'skel-line';
+      line.style.width = w + '%';
+      el.appendChild(line);
+    });
+    return el;
+  }
+
+  async function runChatIntro() {
+    input.disabled   = true;
+    sendBtn.disabled = true;
+
+    // Show skeleton
+    const skeletonEl = createSkeleton();
+    messagesEl.appendChild(skeletonEl);
+    scrollToBottom();
+    await delay(700);
+
+    // Fade skeleton out
+    skeletonEl.style.transition = 'opacity 0.3s ease';
+    skeletonEl.style.opacity = '0';
+    await delay(320);
+    skeletonEl.remove();
+
+    // Render content invisible
+    const allEls: HTMLElement[] = [];
+    BIO_PARAGRAPHS.forEach(para => {
+      const el = document.createElement('div');
+      el.className = 'msg-marshall';
+      el.textContent = para;
+      el.style.opacity = '0';
+      el.style.transition = 'opacity 0.5s ease';
+      messagesEl.appendChild(el);
+      allEls.push(el);
+    });
+    const welcome = document.createElement('div');
+    welcome.className = 'msg-marshall';
+    welcome.textContent = 'What would you like to ask me?';
+    welcome.style.opacity = '0';
+    welcome.style.transition = 'opacity 0.5s ease';
+    messagesEl.appendChild(welcome);
+    allEls.push(welcome);
+
+    scrollToBottom();
+    // Double rAF ensures layout is computed before transition fires
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      allEls.forEach(el => { el.style.opacity = '1'; });
+    }));
+    await delay(550);
+
+    input.disabled   = false;
+    sendBtn.disabled = false;
+    showSuggestions();
+  }
+
+  const suggestionsEl = document.getElementById('chat-suggestions') as HTMLDivElement;
+
+  function showSuggestions() {
+    suggestionsEl.innerHTML = '';
+    const label = document.createElement('span');
+    label.className = 'suggestions-label';
+    label.textContent = 'Example questions';
+    suggestionsEl.appendChild(label);
+    const picked = QUESTION_POOL
+      .slice()
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+    picked.forEach(q => {
+      const btn = document.createElement('button');
+      btn.className = 'suggestion-chip';
+      btn.textContent = q;
+      btn.addEventListener('click', () => {
+        input.value = q;
+        input.focus();
+        autoResize();
+      });
+      suggestionsEl.appendChild(btn);
+    });
+    suggestionsEl.classList.add('visible');
+  }
+
+  function hideSuggestions() {
+    suggestionsEl.classList.remove('visible');
+    suggestionsEl.innerHTML = '';
+  }
+
+  function collapseSuggestions() {
+    suggestionsEl.classList.remove('visible');
+    setTimeout(() => { suggestionsEl.innerHTML = ''; }, 380);
   }
 
   // ── Populate chat instantly (mobile) ──────────────────────
@@ -660,6 +840,7 @@ const EXAMPLES = [
     welcome.className = 'msg-marshall';
     welcome.textContent = "What would you like to ask me?";
     messagesEl.appendChild(welcome);
+    showSuggestions();
   }
 
   // ── Activate chat with typewriter (desktop) ───────────────
@@ -692,26 +873,7 @@ const EXAMPLES = [
     inputAreaEl.style.opacity  = '1';
 
     await delay(350);
-
-    // 4. Type bio paragraphs
-    for (let i = 0; i < BIO_PARAGRAPHS.length; i++) {
-      const el = document.createElement('div');
-      el.className = 'msg-marshall';
-      messagesEl.appendChild(el);
-      await typeInto(el, BIO_PARAGRAPHS[i], 3);
-      await delay(i < BIO_PARAGRAPHS.length - 1 ? 280 : 180);
-    }
-
-    // 5. Type welcome message
-    const welcome = document.createElement('div');
-    welcome.className = 'msg-marshall';
-    messagesEl.appendChild(welcome);
-    await typeInto(welcome, "What would you like to ask me?", 10);
-
-    // 6. Unlock input
-    input.disabled   = false;
-    sendBtn.disabled = false;
-    input.focus();
+    runChatIntro();
   }
 
   // ── Click handlers ────────────────────────────────────────
@@ -733,30 +895,7 @@ const EXAMPLES = [
 
     if (!chatActivated) {
       chatActivated = true;
-      input.disabled = true;
-      sendBtn.disabled = true;
-
-      (async () => {
-        await delay(200); // let modal finish opening
-
-        for (let i = 0; i < BIO_PARAGRAPHS.length; i++) {
-          const el = document.createElement('div');
-          el.className = 'msg-marshall';
-          messagesEl.appendChild(el);
-          scrollToBottom();
-          await typeInto(el, BIO_PARAGRAPHS[i], 3);
-          await delay(i < BIO_PARAGRAPHS.length - 1 ? 280 : 180);
-        }
-
-        const welcome = document.createElement('div');
-        welcome.className = 'msg-marshall';
-        messagesEl.appendChild(welcome);
-        await typeInto(welcome, "What would you like to ask me?", 10);
-
-        input.disabled = false;
-        sendBtn.disabled = false;
-        input.focus();
-      })();
+      setTimeout(() => runChatIntro(), 200); // let modal finish opening
     } else {
       input.focus();
     }
@@ -847,6 +986,7 @@ const EXAMPLES = [
   async function sendMessage(text: string) {
     if (!text.trim() || userMessageCount >= MAX_MESSAGES) return;
 
+    collapseSuggestions();
     input.value = '';
     input.style.height = 'auto';
     input.style.overflowY = 'hidden';
