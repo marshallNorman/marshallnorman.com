@@ -273,6 +273,16 @@
     pollNowPlaying();
     const interval = setInterval(pollNowPlaying, 10_000);
     document.addEventListener('astro:before-preparation', () => clearInterval(interval), { once: true });
+
+    const el = document.getElementById('now-playing') as HTMLAnchorElement | null;
+    el?.addEventListener('click', () => {
+      const isPlaying = el.classList.contains('playing');
+      import('@vercel/analytics').then(({ track }) => track('music_pill_clicked', {
+        state: isPlaying ? 'playing' : 'idle',
+        song: (el.querySelector('.np-track') as HTMLElement | null)?.textContent || null,
+        artist: (el.querySelector('.np-artist') as HTMLElement | null)?.textContent || null,
+      }));
+    });
   }
 
   document.addEventListener('astro:page-load', initNowPlaying);

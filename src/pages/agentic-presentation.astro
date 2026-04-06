@@ -1,0 +1,1103 @@
+---
+import '../styles/global.css';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, viewport-fit=cover" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=4" />
+  <title>DAART — Designing Dialpad's Agentic AI Platform</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Glass distortion filter (used by [data-glass]) -->
+  <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="glass-distortion" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGBLinear">
+        <feTurbulence type="turbulence" baseFrequency="0.012 0.008" numOctaves="3" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Topo background -->
+  <div class="topo-bg" aria-hidden="true"></div>
+
+  <!-- ── Password Gate ─────────────────────────────────────────── -->
+  <div id="gate" class="gate">
+    <div class="gate-card" data-glass>
+      <p class="gate-label">DAART · Restricted Access</p>
+      <h1 class="gate-title">Enter password<br/>to continue</h1>
+      <div class="gate-input-row">
+        <input
+          id="gate-input"
+          type="password"
+          class="gate-input"
+          placeholder="password"
+          autocomplete="off"
+          autocapitalize="none"
+          spellcheck="false"
+        />
+        <button id="gate-btn" class="gate-btn" aria-label="Submit">→</button>
+      </div>
+      <p id="gate-error" class="gate-error" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <!-- ── Presentation ──────────────────────────────────────────── -->
+  <div id="preso" class="preso" style="display:none; opacity:0;">
+
+    <!-- Slide track -->
+    <div id="track" class="track">
+
+      <!-- ── Slide 01 · Cover ────────────────────────────────── -->
+      <div class="slide slide-cover">
+        <div class="slide-inner">
+          <div class="cover-content">
+            <p class="slide-label">Sanas · Interview Presentation · 04.06.2026</p>
+            <h1 class="cover-title">DAART</h1>
+            <p class="cover-sub">Designing Dialpad's Agentic AI Platform</p>
+            <div class="cover-divider"></div>
+            <p class="cover-byline">Marshall Norman · Staff Product Designer · Dialpad · 2025–2026</p>
+          </div>
+          <p class="nav-hint">← → to navigate</p>
+        </div>
+      </div>
+
+      <!-- ── Slide 02 · Context ──────────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">01 / Context</p>
+          <h2 class="slide-heading">"Contact centers were built<br/>for a different era."</h2>
+          <div class="slide-body">
+            <p class="slide-prose">Rigid scripted bots. Customers repeat themselves. Agents answer the same questions 10,000 times a day. The opportunity: AI that doesn't just respond — it understands goals, reasons through context, takes actions, and resolves issues end to end.</p>
+            <blockquote class="pull-quote">
+              "From FAQ bots to AI that can understand goals, reason, take actions, and complete end-to-end customer workflows across channels."
+            </blockquote>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Slide 03 · My Role ──────────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">02 / My Contribution</p>
+          <h2 class="slide-heading">Design lead across the<br/>platform's core creation surfaces.</h2>
+          <div class="role-grid">
+            <div class="role-card">
+              <p class="role-card-label">DRI</p>
+              <p class="role-card-title">Agent Building Experience</p>
+              <p class="role-card-body">Agent Studio, Compass, Proving Ground — directly responsible for the core creation and validation surfaces.</p>
+            </div>
+            <div class="role-card">
+              <p class="role-card-label">Design Program Lead</p>
+              <p class="role-card-title">Rituals & Visibility</p>
+              <p class="role-card-body">DAART design rituals, design approval cadence, roadmap visibility across a distributed team and 150-person product org.</p>
+            </div>
+            <div class="role-card">
+              <p class="role-card-label">Partner</p>
+              <p class="role-card-title">Platform Expansion</p>
+              <p class="role-card-body">AI Agent v2, versioning UX, Optimize suite — partnering across pods while maintaining direct IC ownership.</p>
+            </div>
+          </div>
+          <p class="slide-footnote">9 designers embedded across a 150-person product org</p>
+        </div>
+      </div>
+
+      <!-- ── Slide 04 · The Platform ────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">03 / What We Built</p>
+          <h2 class="slide-heading">Three surfaces. One platform.</h2>
+          <div class="platform-grid">
+            <div class="platform-card">
+              <div class="platform-card-header">
+                <span class="platform-number">01</span>
+                <h3 class="platform-card-title">Dialpad AI Agent v2</h3>
+              </div>
+              <p class="platform-card-body">Executes deterministic skills and agentic reasoning in sequence. Routes between skills, escalates to human agents, and resolves multi-turn workflows end-to-end — without scripting every path.</p>
+              <div class="platform-card-tags">
+                <span class="tag">Skills</span>
+                <span class="tag">Routing</span>
+                <span class="tag">Agentic</span>
+              </div>
+            </div>
+            <div class="platform-card">
+              <div class="platform-card-header">
+                <span class="platform-number">02</span>
+                <h3 class="platform-card-title">Agentic Studio</h3>
+              </div>
+              <p class="platform-card-body">Visual canvas. Deterministic workflows + agentic skills as composable nodes. The heart of the builder experience.</p>
+              <div class="platform-card-tags">
+                <span class="tag">Canvas</span>
+                <span class="tag">Nodes</span>
+                <span class="tag">Agentic</span>
+              </div>
+            </div>
+            <div class="platform-card">
+              <div class="platform-card-header">
+                <span class="platform-number">03</span>
+                <h3 class="platform-card-title">Continuous Improvement</h3>
+              </div>
+              <p class="platform-card-body">Compass (linting), Proving Ground (simulation), Guardian (safety). Test, validate, and safeguard before deploy.</p>
+              <div class="platform-card-tags">
+                <span class="tag">Compass</span>
+                <span class="tag">Sim</span>
+                <span class="tag">Safety</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Slide 05 · Design Challenge ───────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">04 / Design Challenge</p>
+          <h2 class="slide-heading">"Making autonomous AI legible<br/>to a non-technical builder."</h2>
+          <p class="slide-prose slide-prose--narrow">The hardest problem wasn't building the builder — it was making agentic behavior trustworthy to contact center managers who had never thought about prompt engineering.</p>
+          <div class="decision-grid">
+            <div class="decision-card">
+              <p class="decision-card-label">Compass</p>
+              <p class="decision-card-body">Surface linting errors in the canvas, where you made them, not at publish time. Errors in context are errors that get fixed.</p>
+            </div>
+            <div class="decision-card">
+              <p class="decision-card-label">Proving Ground</p>
+              <p class="decision-card-body">Simulate before you ship. Agents get tested like code — real scenarios, real branching, observable outcomes.</p>
+            </div>
+            <div class="decision-card">
+              <p class="decision-card-label">Guardian</p>
+              <p class="decision-card-body">Configurable safety thresholds at runtime. Transparency, not a black box — managers stay in control as autonomy scales.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Slide 06 · Agent Studio ────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">05 / The Canvas</p>
+          <h2 class="slide-heading">"A visual builder that bridges<br/>no-code and full agentic power."</h2>
+          <div class="studio-grid">
+            <div class="studio-item">
+              <div class="studio-num">01</div>
+              <div>
+                <p class="studio-title">Composable node library</p>
+                <p class="studio-body">Deterministic steps + agentic skill blocks as first-class primitives — not second-class addons.</p>
+              </div>
+            </div>
+            <div class="studio-item">
+              <div class="studio-num">02</div>
+              <div>
+                <p class="studio-title">Editor Copilot</p>
+                <p class="studio-body">AI assistance inline while building — not as a separate onboarding flow. Help when you need it, invisible when you don't.</p>
+              </div>
+            </div>
+            <div class="studio-item">
+              <div class="studio-num">03</div>
+              <div>
+                <p class="studio-title">Linting in context</p>
+                <p class="studio-body">Compass surfaces issues where you made them. The canvas is the source of truth — not a deploy modal.</p>
+              </div>
+            </div>
+            <div class="studio-item">
+              <div class="studio-num">04</div>
+              <div>
+                <p class="studio-title">Deploy simplicity</p>
+                <p class="studio-body">Initial concept was over-engineered. Pivoted to a simpler hand-off after watching real EAP usage patterns.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Slide 07 · Timeline ────────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">06 / From 0 to GA</p>
+          <h2 class="slide-heading">Four phases. Fourteen months.</h2>
+          <div class="timeline">
+            <div class="timeline-phase">
+              <div class="timeline-dot"></div>
+              <div class="timeline-line"></div>
+              <p class="timeline-period">Q2–Q3 2025</p>
+              <p class="timeline-phase-title">Vision</p>
+              <p class="timeline-phase-body">Defined what "agentic" means for Dialpad. Aligned execs. Built early prototypes to test the concept space.</p>
+            </div>
+            <div class="timeline-phase">
+              <div class="timeline-dot"></div>
+              <div class="timeline-line"></div>
+              <p class="timeline-period">Mid-2025 → Oct</p>
+              <p class="timeline-phase-title">Build</p>
+              <p class="timeline-phase-body">Design program stood up. Embedded in pods. v1 canvas + Compass/PG UX shipped to internal teams.</p>
+            </div>
+            <div class="timeline-phase">
+              <div class="timeline-dot"></div>
+              <div class="timeline-line"></div>
+              <p class="timeline-period">Oct–Dec 2025</p>
+              <p class="timeline-phase-title">Bolster</p>
+              <p class="timeline-phase-body">EAP with HopCo (healthcare) and Custom Ink. Real usage shaped priorities. Full v1 shipped.</p>
+            </div>
+            <div class="timeline-phase timeline-phase--last">
+              <div class="timeline-dot timeline-dot--active"></div>
+              <p class="timeline-period">Jan 2026 → Now</p>
+              <p class="timeline-phase-title">DAART 2.0</p>
+              <p class="timeline-phase-body">Canvas v2, agent lifecycle, Optimize suite. Ongoing customer interviews and testing.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Slide 08 · Impact ──────────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">07 / Outcomes</p>
+          <h2 class="slide-heading">Shipped on time.<br/>At scale. For real customers.</h2>
+          <div class="impact-grid">
+            <div class="impact-cell">
+              <p class="impact-stat">117,800</p>
+              <p class="impact-label">Conversations Handled</p>
+              <p class="impact-desc">In Q4 alone — real customers, real resolution, not demos</p>
+            </div>
+            <div class="impact-cell">
+              <p class="impact-stat">~55%</p>
+              <p class="impact-label">Blended Deflection Rate</p>
+              <p class="impact-desc">AI resolving issues end-to-end without human handoff</p>
+            </div>
+            <div class="impact-cell">
+              <p class="impact-stat">Feb 2<span class="impact-stat-sup">'26</span></p>
+              <p class="impact-label">GA Shipped On Time</p>
+              <p class="impact-desc">Zero slips on the public launch date under a compressed timeline</p>
+            </div>
+            <div class="impact-cell">
+              <p class="impact-stat">150</p>
+              <p class="impact-label">Person Product Org</p>
+              <p class="impact-desc">Up from a 12-person tiger team — design leading through rapid scale</p>
+            </div>
+          </div>
+          <div class="customers-row">
+            <p class="customers-label">Early customers</p>
+            <div class="customers-list">
+              <span class="customer-chip">HopCo — Healthcare EMR</span>
+              <span class="customer-chip">Custom Ink — Voice Order Status</span>
+              <span class="customer-chip">Austin FC</span>
+              <span class="customer-chip">F5 Mortgage</span>
+              <span class="customer-chip customer-chip--muted">+ long tail in pipeline</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /track -->
+
+    <!-- ── Nav controls ──────────────────────────────────────── -->
+    <button id="btn-prev" class="nav-btn nav-btn--prev" aria-label="Previous slide">‹</button>
+    <button id="btn-next" class="nav-btn nav-btn--next" aria-label="Next slide">›</button>
+
+    <!-- Slide counter -->
+    <div id="counter" class="slide-counter">1 / 8</div>
+
+  </div><!-- /preso -->
+
+</body>
+</html>
+
+<script>
+  const TOTAL = 8;
+  const PASSWORD = 'agentpreso';
+  const STORAGE_KEY = 'preso-auth';
+
+  let current = 0;
+
+  // ── Auth ──────────────────────────────────────────────────────
+  function showPreso() {
+    const gate = document.getElementById('gate')!;
+    const preso = document.getElementById('preso')!;
+    gate.style.opacity = '0';
+    gate.style.pointerEvents = 'none';
+    setTimeout(() => { gate.style.display = 'none'; }, 500);
+    preso.style.display = 'block';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        preso.style.opacity = '1';
+      });
+    });
+    document.body.style.overflow = 'hidden';
+  }
+
+  function shakeCard() {
+    const card = document.querySelector('.gate-card') as HTMLElement;
+    if (!card) return;
+    card.classList.remove('shake');
+    void card.offsetWidth; // reflow
+    card.classList.add('shake');
+  }
+
+  function handleAuth() {
+    const input = document.getElementById('gate-input') as HTMLInputElement;
+    const errorEl = document.getElementById('gate-error')!;
+    const val = input.value.trim();
+    if (val === PASSWORD) {
+      sessionStorage.setItem(STORAGE_KEY, '1');
+      errorEl.textContent = '';
+      showPreso();
+    } else {
+      errorEl.textContent = 'Incorrect password.';
+      shakeCard();
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  // ── Navigation ────────────────────────────────────────────────
+  function goTo(index: number) {
+    if (index < 0 || index >= TOTAL) return;
+    current = index;
+    const track = document.getElementById('track')!;
+    track.style.transform = `translateX(${-current * 100}vw)`;
+    const counter = document.getElementById('counter')!;
+    counter.textContent = `${current + 1} / ${TOTAL}`;
+    // Update button visibility
+    const prevBtn = document.getElementById('btn-prev') as HTMLButtonElement;
+    const nextBtn = document.getElementById('btn-next') as HTMLButtonElement;
+    prevBtn.style.opacity = current === 0 ? '0' : '1';
+    prevBtn.style.pointerEvents = current === 0 ? 'none' : 'auto';
+    nextBtn.style.opacity = current === TOTAL - 1 ? '0' : '1';
+    nextBtn.style.pointerEvents = current === TOTAL - 1 ? 'none' : 'auto';
+  }
+
+  // ── Init ──────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check sessionStorage
+    if (sessionStorage.getItem(STORAGE_KEY) === '1') {
+      showPreso();
+    }
+
+    // Gate interactions
+    const btn = document.getElementById('gate-btn')!;
+    const input = document.getElementById('gate-input') as HTMLInputElement;
+    btn.addEventListener('click', handleAuth);
+    input.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Enter') handleAuth();
+    });
+
+    // Nav buttons
+    document.getElementById('btn-prev')!.addEventListener('click', () => goTo(current - 1));
+    document.getElementById('btn-next')!.addEventListener('click', () => goTo(current + 1));
+
+    // Keyboard
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      const preso = document.getElementById('preso')!;
+      if (preso.style.display === 'none' || preso.style.opacity === '0') return;
+      if (e.key === 'ArrowRight') goTo(current + 1);
+      if (e.key === 'ArrowLeft') goTo(current - 1);
+    });
+
+    // Initial state
+    goTo(0);
+
+    // Focus the password input if gate is visible
+    const gate = document.getElementById('gate')!;
+    if (gate.style.display !== 'none') {
+      (document.getElementById('gate-input') as HTMLInputElement).focus();
+    }
+  });
+</script>
+
+<style>
+  /* ── Reset / Base ─────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background-color: #f1ede6;
+    font-family: "IBM Plex Serif", Georgia, serif;
+  }
+
+  /* ── Topo background ──────────────────────────────────── */
+  .topo-bg {
+    position: fixed;
+    inset: 0;
+    background-image: url('/images/case-study-dialpad.svg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Gate ─────────────────────────────────────────────── */
+  .gate {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1ede6;
+    transition: opacity 0.4s ease;
+  }
+
+  .gate-card {
+    border-radius: 16px;
+    padding: 48px 52px;
+    max-width: 440px;
+    width: 90%;
+    background: rgba(255,255,255,0.6);
+    text-align: left;
+  }
+
+  .gate-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.45;
+    margin: 0 0 20px;
+    color: #000;
+  }
+
+  .gate-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0 0 32px;
+    color: #111;
+  }
+
+  .gate-input-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .gate-input {
+    flex: 1;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 15px;
+    padding: 12px 16px;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.8);
+    color: #111;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .gate-input:focus {
+    border-color: rgba(0,0,0,0.4);
+  }
+
+  .gate-input::placeholder {
+    color: rgba(0,0,0,0.3);
+    font-style: italic;
+  }
+
+  .gate-btn {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 18px;
+    padding: 12px 18px;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 8px;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .gate-btn:hover { opacity: 0.75; }
+
+  .gate-error {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: #EC4D26;
+    margin: 12px 0 0;
+    min-height: 18px;
+  }
+
+  @keyframes shake {
+    0%  { transform: translateX(0); }
+    15% { transform: translateX(-8px); }
+    30% { transform: translateX(7px); }
+    45% { transform: translateX(-6px); }
+    60% { transform: translateX(5px); }
+    75% { transform: translateX(-3px); }
+    90% { transform: translateX(2px); }
+    100%{ transform: translateX(0); }
+  }
+
+  .gate-card.shake { animation: shake 0.45s ease; }
+
+  /* ── Presentation ─────────────────────────────────────── */
+  .preso {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    transition: opacity 0.5s ease;
+  }
+
+  .track {
+    display: flex;
+    width: calc(8 * 100vw);
+    height: 100vh;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  /* ── Slides ───────────────────────────────────────────── */
+  .slide {
+    min-width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .slide-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .slide-inner--pad {
+    padding: clamp(40px, 6vw, 96px) clamp(48px, 8vw, 120px);
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* ── Labels & shared ──────────────────────────────────── */
+  .section-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.4;
+    color: #000;
+    margin: 0 0 20px;
+  }
+
+  .slide-heading {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(28px, 3.5vw, 52px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: #111;
+    margin: 0 0 36px;
+  }
+
+  .slide-prose {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(15px, 1.4vw, 20px);
+    line-height: 1.7;
+    color: #333;
+    margin: 0 0 28px;
+    max-width: 860px;
+  }
+
+  .slide-prose--narrow {
+    max-width: 680px;
+  }
+
+  .slide-footnote {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    opacity: 0.4;
+    margin: 24px 0 0;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── Slide 01 · Cover ─────────────────────────────────── */
+  .slide-cover {
+    background: none;
+  }
+
+  .cover-content {
+    max-width: 900px;
+    padding: clamp(40px, 6vw, 96px) clamp(48px, 8vw, 120px);
+  }
+
+  .cover-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(80px, 14vw, 180px);
+    font-weight: 400;
+    line-height: 1;
+    color: #111;
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+  }
+
+  .cover-sub {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(18px, 2.2vw, 32px);
+    font-weight: 400;
+    font-style: italic;
+    color: #EC4D26;
+    margin: 0 0 40px;
+  }
+
+  .cover-divider {
+    height: 1px;
+    background: rgba(0,0,0,0.1);
+    max-width: 480px;
+    margin-bottom: 20px;
+  }
+
+  .cover-byline {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1.1vw, 14px);
+    opacity: 0.5;
+    margin: 0;
+    letter-spacing: 0.03em;
+  }
+
+  .nav-hint {
+    position: absolute;
+    bottom: 40px;
+    right: clamp(48px, 8vw, 120px);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    opacity: 0.3;
+    margin: 0;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── Slide 02 · Context ───────────────────────────────── */
+  .slide-body {
+    display: flex;
+    gap: clamp(40px, 5vw, 80px);
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .slide-body .slide-prose {
+    flex: 1;
+    min-width: 280px;
+    margin-bottom: 0;
+  }
+
+  .pull-quote {
+    flex: 1;
+    min-width: 280px;
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(16px, 1.6vw, 22px);
+    font-style: italic;
+    line-height: 1.55;
+    color: #EC4D26;
+    margin: 0;
+    padding: 20px 0 20px 24px;
+    border-left: 2px solid #EC4D26;
+  }
+
+  /* ── Slide 03 · Role ──────────────────────────────────── */
+  .role-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 8px;
+  }
+
+  .role-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: clamp(20px, 2.5vw, 32px);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .role-card-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.4;
+    margin: 0 0 8px;
+  }
+
+  .role-card-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(16px, 1.6vw, 22px);
+    font-weight: 500;
+    color: #111;
+    margin: 0 0 12px;
+  }
+
+  .role-card-body {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1vw, 14px);
+    line-height: 1.65;
+    opacity: 0.6;
+    margin: 0;
+  }
+
+  /* ── Slide 04 · Platform ──────────────────────────────── */
+  .platform-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .platform-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: clamp(20px, 2.5vw, 36px);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .platform-card--accent {
+    background: #111;
+    color: #fff;
+  }
+
+  .platform-card-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .platform-number {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    opacity: 0.35;
+    letter-spacing: 0.06em;
+  }
+
+  .platform-card-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(18px, 1.8vw, 26px);
+    font-weight: 500;
+    margin: 0;
+    flex: 1;
+  }
+
+  .platform-card-body {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1vw, 13px);
+    line-height: 1.7;
+    opacity: 0.6;
+    margin: 0;
+    flex: 1;
+  }
+
+  .platform-card--accent .platform-card-body { opacity: 0.65; }
+
+  .platform-card-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: auto;
+  }
+
+  .tag {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 1px solid rgba(0,0,0,0.15);
+    opacity: 0.6;
+    white-space: nowrap;
+  }
+
+  .platform-card--accent .tag {
+    border-color: rgba(255,255,255,0.25);
+    opacity: 0.7;
+  }
+
+  /* ── Slide 05 · Design Challenge ─────────────────────── */
+  .decision-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 8px;
+  }
+
+  .decision-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: clamp(20px, 2.5vw, 32px);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border-top: 3px solid #7c52ff;
+  }
+
+  .decision-card-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #7c52ff;
+    margin: 0 0 12px;
+    font-weight: 500;
+  }
+
+  .decision-card-body {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1vw, 13px);
+    line-height: 1.7;
+    opacity: 0.65;
+    margin: 0;
+  }
+
+  /* ── Slide 06 · Studio ────────────────────────────────── */
+  .studio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 48px;
+  }
+
+  .studio-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+
+  .studio-item:nth-child(3),
+  .studio-item:nth-child(4) {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .studio-num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    opacity: 0.3;
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+    padding-top: 3px;
+  }
+
+  .studio-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(16px, 1.5vw, 22px);
+    font-weight: 500;
+    color: #111;
+    margin: 0 0 8px;
+  }
+
+  .studio-body {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1vw, 13px);
+    line-height: 1.7;
+    opacity: 0.6;
+    margin: 0;
+  }
+
+  /* ── Slide 07 · Timeline ──────────────────────────────── */
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+    margin-top: 16px;
+  }
+
+  .timeline-phase {
+    position: relative;
+    padding-right: 32px;
+  }
+
+  .timeline-phase--last {
+    padding-right: 0;
+  }
+
+  .timeline-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #111;
+    opacity: 0.3;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .timeline-dot--active {
+    background: #7c52ff;
+    opacity: 1;
+    box-shadow: 0 0 0 3px rgba(124,82,255,0.2);
+  }
+
+  .timeline-line {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    right: 0;
+    height: 1px;
+    background: rgba(0,0,0,0.12);
+    z-index: 1;
+  }
+
+  .timeline-phase--last .timeline-line { display: none; }
+
+  .timeline-period {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    opacity: 0.4;
+    margin: 12px 0 6px;
+    letter-spacing: 0.04em;
+  }
+
+  .timeline-phase-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(18px, 1.8vw, 26px);
+    font-weight: 500;
+    color: #111;
+    margin: 0 0 10px;
+  }
+
+  .timeline-phase-body {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1vw, 13px);
+    line-height: 1.65;
+    opacity: 0.6;
+    margin: 0;
+  }
+
+  /* ── Slide 08 · Impact ────────────────────────────────── */
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+
+  .impact-cell {
+    background: #f1ede6;
+    padding: clamp(20px, 2.5vw, 36px) clamp(16px, 2vw, 28px);
+  }
+
+  .impact-stat {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(28px, 3.5vw, 52px);
+    font-weight: 500;
+    color: #111;
+    margin: 0 0 8px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .impact-stat-sup {
+    font-size: 0.55em;
+    opacity: 0.6;
+    vertical-align: super;
+  }
+
+  .impact-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.5;
+    margin: 0 0 8px;
+  }
+
+  .impact-desc {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(10px, 0.9vw, 12px);
+    line-height: 1.6;
+    opacity: 0.5;
+    margin: 0;
+  }
+
+  .customers-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .customers-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.4;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .customers-list {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .customer-chip {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.1);
+    opacity: 0.8;
+    white-space: nowrap;
+  }
+
+  .customer-chip--muted {
+    opacity: 0.4;
+    border-style: dashed;
+  }
+
+  /* ── Nav buttons ──────────────────────────────────────── */
+  .nav-btn {
+    position: fixed;
+    bottom: 36px;
+    z-index: 50;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 28px;
+    color: #111;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.3s ease, transform 0.15s ease;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding-bottom: 2px;
+  }
+
+  .nav-btn:hover { transform: scale(1.08); }
+
+  .nav-btn--prev { left: 36px; }
+  .nav-btn--next { right: 36px; }
+
+  /* ── Slide counter ────────────────────────────────────── */
+  .slide-counter {
+    position: fixed;
+    bottom: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    opacity: 0.35;
+    z-index: 50;
+    letter-spacing: 0.06em;
+    pointer-events: none;
+  }
+</style>

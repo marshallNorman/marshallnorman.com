@@ -428,6 +428,7 @@ const photos = readdirSync(imagesDir)
     if (!btn || !modal || !closeBtn) return;
 
     function openModal() {
+      import('@vercel/analytics').then(({ track }) => track('eye_button_opened'));
       const rect = btn.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
