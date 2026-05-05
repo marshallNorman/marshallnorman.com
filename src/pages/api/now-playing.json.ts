@@ -6,7 +6,7 @@ export type NowPlayingResponse =
   | { isPlaying: true; track: string; artist: string; album: string; albumArt: string };
 
 export const GET: APIRoute = async () => {
-  const workerUrl = import.meta.env.NOW_PLAYING_WORKER_URL;
+  const workerUrl = process.env.NOW_PLAYING_WORKER_URL;
   const headers = {
     'Content-Type': 'application/json',
     'Cache-Control': 'public, max-age=25, stale-while-revalidate=5',

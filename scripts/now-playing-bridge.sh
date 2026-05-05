@@ -45,9 +45,20 @@ while true; do
 
   # Fetch iTunes data and push to KV only when track changes
   if [[ "$CURRENT" != "$LAST_TRACK" ]]; then
-    ITUNES_JSON=$(curl -s "https://itunes.apple.com/search?term=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]+' '+sys.argv[2]))" "$TRACK" "$ARTIST")&entity=song&limit=1" 2>/dev/null)
-    ART_URL=$(echo "$ITUNES_JSON" | python3 -c "import json,sys; d=json.load(sys.stdin); r=d.get('results',[]); print(r[0].get('artworkUrl100','').replace('100x100bb','600x600bb') if r else '')" 2>/dev/null)
-    ALBUM_URL=$(echo "$ITUNES_JSON" | python3 -c "import json,sys; d=json.load(sys.stdin); r=d.get('results',[]); print(r[0].get('collectionViewUrl','') if r else '')" 2>/dev/null)
+    # Try four strategies in order: (track+artist, track+artist GB, album+artist, album+artist GB)
+    # Strips punctuation before encoding to improve matching (e.g. "Mr." → "Mr")
+    ART_URL=""
+    ALBUM_URL=""
+    for SEARCH_TERMS in "$TRACK $ARTIST" "$ALBUM $ARTIST"; do
+      for COUNTRY in "" "gb"; do
+        COUNTRY_PARAM=${COUNTRY:+"&country=$COUNTRY"}
+        ENCODED=$(python3 -c "import re,urllib.parse,sys; t=re.sub(r'[^\w\s]',' ',sys.argv[1]); print(urllib.parse.quote(t.strip()))" "$SEARCH_TERMS" 2>/dev/null)
+        ITUNES_JSON=$(curl -s "https://itunes.apple.com/search?term=$ENCODED&entity=song&limit=1${COUNTRY_PARAM}" 2>/dev/null)
+        ART_URL=$(echo "$ITUNES_JSON" | python3 -c "import json,sys; d=json.load(sys.stdin); r=d.get('results',[]); print(r[0].get('artworkUrl100','').replace('100x100bb','600x600bb') if r else '')" 2>/dev/null)
+        ALBUM_URL=$(echo "$ITUNES_JSON" | python3 -c "import json,sys; d=json.load(sys.stdin); r=d.get('results',[]); print(r[0].get('collectionViewUrl','') if r else '')" 2>/dev/null)
+        if [[ -n "$ART_URL" ]]; then break 2; fi
+      done
+    done
     LAST_TRACK="$CURRENT"
     WAS_PLAYING=true
 

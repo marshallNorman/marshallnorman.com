@@ -1,0 +1,1600 @@
+---
+import '../../styles/global.css';
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, viewport-fit=cover" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=4" />
+  <title>Rebuilding Dialtone — Case Study</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ── Password Gate ─────────────────────────────────────────── -->
+  <div id="gate" class="gate">
+    <div class="gate-card">
+      <p class="gate-label">Dialtone Case Study · Restricted Access</p>
+      <h1 class="gate-title">Enter password<br/>to continue</h1>
+      <div class="gate-input-row">
+        <input
+          id="gate-input"
+          type="password"
+          class="gate-input"
+          placeholder="password"
+          autocomplete="off"
+          autocapitalize="none"
+          spellcheck="false"
+        />
+        <button id="gate-btn" class="gate-btn" aria-label="Submit">→</button>
+      </div>
+      <p id="gate-error" class="gate-error" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <!-- ── Presentation ──────────────────────────────────────────── -->
+  <div id="preso" class="preso" style="display:none; opacity:0;">
+
+    <div id="track" class="track">
+
+      <!-- ── Slide 01 · Cover ───────────────────────────────────── -->
+      <div class="slide slide-cover">
+        <div class="slide-inner">
+          <div class="cover-content">
+            <p class="cover-label">Dialpad · 2022–2023</p>
+            <h1 class="cover-title">Rebuilding<br/>Dialtone</h1>
+            <p class="cover-sub">v5 → v7 → v9</p>
+            <div class="cover-divider"></div>
+            <div class="cover-tags">
+              <span class="cover-tag">Lead Designer</span>
+              <span class="cover-tag">Design Systems</span>
+              <span class="cover-tag">Typography · Color · Scale</span>
+            </div>
+            <p class="cover-byline">Marshall Norman · Staff Product Designer · Dialpad</p>
+          </div>
+          <p class="nav-hint">← → to navigate</p>
+        </div>
+      </div>
+
+      <!-- ── Slide 02 · Context ─────────────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">01 / Context</p>
+          <h2 class="slide-heading">A design system built<br/>to scale a company.</h2>
+          <div class="slide-body">
+            <p class="slide-prose">Dialpad is a cloud communications platform — voice, video, messaging, and AI — used by hundreds of thousands of businesses. Dialtone is the design system that powers every surface across every product. At the scale Dialpad was operating, inconsistency wasn't a polish problem. It was a velocity problem. A coherence problem. A trust problem.</p>
+            <blockquote class="pull-quote">
+              "Design systems don't just make products look consistent — they determine how fast a team can move without breaking what they've already built."
+            </blockquote>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Slide 03 · The Problem ─────────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">02 / The Problem</p>
+          <h2 class="slide-heading">What v5 couldn't do.</h2>
+          <div class="problem-grid">
+            <div class="problem-card">
+              <p class="problem-card-num">01</p>
+              <p class="problem-card-title">Naming ambiguity</p>
+              <p class="problem-card-body">T-shirt sizing — sm, md, lg — carried no semantic meaning. Designers couldn't derive intent from a token name. Every decision required looking it up.</p>
+            </div>
+            <div class="problem-card">
+              <p class="problem-card-num">02</p>
+              <p class="problem-card-title">No token layer</p>
+              <p class="problem-card-body">Colors and spacing were hardcoded values, not tokens. Multi-theme support — T-Mobile, dark mode, expressive themes — was a manual, error-prone process.</p>
+            </div>
+            <div class="problem-card">
+              <p class="problem-card-num">03</p>
+              <p class="problem-card-title">Contribution gap</p>
+              <p class="problem-card-body">No clear path for product teams to contribute back. The system grew stale as product shipped. Designers worked around it instead of through it.</p>
+            </div>
+          </div>
+          <blockquote class="pull-quote pull-quote--inline">
+            "The cost of inconsistency compounds. Every workaround is debt the next designer inherits."
+          </blockquote>
+        </div>
+      </div>
+
+      <!-- ── Slide 04 · The Vision ──────────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">03 / Vision</p>
+          <h2 class="slide-heading">What we needed<br/>Dialtone to become.</h2>
+          <div class="vision-grid">
+            <div class="vision-card vision-card--accent">
+              <p class="vision-card-label">Systematic</p>
+              <p class="vision-card-body">Every decision derivable from a token, not a file. Typography, color, spacing — all living in a structured hierarchy that designers and engineers shared.</p>
+            </div>
+            <div class="vision-card">
+              <p class="vision-card-label">Accessible by default</p>
+              <p class="vision-card-body">WCAG AA/AAA compliance baked into the token layer — not retrofitted. Every color pair, every type size validated before it ships.</p>
+            </div>
+            <div class="vision-card">
+              <p class="vision-card-label">Contributable</p>
+              <p class="vision-card-body">A system designers and engineers could participate in. Clear rules for what gets in, how, and why — so the system evolves with the product.</p>
+            </div>
+          </div>
+          <p class="slide-footnote">These three principles guided every decision in v7.</p>
+        </div>
+      </div>
+
+      <!-- ── Slide 05 · My Role ─────────────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">04 / My Role</p>
+          <h2 class="slide-heading">How I led this.</h2>
+          <div class="role-grid">
+            <div class="role-card">
+              <p class="role-card-label">Design Lead</p>
+              <p class="role-card-title">Typography · Color · Scale</p>
+              <p class="role-card-body">Owned the foundational decisions end-to-end — naming conventions, token hierarchy, spacing system. From first principles to shipped implementation.</p>
+            </div>
+            <div class="role-card">
+              <p class="role-card-label">System Architect</p>
+              <p class="role-card-title">Token structure · Naming · Themes</p>
+              <p class="role-card-body">Defined how the token layer was organized — semantic naming, multi-theme architecture, the relationship between primitive and semantic tokens.</p>
+            </div>
+            <div class="role-card">
+              <p class="role-card-label">Enablement</p>
+              <p class="role-card-title">Tooling · Contribution · Process</p>
+              <p class="role-card-body">Built tooling for the design team. Defined the contribution model — what gets in, what doesn't, and the process that made it sustainable.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Slide 06 · Typography ──────────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">05 / Typography</p>
+          <h2 class="slide-heading">A type scale built<br/>on explicit semantics.</h2>
+          <div class="type-slide-body">
+            <div class="type-scale-visual" aria-hidden="true">
+              <div class="type-row">
+                <span class="type-size-label">32</span>
+                <span class="type-sample" style="font-size:32px; line-height:40px;">Communicate clearly.</span>
+              </div>
+              <div class="type-row">
+                <span class="type-size-label">24</span>
+                <span class="type-sample" style="font-size:24px; line-height:32px;">Design at scale.</span>
+              </div>
+              <div class="type-row">
+                <span class="type-size-label">20</span>
+                <span class="type-sample" style="font-size:20px; line-height:28px;">Consistent across products.</span>
+              </div>
+              <div class="type-row">
+                <span class="type-size-label">16</span>
+                <span class="type-sample" style="font-size:16px; line-height:24px;">Every token has a purpose.</span>
+              </div>
+              <div class="type-row">
+                <span class="type-size-label">14</span>
+                <span class="type-sample" style="font-size:14px; line-height:20px;">Accessible by default, not by accident.</span>
+              </div>
+              <div class="type-row">
+                <span class="type-size-label">12</span>
+                <span class="type-sample" style="font-size:12px; line-height:16px;">Supporting text, labels, and metadata.</span>
+              </div>
+              <div class="type-row">
+                <span class="type-size-label">11</span>
+                <span class="type-sample" style="font-size:11px; line-height:16px; opacity:0.6;">Captions, timestamps, secondary information.</span>
+              </div>
+            </div>
+            <div class="type-decisions">
+              <div class="type-decision">
+                <p class="type-decision-label">Naming</p>
+                <p class="type-decision-body">Shifted from t-shirt sizing (sm/md/lg) to explicit numeric naming at v5.8.0. `dt-font-size-200` tells you the size. `dt-font-size-md` does not.</p>
+              </div>
+              <div class="type-decision">
+                <p class="type-decision-label">Line-height</p>
+                <p class="type-decision-body">All line-heights strictly adhere to 4px increments. Baseline grids stay predictable across every component, every platform.</p>
+              </div>
+              <div class="type-decision">
+                <p class="type-decision-label">Fluid scaling</p>
+                <p class="type-decision-body">Token values pair with `clamp()` in implementation — responsive by default, no breakpoint overrides needed for type size.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Slide 07 · Color ───────────────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">06 / Color</p>
+          <h2 class="slide-heading">Tokens, themes, and<br/>the accessibility floor.</h2>
+          <div class="color-slide-body">
+            <div class="color-prose-col">
+              <p class="slide-prose">The v7 color system moved from hardcoded hex values to a two-layer token architecture: primitive tokens (the raw palette) and semantic tokens (what those colors mean in context). This made multi-theme support — Dialpad Light, Dialpad Dark, T-Mobile, Expressive — a configuration, not a rewrite.</p>
+              <div class="wcag-callout">
+                <span class="wcag-badge">WCAG 2.1 AAA</span>
+                <p class="wcag-text">All Dialtone colors meet Level AAA contrast ratio (≥ 7:1). The accessibility floor is part of the token definition, not a post-hoc audit.</p>
+              </div>
+            </div>
+            <div class="color-swatches">
+              <div class="color-category">
+                <div class="swatch-row">
+                  <span class="swatch" style="background:#6c3dff;"></span>
+                  <span class="swatch" style="background:#8B5FFF;"></span>
+                  <span class="swatch" style="background:#D4BCFF;"></span>
+                  <span class="swatch" style="background:#f5f2ff;"></span>
+                </div>
+                <p class="swatch-label">Brand / Interactive</p>
+              </div>
+              <div class="color-category">
+                <div class="swatch-row">
+                  <span class="swatch" style="background:#10022C;"></span>
+                  <span class="swatch" style="background:#2D1B5A;"></span>
+                  <span class="swatch" style="background:#6B6B7B;"></span>
+                  <span class="swatch" style="background:#C8C8D4;"></span>
+                </div>
+                <p class="swatch-label">Neutral</p>
+              </div>
+              <div class="color-category">
+                <div class="swatch-row">
+                  <span class="swatch" style="background:#0A7C42;"></span>
+                  <span class="swatch" style="background:#B8470A;"></span>
+                  <span class="swatch" style="background:#C41F1F;"></span>
+                  <span class="swatch" style="background:#0057B8;"></span>
+                </div>
+                <p class="swatch-label">Semantic (success · warning · error · info)</p>
+              </div>
+              <div class="color-category">
+                <div class="swatch-row">
+                  <span class="swatch swatch--theme" style="background:#6c3dff;" title="Dialpad"></span>
+                  <span class="swatch swatch--theme" style="background:#E20074;" title="T-Mobile"></span>
+                  <span class="swatch swatch--theme" style="background:#1A1A2E;" title="Dark"></span>
+                  <span class="swatch swatch--theme" style="background:#FF6B35;" title="Expressive"></span>
+                </div>
+                <p class="swatch-label">Multi-theme support</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Slide 08 · Scale & Space ───────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">07 / Scale &amp; Space</p>
+          <h2 class="slide-heading">Everything on a 4px grid.</h2>
+          <div class="scale-slide-body">
+            <div class="spacing-ruler" aria-label="Spacing scale visual">
+              <div class="spacing-item">
+                <div class="spacing-block" style="width:4px; height:4px;"></div>
+                <span class="spacing-val">4</span>
+              </div>
+              <div class="spacing-item">
+                <div class="spacing-block" style="width:8px; height:8px;"></div>
+                <span class="spacing-val">8</span>
+              </div>
+              <div class="spacing-item">
+                <div class="spacing-block" style="width:12px; height:12px;"></div>
+                <span class="spacing-val">12</span>
+              </div>
+              <div class="spacing-item">
+                <div class="spacing-block" style="width:16px; height:16px;"></div>
+                <span class="spacing-val">16</span>
+              </div>
+              <div class="spacing-item">
+                <div class="spacing-block" style="width:20px; height:20px;"></div>
+                <span class="spacing-val">20</span>
+              </div>
+              <div class="spacing-item">
+                <div class="spacing-block" style="width:24px; height:24px;"></div>
+                <span class="spacing-val">24</span>
+              </div>
+              <div class="spacing-item">
+                <div class="spacing-block" style="width:32px; height:32px;"></div>
+                <span class="spacing-val">32</span>
+              </div>
+              <div class="spacing-item">
+                <div class="spacing-block" style="width:40px; height:40px;"></div>
+                <span class="spacing-val">40</span>
+              </div>
+              <div class="spacing-item">
+                <div class="spacing-block" style="width:48px; height:48px;"></div>
+                <span class="spacing-val">48</span>
+              </div>
+              <div class="spacing-item">
+                <div class="spacing-block" style="width:64px; height:64px;"></div>
+                <span class="spacing-val">64</span>
+              </div>
+            </div>
+            <div class="scale-decisions">
+              <div class="scale-decision">
+                <p class="scale-decision-label">Base unit: 4px</p>
+                <p class="scale-decision-body">Every spacing value in the system is a multiple of 4. Padding, margin, gap, border-radius — all derivable, all predictable.</p>
+              </div>
+              <div class="scale-decision">
+                <p class="scale-decision-label">Half-steps where needed</p>
+                <p class="scale-decision-body">2px half-steps are available for fine-grained control — icon padding, tight list spacing — without breaking the rhythm.</p>
+              </div>
+              <div class="scale-decision">
+                <p class="scale-decision-label">Line-height alignment</p>
+                <p class="scale-decision-body">Typography line-heights follow the same 4px increment rule. Text and layout share a baseline grid — components snap without hacks.</p>
+              </div>
+            </div>
+          </div>
+          <p class="slide-footnote">Predictable rhythm across 200+ components.</p>
+        </div>
+      </div>
+
+      <!-- ── Slide 09 · Designer Enablement ────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">08 / Enablement</p>
+          <h2 class="slide-heading">Making Dialtone a system<br/>you could contribute to.</h2>
+          <div class="studio-grid">
+            <div class="studio-item">
+              <div class="studio-num">01</div>
+              <div>
+                <p class="studio-title">Icon sizing tool</p>
+                <p class="studio-body">A Figma component built for the design team — lets designers output icons at multiple standardized sizes without manual resizing or guessing. One source, all variants.</p>
+              </div>
+            </div>
+            <div class="studio-item">
+              <div class="studio-num">02</div>
+              <div>
+                <p class="studio-title">Contribution types</p>
+                <p class="studio-body">Three categories: Fix (defect or docs), Enhancement (extends existing patterns), New Feature (adds net-new components). Single-use elements not accepted — Dialtone is shared infrastructure.</p>
+              </div>
+            </div>
+            <div class="studio-item">
+              <div class="studio-num">03</div>
+              <div>
+                <p class="studio-title">Review process</p>
+                <p class="studio-body">#dialtone channel discussion before work starts. Feature branches, conventional commits, squash merges into staging. No surprises at review time.</p>
+              </div>
+            </div>
+            <div class="studio-item">
+              <div class="studio-num">04</div>
+              <div>
+                <p class="studio-title">Quality bar</p>
+                <p class="studio-body">Unit tests, Storybook documentation, accessibility compliance, passing linters — all required. The bar isn't high to be gatekeeping. It's high because the system serves everyone.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Slide 10 · Evolution ───────────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">09 / Evolution</p>
+          <h2 class="slide-heading">The foundation that<br/>made v9 possible.</h2>
+          <div class="timeline">
+            <div class="timeline-phase">
+              <div class="timeline-dot"></div>
+              <div class="timeline-line"></div>
+              <p class="timeline-period">2021–2022</p>
+              <p class="timeline-phase-title">v5</p>
+              <p class="timeline-phase-body">T-shirt sizing, hardcoded values, minimal token structure. Component library growing faster than the system could support.</p>
+            </div>
+            <div class="timeline-phase">
+              <div class="timeline-dot timeline-dot--active"></div>
+              <div class="timeline-line"></div>
+              <p class="timeline-period">2022–2023</p>
+              <p class="timeline-phase-title">v7</p>
+              <p class="timeline-phase-body">Explicit numeric naming, two-layer token architecture, 4px grid, WCAG AAA compliance, contribution model. The rebuild.</p>
+            </div>
+            <div class="timeline-phase">
+              <div class="timeline-dot"></div>
+              <div class="timeline-line"></div>
+              <p class="timeline-period">2023–2024</p>
+              <p class="timeline-phase-title">v8</p>
+              <p class="timeline-phase-body">Monorepo restructure. Vue 3 migration. ESM builds with tree-shaking. The token architecture from v7 made this tractable.</p>
+            </div>
+            <div class="timeline-phase timeline-phase--last">
+              <div class="timeline-dot"></div>
+              <p class="timeline-period">2024 → Now</p>
+              <p class="timeline-phase-title">v9</p>
+              <p class="timeline-phase-body">MCP server integration, AI documentation tooling, deprecated component linting. The system evolving toward AI-native workflows.</p>
+            </div>
+          </div>
+          <blockquote class="pull-quote pull-quote--bottom">
+            "The decisions we made in v7 didn't just fix v5. They set the architectural ceiling for everything that came after."
+          </blockquote>
+        </div>
+      </div>
+
+      <!-- ── Slide 11 · Impact ──────────────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">10 / Impact</p>
+          <h2 class="slide-heading">What it changed.</h2>
+          <div class="impact-grid">
+            <div class="impact-cell">
+              <p class="impact-stat">39</p>
+              <p class="impact-label">Components Growing</p>
+              <p class="impact-desc">Core primitives showing compounding usage growth in production — dt-button, dt-input, dt-icon leading adoption</p>
+            </div>
+            <div class="impact-cell">
+              <p class="impact-stat">35%</p>
+              <p class="impact-label">Token Adoption</p>
+              <p class="impact-desc">Of the production codebase now building on Dialtone tokens — up from near zero when the rebuild began</p>
+            </div>
+            <div class="impact-cell">
+              <p class="impact-stat">↓&thinsp;1.9K</p>
+              <p class="impact-label">Lint Warnings</p>
+              <p class="impact-desc">Active Dialtone ESLint warnings — trending down each period as teams migrate off legacy patterns</p>
+            </div>
+            <div class="impact-cell">
+              <p class="impact-stat">4</p>
+              <p class="impact-label">Product Themes</p>
+              <p class="impact-desc">Dialpad Light, Dark, T-Mobile, and Expressive — all enabled by the v7 token architecture without per-theme rewrites</p>
+            </div>
+          </div>
+          <p class="slide-footnote">Ubervoice codebase · March 2026 · Dialtone KPIs Dashboard</p>
+        </div>
+      </div>
+
+      <!-- ── Slide 12 · What's Next ───────────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">11 / What's Next</p>
+          <h2 class="slide-heading">Dialtone 9.</h2>
+          <div class="whats-next-body">
+            <p class="slide-prose slide-prose--narrow">The token architecture and contribution model from v7 made Dialtone's next evolution tractable. v9 isn't just more components — it's the system adapting to how teams build AI-native products.</p>
+            <div class="whats-next-grid">
+              <div class="whats-next-card whats-next-card--featured">
+                <p class="whats-next-card-label">AI-Native Tooling</p>
+                <p class="whats-next-card-body">MCP server integration and a markdown-to-JSON documentation generator — design system context delivered directly to AI coding environments.</p>
+              </div>
+              <div class="whats-next-card">
+                <p class="whats-next-card-label">Deprecated Component Linting</p>
+                <p class="whats-next-card-body">Custom ESLint rule (`deprecated-dialtone-component`) surfaces migration paths at the point of use — automated governance at scale.</p>
+              </div>
+              <div class="whats-next-card">
+                <p class="whats-next-card-label">Rich Text Editor</p>
+                <p class="whats-next-card-body">A fully-integrated RTE component built on the system's token layer — powering AI-generated and human-authored content surfaces across Dialpad.</p>
+              </div>
+              <div class="whats-next-card">
+                <p class="whats-next-card-label">Weekly Velocity</p>
+                <p class="whats-next-card-body">v9.181.0 shipped April 24, 2026 — the system now releases on a weekly cadence, sustained by the contribution infrastructure built in v7.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Slide 12 · Reflection ──────────────────────────────── -->
+      <div class="slide">
+        <div class="slide-inner slide-inner--pad">
+          <p class="section-label">12 / Reflection</p>
+          <h2 class="slide-heading">What this work taught me.</h2>
+          <div class="reflection-body">
+            <div class="reflection-col">
+              <p class="reflection-col-label">What worked</p>
+              <ul class="reflection-list">
+                <li>Starting with naming — once the token naming convention was right, everything downstream became easier to reason about.</li>
+                <li>The contribution model as a forcing function — defining what gets in forced clearer thinking about what the system was actually for.</li>
+                <li>Accessibility as a constraint, not a phase — building WCAG compliance into the token layer meant it stopped being a separate workstream.</li>
+              </ul>
+            </div>
+            <div class="reflection-col">
+              <p class="reflection-col-label">What I'd do differently</p>
+              <ul class="reflection-list">
+                <li>Move faster on typography token migration — at 2% adoption, legacy font utilities still dominate. The architecture was right; the migration path needed more forcing functions.</li>
+                <li>Instrument adoption earlier — we measured output (tokens shipped, components documented) before we measured outcome (how teams were actually using it). The KPIs dashboard came too late.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="reflection-closing">
+            "A design system isn't a product. It's infrastructure. The measure of whether it worked is whether the teams who rely on it stopped thinking about it."
+          </p>
+        </div>
+      </div>
+
+    </div><!-- /track -->
+
+    <!-- Nav controls -->
+    <button id="btn-prev" class="nav-btn nav-btn--prev" aria-label="Previous slide">‹</button>
+    <button id="btn-next" class="nav-btn nav-btn--next" aria-label="Next slide">›</button>
+
+    <!-- Slide counter -->
+    <div id="counter" class="slide-counter">1 / 13</div>
+
+  </div><!-- /preso -->
+
+</body>
+</html>
+
+<script>
+  const TOTAL = 13;
+  const PASSWORD = 'dialtonepreso';
+  const STORAGE_KEY = 'dialtone-preso-auth';
+
+  let current = 0;
+
+  function showPreso() {
+    const gate = document.getElementById('gate')!;
+    const preso = document.getElementById('preso')!;
+    gate.style.opacity = '0';
+    gate.style.pointerEvents = 'none';
+    setTimeout(() => { gate.style.display = 'none'; }, 500);
+    preso.style.display = 'block';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        preso.style.opacity = '1';
+      });
+    });
+    document.body.style.overflow = 'hidden';
+  }
+
+  function shakeCard() {
+    const card = document.querySelector('.gate-card') as HTMLElement;
+    if (!card) return;
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+  }
+
+  function handleAuth() {
+    const input = document.getElementById('gate-input') as HTMLInputElement;
+    const errorEl = document.getElementById('gate-error')!;
+    const val = input.value.trim();
+    if (val === PASSWORD) {
+      sessionStorage.setItem(STORAGE_KEY, '1');
+      errorEl.textContent = '';
+      showPreso();
+    } else {
+      errorEl.textContent = 'Incorrect password.';
+      shakeCard();
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  function goTo(index: number) {
+    if (index < 0 || index >= TOTAL) return;
+    current = index;
+    const track = document.getElementById('track')!;
+    track.style.transform = `translateX(${-current * 100}vw)`;
+    const counter = document.getElementById('counter')!;
+    counter.textContent = `${current + 1} / ${TOTAL}`;
+    const prevBtn = document.getElementById('btn-prev') as HTMLButtonElement;
+    const nextBtn = document.getElementById('btn-next') as HTMLButtonElement;
+    prevBtn.style.opacity = current === 0 ? '0' : '1';
+    prevBtn.style.pointerEvents = current === 0 ? 'none' : 'auto';
+    nextBtn.style.opacity = current === TOTAL - 1 ? '0' : '1';
+    nextBtn.style.pointerEvents = current === TOTAL - 1 ? 'none' : 'auto';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem(STORAGE_KEY) === '1') {
+      showPreso();
+    }
+
+    const btn = document.getElementById('gate-btn')!;
+    const input = document.getElementById('gate-input') as HTMLInputElement;
+    btn.addEventListener('click', handleAuth);
+    input.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Enter') handleAuth();
+    });
+
+    document.getElementById('btn-prev')!.addEventListener('click', () => goTo(current - 1));
+    document.getElementById('btn-next')!.addEventListener('click', () => goTo(current + 1));
+
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      const preso = document.getElementById('preso')!;
+      if (preso.style.display === 'none' || preso.style.opacity === '0') return;
+      if (e.key === 'ArrowRight') goTo(current + 1);
+      if (e.key === 'ArrowLeft') goTo(current - 1);
+    });
+
+    goTo(0);
+
+    const gate = document.getElementById('gate')!;
+    if (gate.style.display !== 'none') {
+      (document.getElementById('gate-input') as HTMLInputElement).focus();
+    }
+  });
+</script>
+
+<style>
+  /* ── Reset / Base ──────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background-color: #f5f2ff;
+    font-family: "IBM Plex Serif", Georgia, serif;
+  }
+
+  /* ── Gate ─────────────────────────────────────────────── */
+  .gate {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f2ff;
+    background-image:
+      linear-gradient(rgba(16,2,44,0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(16,2,44,0.055) 1px, transparent 1px);
+    background-size: 80px 80px;
+    transition: opacity 0.4s ease;
+  }
+
+  .gate-card {
+    border-radius: 16px;
+    padding: 48px 52px;
+    max-width: 440px;
+    width: 90%;
+    background: rgba(255,255,255,0.75);
+    border: 1px solid rgba(108,61,255,0.14);
+    box-shadow: 0 4px 32px rgba(16,2,44,0.08);
+    text-align: left;
+  }
+
+  .gate-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(16,2,44,0.4);
+    margin: 0 0 20px;
+  }
+
+  .gate-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0 0 32px;
+    color: #10022C;
+  }
+
+  .gate-input-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .gate-input {
+    flex: 1;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 15px;
+    padding: 12px 16px;
+    border: 1px solid rgba(108,61,255,0.2);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.9);
+    color: #10022C;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .gate-input:focus { border-color: #6c3dff; }
+
+  .gate-input::placeholder {
+    color: rgba(16,2,44,0.3);
+    font-style: italic;
+  }
+
+  .gate-btn {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 18px;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #6c3dff;
+    color: #fff;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .gate-btn:hover { opacity: 0.8; }
+
+  .gate-error {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: #6c3dff;
+    margin: 12px 0 0;
+    min-height: 18px;
+  }
+
+  @keyframes shake {
+    0%  { transform: translateX(0); }
+    15% { transform: translateX(-8px); }
+    30% { transform: translateX(7px); }
+    45% { transform: translateX(-6px); }
+    60% { transform: translateX(5px); }
+    75% { transform: translateX(-3px); }
+    90% { transform: translateX(2px); }
+    100%{ transform: translateX(0); }
+  }
+
+  .gate-card.shake { animation: shake 0.45s ease; }
+
+  /* ── Presentation ─────────────────────────────────────── */
+  .preso {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    transition: opacity 0.5s ease;
+  }
+
+  .track {
+    display: flex;
+    width: calc(13 * 100vw);
+    height: 100vh;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  /* ── Slides ───────────────────────────────────────────── */
+  .slide {
+    min-width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #f5f2ff;
+    background-image:
+      linear-gradient(rgba(16,2,44,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(16,2,44,0.045) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  .slide-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .slide-inner--pad {
+    padding: clamp(40px, 6vw, 96px) clamp(48px, 8vw, 120px);
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* ── Shared text styles ───────────────────────────────── */
+  .section-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #6c3dff;
+    margin: 0 0 20px;
+    padding-left: 12px;
+    border-left: 2px solid #6c3dff;
+  }
+
+  .slide-heading {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(28px, 3.5vw, 52px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: #10022C;
+    margin: 0 0 36px;
+  }
+
+  .slide-prose {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(15px, 1.4vw, 20px);
+    line-height: 1.7;
+    color: rgba(16,2,44,0.75);
+    margin: 0 0 28px;
+    max-width: 860px;
+  }
+
+  .slide-footnote {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: rgba(16,2,44,0.35);
+    margin: 24px 0 0;
+    letter-spacing: 0.04em;
+  }
+
+  .slide-body {
+    display: flex;
+    gap: clamp(40px, 5vw, 80px);
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .slide-body .slide-prose {
+    flex: 1;
+    min-width: 280px;
+    margin-bottom: 0;
+  }
+
+  .pull-quote {
+    flex: 1;
+    min-width: 280px;
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(16px, 1.6vw, 22px);
+    font-style: italic;
+    line-height: 1.55;
+    color: #6c3dff;
+    margin: 0;
+    padding: 20px 0 20px 24px;
+    border-left: 2px solid #6c3dff;
+  }
+
+  .pull-quote--inline {
+    flex: none;
+    margin-top: 28px;
+    max-width: 600px;
+    font-size: clamp(14px, 1.3vw, 18px);
+  }
+
+  .pull-quote--bottom {
+    margin-top: 32px;
+    max-width: 700px;
+    font-size: clamp(14px, 1.3vw, 18px);
+  }
+
+  /* ── Slide 01 · Cover ─────────────────────────────────── */
+  .slide-cover {
+    background-color: #10022C !important;
+    background-image:
+      linear-gradient(rgba(212,188,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,188,255,0.06) 1px, transparent 1px) !important;
+  }
+
+  .cover-content {
+    max-width: 900px;
+    padding: clamp(40px, 6vw, 96px) clamp(48px, 8vw, 120px);
+  }
+
+  .cover-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(212,188,255,0.45);
+    margin: 0 0 24px;
+  }
+
+  .cover-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(72px, 12vw, 160px);
+    font-weight: 400;
+    line-height: 1;
+    color: #D4BCFF;
+    margin: 0 0 16px;
+    letter-spacing: -0.02em;
+  }
+
+  .cover-sub {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(16px, 1.8vw, 26px);
+    color: #6c3dff;
+    margin: 0 0 40px;
+    letter-spacing: 0.06em;
+  }
+
+  .cover-divider {
+    height: 1px;
+    background: rgba(212,188,255,0.15);
+    max-width: 480px;
+    margin-bottom: 20px;
+  }
+
+  .cover-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .cover-tag {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(212,188,255,0.2);
+    color: rgba(212,188,255,0.55);
+    letter-spacing: 0.04em;
+  }
+
+  .cover-byline {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1.1vw, 13px);
+    color: rgba(212,188,255,0.3);
+    margin: 0;
+    letter-spacing: 0.04em;
+  }
+
+  .nav-hint {
+    position: absolute;
+    bottom: 40px;
+    right: clamp(48px, 8vw, 120px);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: rgba(212,188,255,0.25);
+    margin: 0;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── Slide 03 · Problem ───────────────────────────────── */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .problem-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: clamp(20px, 2.5vw, 32px);
+    border: 1px solid rgba(108,61,255,0.12);
+    box-shadow: 0 2px 12px rgba(16,2,44,0.05);
+  }
+
+  .problem-card-num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: rgba(16,2,44,0.25);
+    margin: 0 0 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .problem-card-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(16px, 1.5vw, 22px);
+    font-weight: 500;
+    color: #10022C;
+    margin: 0 0 12px;
+  }
+
+  .problem-card-body {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1vw, 13px);
+    line-height: 1.65;
+    color: rgba(16,2,44,0.55);
+    margin: 0;
+  }
+
+  /* ── Slide 04 · Vision ────────────────────────────────── */
+  .vision-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .vision-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: clamp(20px, 2.5vw, 32px);
+    border: 1px solid rgba(108,61,255,0.12);
+    box-shadow: 0 2px 12px rgba(16,2,44,0.05);
+  }
+
+  .vision-card--accent {
+    background: #6c3dff;
+    border-color: #6c3dff;
+  }
+
+  .vision-card-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6c3dff;
+    margin: 0 0 12px;
+    font-weight: 500;
+  }
+
+  .vision-card--accent .vision-card-label {
+    color: rgba(212,188,255,0.75);
+  }
+
+  .vision-card-body {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1vw, 13px);
+    line-height: 1.65;
+    color: rgba(16,2,44,0.55);
+    margin: 0;
+  }
+
+  .vision-card--accent .vision-card-body {
+    color: rgba(212,188,255,0.85);
+  }
+
+  /* ── Slide 05 · Role ──────────────────────────────────── */
+  .role-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .role-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: clamp(20px, 2.5vw, 32px);
+    border: 1px solid rgba(108,61,255,0.12);
+    box-shadow: 0 2px 12px rgba(16,2,44,0.05);
+  }
+
+  .role-card-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(16,2,44,0.35);
+    margin: 0 0 8px;
+  }
+
+  .role-card-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(16px, 1.6vw, 22px);
+    font-weight: 500;
+    color: #10022C;
+    margin: 0 0 12px;
+  }
+
+  .role-card-body {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1vw, 13px);
+    line-height: 1.65;
+    color: rgba(16,2,44,0.55);
+    margin: 0;
+  }
+
+  /* ── Slide 06 · Typography ────────────────────────────── */
+  .type-slide-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 5vw, 80px);
+    align-items: start;
+  }
+
+  .type-scale-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .type-row {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+
+  .type-size-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    color: rgba(16,2,44,0.3);
+    width: 24px;
+    text-align: right;
+    flex-shrink: 0;
+    padding-top: 4px;
+  }
+
+  .type-sample {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+    font-weight: 400;
+    color: #10022C;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .type-decisions {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .type-decision {
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(108,61,255,0.1);
+  }
+
+  .type-decision:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .type-decision-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6c3dff;
+    margin: 0 0 6px;
+    font-weight: 500;
+  }
+
+  .type-decision-body {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1vw, 13px);
+    line-height: 1.65;
+    color: rgba(16,2,44,0.55);
+    margin: 0;
+  }
+
+  /* ── Slide 07 · Color ─────────────────────────────────── */
+  .color-slide-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 5vw, 80px);
+    align-items: start;
+  }
+
+  .color-prose-col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .color-prose-col .slide-prose {
+    margin-bottom: 0;
+  }
+
+  .wcag-callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 20px;
+    background: rgba(108,61,255,0.06);
+    border: 1px solid rgba(108,61,255,0.18);
+    border-radius: 8px;
+  }
+
+  .wcag-badge {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #fff;
+    background: #6c3dff;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .wcag-text {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(16,2,44,0.6);
+    margin: 0;
+  }
+
+  .color-swatches {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .color-category {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .swatch-row {
+    display: flex;
+    gap: 6px;
+  }
+
+  .swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: block;
+    border: 1px solid rgba(16,2,44,0.08);
+  }
+
+  .swatch--theme {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+  }
+
+  .swatch-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: rgba(16,2,44,0.4);
+    margin: 0;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── Slide 08 · Scale ─────────────────────────────────── */
+  .scale-slide-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 5vw, 80px);
+    align-items: start;
+    margin-bottom: 8px;
+  }
+
+  .spacing-ruler {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid rgba(108,61,255,0.12);
+  }
+
+  .spacing-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .spacing-block {
+    background: rgba(108,61,255,0.2);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .spacing-val {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    color: rgba(16,2,44,0.35);
+    letter-spacing: 0.04em;
+  }
+
+  .scale-decisions {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .scale-decision {
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(108,61,255,0.1);
+  }
+
+  .scale-decision:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .scale-decision-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6c3dff;
+    margin: 0 0 6px;
+    font-weight: 500;
+  }
+
+  .scale-decision-body {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1vw, 13px);
+    line-height: 1.65;
+    color: rgba(16,2,44,0.55);
+    margin: 0;
+  }
+
+  /* ── Slide 09 · Studio/Enablement ────────────────────── */
+  .studio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 48px;
+  }
+
+  .studio-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(108,61,255,0.1);
+  }
+
+  .studio-item:nth-child(3),
+  .studio-item:nth-child(4) {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .studio-num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: rgba(108,61,255,0.4);
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+    padding-top: 3px;
+  }
+
+  .studio-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(16px, 1.5vw, 22px);
+    font-weight: 500;
+    color: #10022C;
+    margin: 0 0 8px;
+  }
+
+  .studio-body {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1vw, 13px);
+    line-height: 1.7;
+    color: rgba(16,2,44,0.55);
+    margin: 0;
+  }
+
+  /* ── Slide 10 · Timeline ──────────────────────────────── */
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+    margin-top: 16px;
+    margin-bottom: 0;
+  }
+
+  .timeline-phase {
+    position: relative;
+    padding-right: 32px;
+  }
+
+  .timeline-phase--last { padding-right: 0; }
+
+  .timeline-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(16,2,44,0.25);
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .timeline-dot--active {
+    background: #6c3dff;
+    box-shadow: 0 0 0 3px rgba(108,61,255,0.2);
+  }
+
+  .timeline-line {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    right: 0;
+    height: 1px;
+    background: rgba(108,61,255,0.15);
+    z-index: 1;
+  }
+
+  .timeline-phase--last .timeline-line { display: none; }
+
+  .timeline-period {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: rgba(16,2,44,0.35);
+    margin: 12px 0 6px;
+    letter-spacing: 0.04em;
+  }
+
+  .timeline-phase-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(18px, 1.8vw, 26px);
+    font-weight: 500;
+    color: #10022C;
+    margin: 0 0 10px;
+  }
+
+  .timeline-phase-body {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1vw, 13px);
+    line-height: 1.65;
+    color: rgba(16,2,44,0.55);
+    margin: 0;
+  }
+
+  /* ── Slide 11 · What's Next ──────────────────────────── */
+  .whats-next-body {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .whats-next-body .slide-prose {
+    margin-bottom: 0;
+  }
+
+  .whats-next-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .whats-next-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: clamp(18px, 2vw, 28px);
+    border: 1px solid rgba(108,61,255,0.12);
+    box-shadow: 0 2px 12px rgba(16,2,44,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .whats-next-card--featured {
+    background: #6c3dff;
+    border-color: #6c3dff;
+  }
+
+  .whats-next-card-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6c3dff;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .whats-next-card--featured .whats-next-card-label {
+    color: rgba(212,188,255,0.75);
+  }
+
+  .whats-next-card-body {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1vw, 13px);
+    line-height: 1.65;
+    color: rgba(16,2,44,0.55);
+    margin: 0;
+  }
+
+  .whats-next-card--featured .whats-next-card-body {
+    color: rgba(212,188,255,0.85);
+  }
+
+  /* ── Slide 12 · Impact ────────────────────────────────── */
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    background: rgba(108,61,255,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .impact-cell {
+    background: #f5f2ff;
+    padding: clamp(20px, 2.5vw, 36px) clamp(16px, 2vw, 28px);
+  }
+
+  .impact-stat {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(28px, 3.5vw, 52px);
+    font-weight: 500;
+    color: #10022C;
+    margin: 0 0 8px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .impact-stat--placeholder {
+    opacity: 0.2;
+  }
+
+  .impact-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(16,2,44,0.4);
+    margin: 0 0 8px;
+  }
+
+  .impact-desc {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(10px, 0.9vw, 12px);
+    line-height: 1.6;
+    color: rgba(16,2,44,0.4);
+    margin: 0;
+  }
+
+  /* ── Slide 12 · Reflection ────────────────────────────── */
+  .reflection-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 5vw, 80px);
+    margin-bottom: 40px;
+  }
+
+  .reflection-col-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6c3dff;
+    margin: 0 0 16px;
+    font-weight: 500;
+  }
+
+  .reflection-list {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1vw, 13px);
+    line-height: 1.7;
+    color: rgba(16,2,44,0.6);
+    margin: 0;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .reflection-list li {
+    padding-left: 4px;
+  }
+
+  .reflection-closing {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(16px, 1.6vw, 22px);
+    font-style: italic;
+    line-height: 1.5;
+    color: rgba(16,2,44,0.6);
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 32px;
+    border-top: 1px solid rgba(108,61,255,0.12);
+  }
+
+  /* ── Nav buttons ──────────────────────────────────────── */
+  .nav-btn {
+    position: fixed;
+    bottom: 36px;
+    z-index: 50;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 28px;
+    color: #10022C;
+    background: rgba(212,188,255,0.3);
+    border: 1px solid rgba(108,61,255,0.18);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.3s ease, transform 0.15s ease;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding-bottom: 2px;
+  }
+
+  .nav-btn:hover { transform: scale(1.08); }
+
+  .nav-btn--prev { left: 36px; }
+  .nav-btn--next { right: 36px; }
+
+  /* ── Slide counter ────────────────────────────────────── */
+  .slide-counter {
+    position: fixed;
+    bottom: 44px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: rgba(16,2,44,0.3);
+    z-index: 50;
+    letter-spacing: 0.06em;
+    pointer-events: none;
+  }
+</style>
