@@ -82,7 +82,7 @@ import NowPlaying from './NowPlaying.astro';
         if (!res.ok) {
           formErrorEl.textContent = data.error ?? 'Something went wrong.';
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Send';
+          submitLabel.textContent = 'Send';
         } else {
           form.style.display = 'none';
           successEl.style.display = 'block';
