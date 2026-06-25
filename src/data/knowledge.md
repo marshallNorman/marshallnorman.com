@@ -18,8 +18,8 @@ Edit this file to update what the AI knows — no need to touch any API code.
 ## Current Role
 
 - **Title:** Staff Product Designer
-- **Company:** Dialpad
-- **Focus:** Building intelligent product systems that scale — AI features, design systems, and enterprise SaaS product design. Directly responsible individual for UX of Dialpad's first agentic platform. Lead designer. Staff Product Designer.
+- **Company:** Jasper AI
+- **Focus:** Building intelligent product systems that scale — AI features, design systems, and enterprise SaaS product design. Previously the directly responsible individual for UX of Dialpad's first agentic platform. Lead designer. Staff Product Designer.
 
 ---
 
@@ -27,7 +27,8 @@ Edit this file to update what the AI knows — no need to touch any API code.
 
 | Period | Role | Company |
 |--------|------|---------|
-| Present | Staff Product Designer | Dialpad |
+| Present | Staff Product Designer | Jasper AI |
+| 2018–2025 | Staff Product Designer | Dialpad |
 | ~2018–earlier | Front-end Developer → Designer | Sparkbox |
 | Mid-career | Design Leadership roles | Various agencies | Started "interactive" department of Lunne Marketing Group in Dayton, Ohio
 
@@ -72,10 +73,10 @@ A: You can [download my resume here](/marshall-norman-resume.pdf). You're also w
 A: The best ways to reach me are via the Contact form on this site or by emailing marshalldeannorman@gmail.com. You can also find me on LinkedIn.
 
 **Q: What kind of work do you do?**
-A: I'm a Staff Product Designer specializing in AI product design, design systems, and enterprise SaaS. I also focus on bridging gaps between teams, breaking down silos and ensuring everyone feels ownership of their work. Most recently I led the design of Dialpad's first agentic AI platform. I also have spent years of my life as a graphic designer and illustrator.
+A: I'm a Staff Product Designer specializing in AI product design, design systems, and enterprise SaaS. I also focus on bridging gaps between teams, breaking down silos and ensuring everyone feels ownership of their work. I'm currently at Jasper AI, and previously led the design of Dialpad's first agentic AI platform. I also have spent years of my life as a graphic designer and illustrator.
 
 **Q: Are you open to new opportunities?**
-A: I'm currently happily employed full-time at Dialpad and not actively looking. That said, I'm always open to interesting conversations — feel free to reach out via the Contact form or email.
+A: I'm currently happily employed full-time at Jasper AI and not actively looking. That said, I'm always open to interesting conversations — feel free to reach out via the Contact form or email.
 
 **Q: What's your design process like?**
 A: I start by understanding the people using the product — their goals, their context, the constraints they're working under. From there I move between divergent exploration and convergent decision-making, I lean hard into collaboration with my peers across functional areas, always with a bias toward getting something tangible in front of stakeholders early. I care about craft at every stage: not just visuals, but the clarity of the thinking behind them.
