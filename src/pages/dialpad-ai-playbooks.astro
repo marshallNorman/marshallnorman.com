@@ -1,0 +1,745 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+---
+
+<Layout noindex>
+  <div class="cs-topo-bg" aria-hidden="true"></div>
+  <Nav activeHref="#case-studies" anchorLinks={[
+    { label: "Overview", href: "#overview" },
+    { label: "Context", href: "#context" },
+    { label: "Creation", href: "#creation" },
+    { label: "Live Guidance", href: "#live-guidance" },
+    { label: "Design Thinking", href: "#design-thinking" },
+    { label: "Outcomes", href: "#outcomes" },
+  ]} />
+
+  <section id="overview" class="cs-hero">
+    <div class="hero-text-area">
+      <div class="hero-headline">
+        <h1 class="cs-title">Designing <em class="cs-title-accent">AI Playbooks</em><br/>for Live Sales Calls</h1>
+      </div>
+      <div class="hero-subhead">
+        <div class="hero-divider" aria-hidden="true"></div>
+        <p class="cs-subtitle">Evolving Dialpad's keyword-triggered coaching cards into an AI guide that follows the conversation. Sole designer, from how managers build a playbook to what a rep sees mid-call.</p>
+      </div>
+    </div>
+
+    <!-- Hero figure: live playbook panel beside a call transcript -->
+    <div class="hero-illustration">
+      <svg id="hero-svg" viewBox="0 0 1200 460" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="1200" height="460" rx="16" fill="#fff" fill-opacity="0.55"/>
+
+        <!-- Call transcript (left) -->
+        <text x="48" y="56" font-family="IBM Plex Mono, monospace" font-size="11" fill="#000" opacity="0.35" letter-spacing="0.1em">LIVE CALL · 04:32</text>
+        <g font-family="IBM Plex Mono, monospace" font-size="12" fill="#000">
+          <text x="48" y="100" opacity="0.35">PROSPECT</text>
+          <rect x="48" y="112" width="560" height="44" rx="8" fill="#000" fill-opacity="0.04"/>
+          <text x="66" y="139" opacity="0.6">We're trying to get this rolled out before Q3 planning.</text>
+
+          <text x="48" y="190" opacity="0.35">REP</text>
+          <rect x="48" y="202" width="560" height="44" rx="8" fill="#000" fill-opacity="0.04"/>
+          <text x="66" y="229" opacity="0.6">Got it. Who else will weigh in on the decision?</text>
+
+          <text x="48" y="280" opacity="0.35">PROSPECT</text>
+          <rect x="48" y="292" width="560" height="44" rx="8" fill="#000" fill-opacity="0.04"/>
+          <text x="66" y="319" opacity="0.6">Our VP of Sales signs off, and IT reviews security.</text>
+        </g>
+
+        <!-- Playbook panel (right) -->
+        <rect x="700" y="36" width="452" height="388" rx="12" fill="#fff" stroke="#000" stroke-opacity="0.1"/>
+        <text x="728" y="72" font-family="IBM Plex Mono, monospace" font-size="11" fill="#000" opacity="0.35" letter-spacing="0.1em">PLAYBOOK · BANT</text>
+        <text x="728" y="104" font-family="IBM Plex Serif, Georgia, serif" font-size="20" fill="#000" opacity="0.85">Discovery call</text>
+        <rect x="728" y="120" width="396" height="4" rx="2" fill="#000" fill-opacity="0.06"/>
+        <rect class="hero-progress" x="728" y="120" width="198" height="4" rx="2" fill="#EC4D26"/>
+
+        <g font-family="IBM Plex Mono, monospace" font-size="13" fill="#000">
+          <!-- Budget: done -->
+          <g class="hero-item" style="--d: 0ms">
+            <circle cx="740" cy="164" r="10" fill="#EC4D26"/>
+            <path d="M735 164 l3.5 3.5 l6.5 -7" stroke="#fff" stroke-width="2" fill="none"/>
+            <text x="762" y="169" opacity="0.8">Budget</text>
+            <text x="1124" y="169" font-size="10" opacity="0.35" text-anchor="end">DETECTED</text>
+          </g>
+          <!-- Timing: done -->
+          <g class="hero-item" style="--d: 300ms">
+            <circle cx="740" cy="214" r="10" fill="#EC4D26"/>
+            <path d="M735 214 l3.5 3.5 l6.5 -7" stroke="#fff" stroke-width="2" fill="none"/>
+            <text x="762" y="219" opacity="0.8">Timing</text>
+            <text x="1124" y="219" font-size="10" opacity="0.35" text-anchor="end">DETECTED</text>
+          </g>
+          <!-- Authority: in progress -->
+          <g class="hero-item" style="--d: 600ms">
+            <circle cx="740" cy="264" r="10" fill="none" stroke="#EC4D26" stroke-width="1.5"/>
+            <text x="762" y="269" opacity="0.8">Authority</text>
+            <text x="1124" y="269" font-size="10" fill="#EC4D26" text-anchor="end">LISTENING</text>
+            <text x="762" y="292" font-size="11" opacity="0.45">Ask: Who signs off on this purchase?</text>
+          </g>
+          <!-- Need: not started -->
+          <g class="hero-item" style="--d: 900ms">
+            <circle cx="740" cy="334" r="10" fill="none" stroke="#000" stroke-opacity="0.2" stroke-width="1.5"/>
+            <text x="762" y="339" opacity="0.45">Need</text>
+          </g>
+        </g>
+        <text x="728" y="396" font-family="IBM Plex Mono, monospace" font-size="10" fill="#000" opacity="0.3">Tap any item to mark it covered</text>
+      </svg>
+    </div>
+  </section>
+
+  <div class="cs-page">
+    <!-- 01 — Context -->
+    <section id="context" class="cs-section">
+      <p class="section-label">Section 01 — Context</p>
+      <div class="cs-section-grid">
+        <div>
+          <h2 class="cs-heading">Coaching that only heard keywords</h2>
+        </div>
+        <div>
+          <p class="cs-intro">Dialpad already gave agents live guidance through AI Live Coach Cards. An admin wrote each card by hand, picked the words that would trigger it, and assigned it to a team. When someone on the call said "pricing" or named a competitor, the card popped up in the agent's sidebar.</p>
+          <p class="cs-intro">It worked for reference material, but it was a manual system. Cards only knew the phrases someone thought to list, fired once per call, and couldn't tell a rep what they hadn't covered yet. Sales teams needed something smarter and more flexible: guidance that followed the shape of a whole conversation. I was the sole designer on the product that became AI Playbooks.</p>
+        </div>
+      </div>
+
+      <!-- Fig. 01: Live Coach Cards vs. Playbooks -->
+      <div style="margin-top: 64px;">
+        <svg class="cs-fig" viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="800" height="320" fill="#f1ede6"/>
+
+          <!-- Left: Live Coach Cards -->
+          <text x="40" y="44" font-family="IBM Plex Mono, monospace" font-size="9" fill="#000" opacity="0.3" letter-spacing="0.1em">BEFORE · LIVE COACH CARDS</text>
+          <rect x="40" y="68" width="120" height="36" rx="4" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="3 4" opacity="0.35"/>
+          <text x="100" y="90" font-family="IBM Plex Mono, monospace" font-size="10" fill="#000" opacity="0.5" text-anchor="middle">"pricing"</text>
+          <line x1="160" y1="86" x2="220" y2="86" stroke="#000" stroke-width="1" opacity="0.2"/>
+          <rect x="220" y="62" width="140" height="48" rx="4" fill="none" stroke="#000" stroke-width="1" opacity="0.35"/>
+          <text x="290" y="82" font-family="IBM Plex Mono, monospace" font-size="10" fill="#000" opacity="0.55" text-anchor="middle">Pricing card</text>
+          <text x="290" y="98" font-family="IBM Plex Mono, monospace" font-size="8" fill="#000" opacity="0.3" text-anchor="middle">pops up once</text>
+
+          <rect x="40" y="136" width="120" height="36" rx="4" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="3 4" opacity="0.35"/>
+          <text x="100" y="158" font-family="IBM Plex Mono, monospace" font-size="10" fill="#000" opacity="0.5" text-anchor="middle">"Competitor X"</text>
+          <line x1="160" y1="154" x2="220" y2="154" stroke="#000" stroke-width="1" opacity="0.2"/>
+          <rect x="220" y="130" width="140" height="48" rx="4" fill="none" stroke="#000" stroke-width="1" opacity="0.35"/>
+          <text x="290" y="150" font-family="IBM Plex Mono, monospace" font-size="10" fill="#000" opacity="0.55" text-anchor="middle">Battlecard</text>
+          <text x="290" y="166" font-family="IBM Plex Mono, monospace" font-size="8" fill="#000" opacity="0.3" text-anchor="middle">pops up once</text>
+
+          <rect x="40" y="204" width="120" height="36" rx="4" fill="none" stroke="#000" stroke-width="1" stroke-dasharray="3 4" opacity="0.2"/>
+          <text x="100" y="226" font-family="IBM Plex Mono, monospace" font-size="10" fill="#000" opacity="0.3" text-anchor="middle">"who decides?"</text>
+          <text x="290" y="226" font-family="IBM Plex Mono, monospace" font-size="9" fill="#000" opacity="0.3" text-anchor="middle">no keyword, no card</text>
+
+          <!-- Divider -->
+          <line x1="400" y1="40" x2="400" y2="270" stroke="#000" stroke-width="1" opacity="0.1"/>
+
+          <!-- Right: Playbooks -->
+          <text x="440" y="44" font-family="IBM Plex Mono, monospace" font-size="9" fill="#000" opacity="0.3" letter-spacing="0.1em">AFTER · AI PLAYBOOKS</text>
+          <rect x="440" y="62" width="320" height="178" rx="6" fill="none" stroke="#000" stroke-width="1.5" opacity="0.4"/>
+          <text x="460" y="86" font-family="IBM Plex Mono, monospace" font-size="10" fill="#000" opacity="0.6">Whole conversation → methodology</text>
+          <g font-family="IBM Plex Mono, monospace" font-size="10" fill="#000">
+            <circle cx="466" cy="116" r="6" fill="#EC4D26"/>
+            <text x="482" y="120" opacity="0.55">Budget</text>
+            <text x="740" y="120" font-size="8" opacity="0.3" text-anchor="end">covered</text>
+            <circle cx="466" cy="146" r="6" fill="#EC4D26"/>
+            <text x="482" y="150" opacity="0.55">Timing</text>
+            <text x="740" y="150" font-size="8" opacity="0.3" text-anchor="end">covered</text>
+            <circle cx="466" cy="176" r="6" fill="none" stroke="#EC4D26" stroke-width="1.2"/>
+            <text x="482" y="180" opacity="0.55">Authority</text>
+            <text x="740" y="180" font-size="8" fill="#EC4D26" text-anchor="end">suggest a question</text>
+            <circle cx="466" cy="206" r="6" fill="none" stroke="#000" stroke-opacity="0.25" stroke-width="1.2"/>
+            <text x="482" y="210" opacity="0.35">Need</text>
+            <text x="740" y="210" font-size="8" opacity="0.3" text-anchor="end">still to cover</text>
+          </g>
+
+          <text x="40" y="304" font-family="IBM Plex Mono, monospace" font-size="9" fill="#000" opacity="0.25" letter-spacing="0.06em">FIG. 01 — FROM KEYWORD TRIGGERS TO CONVERSATION-AWARE GUIDANCE</text>
+        </svg>
+        <p class="cs-fig-caption">Fig. 01 — Live Coach Cards reacted to exact phrases. Playbooks track what a methodology needs from the whole conversation, including what hasn't been covered yet.</p>
+      </div>
+    </section>
+
+    <!-- 02 — Creation -->
+    <section id="creation" class="cs-section">
+      <p class="section-label">Section 02 — Creation</p>
+      <h2 class="cs-heading">Letting managers describe intent, not keywords</h2>
+
+      <div class="cs-prose" style="margin-top: 40px; max-width: 800px;">
+        <p>The creation experience was the heart of the product. With coaching cards, a manager had to predict the exact words a prospect might say. With Playbooks, a manager describes what a good call should uncover, and the AI listens for it.</p>
+        <p>I designed the flow around the way sales teams already think. Most teams follow an established methodology, so a manager can start from a template for BANT, SPIN, MEDDIC, CHALLENGER or SPICED, or build a custom playbook from scratch. Each playbook is a short list of topics, and each topic has three parts: a title the rep sees, a plain-language definition of the information the AI should listen for, and the questions a rep can ask to get there.</p>
+        <p>Constraints kept playbooks usable on a live call. A playbook holds up to ten topics, and titles and definitions have tight length limits, so the list fits in a sidebar and each definition stays specific enough for the AI to detect reliably. Once a playbook is published, it's archived rather than edited, so scores from different weeks always measure the same thing.</p>
+      </div>
+
+      <!-- Fig. 02: Creation flow -->
+      <div style="margin-top: 48px;">
+        <svg class="cs-fig" viewBox="0 0 800 340" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="800" height="340" fill="#f1ede6"/>
+          <g font-family="IBM Plex Mono, monospace" fill="#000">
+            <!-- Step 1 -->
+            <rect x="40" y="48" width="150" height="64" rx="4" fill="none" stroke="#000" stroke-width="1" opacity="0.35"/>
+            <text x="115" y="74" font-size="10" opacity="0.6" text-anchor="middle">Start from</text>
+            <text x="115" y="90" font-size="10" opacity="0.6" text-anchor="middle">a methodology</text>
+            <text x="115" y="136" font-size="8" opacity="0.3" text-anchor="middle">BANT · SPIN · MEDDIC</text>
+            <text x="115" y="150" font-size="8" opacity="0.3" text-anchor="middle">CHALLENGER · SPICED</text>
+            <text x="115" y="164" font-size="8" opacity="0.3" text-anchor="middle">or custom</text>
+            <line x1="190" y1="80" x2="240" y2="80" stroke="#000" stroke-width="1" opacity="0.2"/>
+
+            <!-- Step 2: topic anatomy -->
+            <rect x="240" y="36" width="300" height="200" rx="6" fill="none" stroke="#000" stroke-width="1.5" opacity="0.45"/>
+            <text x="260" y="60" font-size="9" opacity="0.35" letter-spacing="0.1em">TOPIC · 1 OF UP TO 10</text>
+            <text x="260" y="90" font-size="8" opacity="0.3">TITLE</text>
+            <text x="260" y="106" font-size="11" opacity="0.7">Authority</text>
+            <text x="260" y="136" font-size="8" opacity="0.3">DEFINITION · WHAT TO LISTEN FOR</text>
+            <text x="260" y="152" font-size="10" opacity="0.55">Who makes or approves the</text>
+            <text x="260" y="166" font-size="10" opacity="0.55">purchase decision</text>
+            <text x="260" y="196" font-size="8" opacity="0.3">QUESTIONS FOR THE REP</text>
+            <text x="260" y="212" font-size="10" opacity="0.55">"Who signs off on this?"</text>
+            <line x1="540" y1="80" x2="590" y2="80" stroke="#000" stroke-width="1" opacity="0.2"/>
+
+            <!-- Step 3 -->
+            <rect x="590" y="48" width="170" height="64" rx="4" fill="none" stroke="#000" stroke-width="1" opacity="0.35"/>
+            <text x="675" y="74" font-size="10" opacity="0.6" text-anchor="middle">Publish + assign</text>
+            <text x="675" y="90" font-size="10" opacity="0.6" text-anchor="middle">a default</text>
+            <text x="675" y="136" font-size="8" opacity="0.3" text-anchor="middle">reps can switch</text>
+            <text x="675" y="150" font-size="8" opacity="0.3" text-anchor="middle">playbooks mid-call</text>
+          </g>
+          <text x="40" y="320" font-family="IBM Plex Mono, monospace" font-size="9" fill="#000" opacity="0.25" letter-spacing="0.06em">FIG. 02 — PLAYBOOK CREATION: METHODOLOGY → TOPICS → PUBLISH</text>
+        </svg>
+        <p class="cs-fig-caption">Fig. 02 — A topic is the unit of a playbook: what the rep sees, what the AI listens for, and how the rep can get there.</p>
+      </div>
+
+      <div class="cs-pull-quote">
+        <blockquote>Managers stopped guessing what customers would say and started describing what a good call should uncover.</blockquote>
+      </div>
+    </section>
+
+    <!-- 03 — Live guidance -->
+    <section id="live-guidance" class="cs-section">
+      <p class="section-label">Section 03 — Live Guidance</p>
+      <h2 class="cs-heading" style="max-width: 720px;">A guide that keeps pace without taking over</h2>
+
+      <div class="cs-prose" style="margin-top: 40px; max-width: 800px;">
+        <p>The agent-facing UI had one job: help a rep run a better call while they're in the middle of it. A rep on a live call has very little attention to spare, so the playbook sits in the right-hand panel as a simple checklist, not a stream of pop-ups.</p>
+        <p>As the conversation moves, the AI recognizes when a topic has been covered and checks it off in near real time. Anything still open stays visible with a suggested question, so the rep can see at a glance what's left. Reps stay in control: they can mark an item covered themselves when the AI misses it, and switch playbooks if the call turns out to be a different kind of conversation.</p>
+        <p>After the call, the same checklist becomes the scorecard. Each covered topic links to the transcript moment that satisfied it, which gives managers evidence they can coach from instead of a bare number.</p>
+      </div>
+
+      <!-- Fig. 03: Topic states -->
+      <div style="margin-top: 48px;">
+        <svg class="cs-fig" viewBox="0 0 800 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="800" height="260" fill="#f1ede6"/>
+          <g font-family="IBM Plex Mono, monospace" fill="#000">
+            <!-- Not yet covered -->
+            <rect x="40" y="48" width="220" height="140" rx="6" fill="none" stroke="#000" stroke-width="1" opacity="0.3"/>
+            <circle cx="66" cy="80" r="9" fill="none" stroke="#000" stroke-opacity="0.3" stroke-width="1.5"/>
+            <text x="86" y="84" font-size="11" opacity="0.55">Not yet covered</text>
+            <text x="60" y="118" font-size="9" opacity="0.4">Suggested question shows</text>
+            <text x="60" y="132" font-size="9" opacity="0.4">so the rep knows what</text>
+            <text x="60" y="146" font-size="9" opacity="0.4">to ask next</text>
+
+            <!-- Detected -->
+            <rect x="290" y="48" width="220" height="140" rx="6" fill="none" stroke="#000" stroke-width="1.5" opacity="0.45"/>
+            <circle cx="316" cy="80" r="9" fill="#EC4D26"/>
+            <path d="M311.5 80 l3 3 l6 -6.5" stroke="#fff" stroke-width="1.8" fill="none"/>
+            <text x="336" y="84" font-size="11" opacity="0.7">Detected by AI</text>
+            <text x="310" y="118" font-size="9" opacity="0.4">Checked off automatically,</text>
+            <text x="310" y="132" font-size="9" opacity="0.4">linked to the transcript</text>
+            <text x="310" y="146" font-size="9" opacity="0.4">moment as evidence</text>
+
+            <!-- Verified -->
+            <rect x="540" y="48" width="220" height="140" rx="6" fill="none" stroke="#000" stroke-width="1" opacity="0.3"/>
+            <circle cx="566" cy="80" r="9" fill="#000" fill-opacity="0.7"/>
+            <path d="M561.5 80 l3 3 l6 -6.5" stroke="#fff" stroke-width="1.8" fill="none"/>
+            <text x="586" y="84" font-size="11" opacity="0.6">Verified by rep</text>
+            <text x="560" y="118" font-size="9" opacity="0.4">Rep marks it covered when</text>
+            <text x="560" y="132" font-size="9" opacity="0.4">the AI misses it, during the</text>
+            <text x="560" y="146" font-size="9" opacity="0.4">call or wrap-up</text>
+          </g>
+          <text x="40" y="240" font-family="IBM Plex Mono, monospace" font-size="9" fill="#000" opacity="0.25" letter-spacing="0.06em">FIG. 03 — TOPIC STATES IN THE LIVE AGENT PANEL</text>
+        </svg>
+        <p class="cs-fig-caption">Fig. 03 — Three states a rep can read at a glance. The AI does the tracking, and the rep can always correct it.</p>
+      </div>
+    </section>
+
+    <!-- 04 — Design Thinking -->
+    <section id="design-thinking" class="cs-section">
+      <p class="section-label">Section 04 — Design Thinking</p>
+
+      <h2 class="cs-statement">Guidance should follow the conversation, not interrupt it.</h2>
+
+      <div class="cs-two-col">
+        <div class="cs-prose">
+          <p>Coaching cards reacted to words. Playbooks understand progress. That shift let the product move from interrupting reps with pop-ups to quietly showing them where they are in the call and what's left to do.</p>
+        </div>
+        <div class="cs-prose">
+          <p>It also changed the manager's role. Instead of maintaining a growing list of trigger phrases, managers encode how their team sells once, and every call reflects it. The rep gets help in the moment, and the coach gets evidence afterward, from the same playbook.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 — Outcomes -->
+    <section id="outcomes" class="cs-section">
+      <p class="section-label">Section 05 — Outcomes</p>
+      <h2 class="cs-heading">What the work produced</h2>
+
+      <div class="cs-outcomes-grid">
+        <div class="cs-outcome-cell">
+          <p class="cs-outcome-stat">Solo</p>
+          <p class="cs-outcome-label">Design</p>
+          <p class="cs-outcome-desc">Sole designer across the creation flow, the live agent UI and the post-call experience</p>
+        </div>
+        <div class="cs-outcome-cell">
+          <p class="cs-outcome-stat">5</p>
+          <p class="cs-outcome-label">Methodologies</p>
+          <p class="cs-outcome-desc">Templates for BANT, SPIN, MEDDIC, CHALLENGER and SPICED, plus fully custom playbooks</p>
+        </div>
+        <div class="cs-outcome-cell">
+          <p class="cs-outcome-stat">Live</p>
+          <p class="cs-outcome-label">+ Post-call</p>
+          <p class="cs-outcome-desc">One playbook guides the rep during the call and becomes the manager's scorecard after it</p>
+        </div>
+        <div class="cs-outcome-cell">
+          <p class="cs-outcome-stat">Adopted</p>
+          <p class="cs-outcome-label">Widely</p>
+          <p class="cs-outcome-desc">Widely adopted by Dialpad customers as the evolution of Live Coach Cards</p>
+        </div>
+      </div>
+
+      <p class="cs-footnote">Selected work. Certain product details omitted to protect confidential information. Full walkthrough available on request.</p>
+    </section>
+
+  </div>
+</Layout>
+
+<script>
+  function placeBreadcrumbs() {
+    const page = document.querySelector('.cs-page') as HTMLElement | null;
+    if (!page) return;
+
+    document.querySelectorAll('.cs-breadcrumb').forEach(el => el.remove());
+
+    const pageTop = page.getBoundingClientRect().top + window.scrollY;
+    const totalHeight = page.scrollHeight;
+    const start = 600;
+    const interval = 1200;
+
+    for (let top = start; top < totalHeight; top += interval) {
+      const el = document.createElement('p');
+      el.className = 'cs-breadcrumb';
+      el.innerHTML = '<a href="/#case-studies" class="cs-breadcrumb-link">Case Studies</a> / Designing AI Playbooks';
+      el.style.top = `${pageTop + top}px`;
+      document.body.appendChild(el);
+    }
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    placeBreadcrumbs();
+    document.fonts?.ready.then(placeBreadcrumbs);
+  });
+
+  // Replay the hero checklist animation on each visit
+  function setupHeroAnim() {
+    const svg = document.getElementById('hero-svg');
+    if (!svg) return;
+    svg.classList.remove('anim-ready');
+    requestAnimationFrame(() => svg.classList.add('anim-ready'));
+  }
+  document.addEventListener('astro:page-load', setupHeroAnim);
+</script>
+
+<style>
+  /* ── Page-level theme overrides ─────────────────────────── */
+  :global(body) {
+    background-color: #f1ede6;
+  }
+
+  .cs-topo-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-image: url('/images/case-study-dialpad.svg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Page shell ─────────────────────────────────────────── */
+  .cs-page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 40px 0;
+    box-sizing: border-box;
+    position: relative;
+    overflow-x: clip;
+    z-index: 1;
+  }
+
+  :global(.cs-breadcrumb) {
+    position: absolute;
+    left: 12px;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: #000;
+    opacity: 0.4;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  :global(.cs-breadcrumb a) {
+    color: inherit;
+    text-decoration: none;
+    pointer-events: auto;
+  }
+
+  :global(.cs-breadcrumb a:hover) {
+    text-decoration: underline;
+  }
+
+
+  /* ── Hero ────────────────────────────────── */
+  .cs-hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    position: relative;
+    z-index: 1;
+  }
+
+  :global(html) {
+    scroll-snap-type: none !important;
+  }
+
+  /* ── Text area — centered column, top padding places title just above viewport center ── */
+  .hero-text-area {
+    flex: none;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: clamp(80px, 38vh, 340px) 40px 48px;
+    box-sizing: border-box;
+  }
+
+  .cs-title {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(40px, 6vw, 88px);
+    font-weight: 400;
+    line-height: 1.15;
+    margin: 0;
+  }
+
+  .cs-title-accent {
+    color: #EC4D26;
+    font-style: italic;
+  }
+
+  .hero-subhead {
+    padding-top: 40px;
+    padding-left: 40%;
+  }
+
+  .hero-divider {
+    height: 1px;
+    background: rgba(0,0,0,0.12);
+    margin-bottom: 10px;
+  }
+
+  .cs-subtitle {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(11px, 1.1vw, 15px);
+    line-height: 1.75;
+    opacity: 0.6;
+    margin: 0;
+  }
+
+  /* ── Illustration — natural height below text, full bleed ── */
+  .hero-illustration {
+    flex: none;
+    padding: 0 24px 48px;
+  }
+
+  .hero-illustration :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* ── Content sections ───────────────────────────────────── */
+  .cs-section {
+    padding-top: 96px;
+    padding-bottom: 96px;
+    position: relative;
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.4;
+    margin: 0 0 20px 0;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(0,0,0,0.35);
+  }
+
+  /* ── Section grid (01 context: 55/45 split) ─────────────── */
+  .cs-section-grid {
+    display: grid;
+    grid-template-columns: 55fr 45fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  /* ── Headings ───────────────────────────────────────────── */
+  .cs-heading {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 400;
+    line-height: 1.05;
+    margin: 0;
+  }
+
+  /* ── Large typographic statement (section 04) ───────────── */
+  .cs-statement {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(40px, 6vw, 88px);
+    font-weight: 400;
+    line-height: 1.05;
+    margin: 0 0 0 -4px;
+    max-width: 14ch;
+  }
+
+  /* ── Intro text ─────────────────────────────────────────── */
+  .cs-intro {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-size: clamp(17px, 1.6vw, 22px);
+    line-height: 1.65;
+    opacity: 0.8;
+    margin: 0 0 1em;
+  }
+
+  /* ── Prose ──────────────────────────────────────────────── */
+  .cs-prose p {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 14px;
+    line-height: 1.8;
+    opacity: 0.7;
+    margin: 0 0 1em;
+  }
+
+  .cs-prose p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Pull quote ─────────────────────────────────────────── */
+  .cs-pull-quote {
+    margin: 72px 0;
+    border-top: 1px solid rgba(0,0,0,0.12);
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+    padding: 40px 0;
+  }
+
+  .cs-pull-quote blockquote {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-style: italic;
+    font-size: clamp(24px, 2.8vw, 40px);
+    line-height: 1.3;
+    margin: 0;
+    max-width: 900px;
+  }
+
+  /* ── Watermark stat (section 03) ────────────────────────── */
+  .cs-stat-breakout {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(80px, 12vw, 160px);
+    line-height: 1;
+    position: absolute;
+    right: 0;
+    top: 96px;
+    opacity: 0.12;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* ── Two-column prose (section 04) ─────────────────────── */
+  .cs-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin-top: 32px;
+  }
+
+  /* ── Image blocks ───────────────────────────────────────── */
+  .cs-fig {
+    width: 100%;
+    display: block;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  .cs-fig--dark {
+    border-radius: 4px;
+  }
+
+  /* Full viewport bleed for dark canvas (section 03) */
+  .cs-fig-bleed {
+    margin-left: calc(-40px);
+    width: calc(100% + 80px);
+  }
+
+  .cs-image-caption,
+  .cs-fig-caption {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #000;
+    opacity: 0.4;
+    margin-top: 12px;
+    margin-bottom: 0;
+  }
+
+  /* ── Outcomes grid ──────────────────────────────────────── */
+  .cs-outcomes-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(0,0,0,0.1);
+    margin: 48px 0;
+  }
+
+  .cs-outcome-cell {
+    background: #f1ede6;
+    padding: 40px 28px;
+  }
+
+  .cs-outcome-stat {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+    line-height: 1;
+  }
+
+  .cs-outcome-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.4;
+    margin: 0 0 12px;
+  }
+
+  .cs-outcome-desc {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    opacity: 0.65;
+    margin: 0;
+  }
+
+  /* ── Footnote ───────────────────────────────────────────── */
+  .cs-footnote {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    opacity: 0.45;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding-top: 32px;
+    margin-top: 64px;
+    margin-bottom: 0;
+  }
+
+  /* ── Hero checklist animation ───────────────────────────── */
+  .hero-item {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  .hero-progress {
+    transform-origin: 728px 122px;
+    transform: scaleX(0);
+  }
+  :global(.anim-ready) .hero-item {
+    animation: hero-item-in 500ms ease forwards;
+    animation-delay: calc(var(--d) + 200ms);
+  }
+  :global(.anim-ready) .hero-progress {
+    animation: hero-progress-in 900ms ease 700ms forwards;
+  }
+  @keyframes hero-item-in {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes hero-progress-in {
+    to { transform: scaleX(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-item, .hero-progress { opacity: 1; transform: none; animation: none !important; }
+  }
+
+  /* ── Mobile ─────────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    /* Page shell */
+    .cs-page {
+      padding: 0 20px 0;
+    }
+    :global(.cs-breadcrumb) { display: none; }
+
+    /* Hero */
+    .cs-hero { min-height: 0; }
+    .hero-text-area { padding: 80px 20px 32px 20px; }
+    .cs-title { font-size: 28px; }
+    .hero-subhead { padding-left: 0; padding-top: 20px; }
+    .hero-illustration {
+      padding: 0 12px 32px;
+    }
+
+    /* Sections & body */
+    .cs-section { padding: 48px 20px 48px 20px; }
+    .section-body {
+      padding-left: 0;
+      max-width: 100%;
+    }
+
+    /* Typography */
+    .cs-prose p { font-size: 14px; }
+    .cs-questions li { font-size: 17px; padding: 14px 0 14px 28px; }
+    .cs-questions li::before { top: 16px; }
+    .cs-subheading { font-size: 19px; margin: 24px 0 12px; }
+    .cs-callout { font-size: 19px; line-height: 1.5; }
+
+    /* Callout & image blocks — full bleed to screen edges */
+    .cs-callout {
+      margin: 28px -20px;
+      width: calc(100% + 40px);
+      padding: 28px 20px;
+    }
+    .cs-image-block {
+      margin: 28px -20px;
+      width: calc(100% + 40px);
+    }
+    .cs-image-caption { padding-left: 20px; }
+    .cs-image-block--bleed {
+      margin-left: -20px;
+      width: calc(100% + 40px);
+    }
+
+    /* Phase 2 split: collapse, hide decorative stat */
+    .cs-split { display: block; }
+    .cs-split-stat { display: none; }
+
+    /* All multi-column layouts → single column */
+    .cs-section-grid { grid-template-columns: 1fr; gap: 24px; }
+    .cs-two-col { grid-template-columns: 1fr; gap: 32px; }
+    .cs-outcomes-grid { grid-template-columns: 1fr; }
+
+    /* Outcomes stat grid: shrink numbers */
+    .cs-stat-value { font-size: 40px; }
+  }
+</style>
