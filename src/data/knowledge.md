@@ -27,10 +27,21 @@ Edit this file to update what the AI knows — no need to touch any API code.
 
 | Period | Role | Company |
 |--------|------|---------|
-| Present | Staff Product Designer | Jasper AI |
-| 2018–2025 | Staff Product Designer | Dialpad |
-| ~2018–earlier | Front-end Developer → Designer | Sparkbox |
-| Mid-career | Design Leadership roles | Various agencies | Started "interactive" department of Lunne Marketing Group in Dayton, Ohio
+| 2026–present | Staff Product Designer | Jasper AI |
+| 2021–2026 | Staff Product Designer | Dialpad |
+| 2019–2021 | Senior Product Designer | MarketMuse |
+| 2017–2019 | Design Team Lead | The Scenery |
+| 2014–2017 | Front-End Designer | Sparkbox |
+| 2011–2014 | Senior Interactive Designer | LMG (Lunne Marketing Group) — started the "interactive" department in Dayton, Ohio |
+
+## Education
+
+- Associates Degree of Applied Science — The Modern College of Design (2008)
+- Associates Degree in Visual Communication — Sinclair Community College (2004)
+
+## Summary
+
+Designer from Dayton, Ohio with over 12 years of experience specializing in design systems, human-centered product design, AI systems design, and being a full-stack product design partner. Does his best work as a cross-disciplinary partner in product ideation, design, and execution — knowing the ins and outs of a product to make informed decisions while collaborating and bringing people together.
 
 ---
 
