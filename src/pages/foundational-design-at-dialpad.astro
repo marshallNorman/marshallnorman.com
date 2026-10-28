@@ -1,0 +1,408 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+---
+
+<Layout>
+  <link slot="head" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&family=Roboto+Serif:ital,opsz,wght@0,8..144,400;1,8..144,400&family=Work+Sans:wght@400&display=swap" rel="stylesheet" />
+
+  <Nav activeHref="#case-studies" anchorLinks={[
+    { label: "Intro", href: "#intro" },
+    { label: "Inheriting", href: "#inheriting" },
+    { label: "Adoption", href: "#adoption" },
+    { label: "The AI Shift", href: "#ai-shift" },
+  ]} />
+
+  <div class="fd-page">
+    <main class="fd-col">
+      <header class="fd-hero">
+        <div class="fd-title">
+          <img class="fd-hero-art" src="/images/foundational-design/hero-box.svg" width="278" height="185" alt="" aria-hidden="true" />
+          <h1>Foundational design<br /><em>at</em> Dialpad</h1>
+        </div>
+        <p class="fd-helper">Tearing down and building up design foundations at Dialpad</p>
+      </header>
+
+      <section id="intro" class="fd-thesis">
+        <p class="fd-label">Thesis</p>
+        <p>Foundational design isn’t just about the artifacts found in a design system. It’s about the culture, methods, and processes built around the system. How information is brought to the team at large, and how people on the team are able to interact with and contribute to that system.</p>
+      </section>
+
+      <section id="inheriting">
+        <div class="fd-sec-head">
+          <p class="fd-label">01</p>
+          <h2>Inheriting a half built system</h2>
+        </div>
+        <div class="fd-sec-body">
+          <p>When I began at Dialpad I was excited to know they had a design system in place that I would get to work with. Dialtone v5 had been in service for a couple years, but it did not take long to find that while it was a functional system, it was quite underdeveloped, undervalued, and underused.</p>
+          <p>Dialtone 5 had been developed with care, but it was missing the support it needed to grow and thrive within the organization. There were a handful of colors with 24 variables of each, a large batch of recommended text sizes and weights, but nothing had any semantic meaning attached to it. Designers and engineers had to remember that the “brand” blue was “blue-400” rather than a color scoped to something like “brand-blue.” A tale as old as modern design systems, but we keep hearing it.</p>
+          <p>So, we had the raw materials, but they needed time and attention to be shaped into something useful.</p>
+
+          <aside class="fd-pull" aria-hidden="true">A strong foundation is more flexible than a system that has many options but is under-considered.</aside>
+          <h3>Principles gained from practice</h3>
+          <p>During my time as Design Lead at The Scenery, I was lucky enough to work with the team to produce a boiler-plate design system that we called Ether. Ether was the culmination of all of our learning from building design systems for various customers. It describes the principles that still guide my decision making today: a strong foundation is more flexible than a system that has many options but is under-considered.</p>
+
+          <h3>The Dialtone saga</h3>
+          <p>As I mentioned above, when I inherited Dialtone it was a robust, but underdeveloped system. Robust in the sense that—if you needed something, it was probably in there. Underdeveloped in the sense that—if you need something, good luck finding it.</p>
+          <p>I worked directly with the VP of Design, Austen Ezzell, and the Director of Product Design, Joshua Hynes, to rebuild Dialtone from the ground up. I was tasked with the lion’s share of the work, and worked with Austen and Josh to gain approval and work through challenges. I was able to sell them on the idea of a smaller, more well defined system that would allow us to scale and grow as the business moved forward.</p>
+          <p>I won’t go through all the details and decisions that we made along the way like which font stack to use, which icon set to start with, etc. I think the more interesting story lies in the friction we encountered along the way.</p>
+
+          <h4>The (healthy) friction</h4>
+          <p>From my seat at the time as a senior designer I came to the table with the principles I had developed through building Ether solidly at the center of my arguments. We needed fewer options across the board. Fewer font styles, fewer spacing tokens, fewer colors. This raised some concern with my colleagues but in the end we landed in the middle—but a little bit more on my side. For example, I wanted only seven variants of each color in the design system, others wanted something closer to 16, we landed on 10 variants to start.</p>
+          <p>While I felt that my arguments were all solid, they were used against me when it came to discussing iconography. We started out with Feather Icons as a base for the library. Feather is nice because it gives you lots of knobs to pull to customize the icons before implementing. However, I wanted to take the system a step further and add variants for each icon depending on size. For example, delete/trashcan icon would have only 2 detail lines at its smallest size, but 3 at larger sizes.</p>
+          <p>After much debate I had to concede that this would create too much design overhead, because for each new icon that we created (which would end up being a lot) we would have to consider, and perhaps create multiple versions. This works well in smaller, more focused design systems, but for what we needed at Dialpad, it would likely not be sustainable.</p>
+
+          <h3>Where we landed</h3>
+          <p>After a few months we felt Dialtone v7 was ready to go.</p>
+          <aside class="fd-note" aria-hidden="true"><span>Colors</span> 24 → 10 <span>Type sizes</span> 36 → 7</aside>
+          <p>We had cut the number of color variants from 24 down to 10, font sizes from 36 down to 7 (with weight and line height options), added a spacing system, and we had attached semantic rules to everything. This was a big step up and we felt confident that we had assembled a lean system that had everything it needed to grow with the design culture and the company.</p>
+      
+        </div>
+      </section>
+
+      <section id="adoption">
+        <div class="fd-sec-head">
+          <p class="fd-label">02</p>
+          <h2>Adoption, the true test of a design system</h2>
+        </div>
+        <div class="fd-sec-body">
+          <aside class="fd-pull" aria-hidden="true">A system will only be as good as the way it reaches people.</aside>
+          <p>We had done the work. The new design system was ready to start making its way into the product. In my experience this is often the biggest hurdle for a design system. A system will only be as good as the way it reaches people.</p>
+          <p>I had 3 audiences that I needed to convince that the new system was good and usable, something to be excited about. First were my co-conspirators, this job was done. Austen and Josh were fully on board.</p>
+          <p>Second was the design team. Designers were an easy sell, and here’s why. Designers had to only turn Dialtone v6 on in their Figma libraries to gain access, there was plenty of documentation baked into the Figma files, and more engineering minded designers had full access to the design system site, and storybook. This ease of access would make you think that adoption would be quick, but often that’s not the case.</p>
+          <p>I’ve found that the best way to get people involved is to give them some sort of responsibility and agency inside of a system. So first I introduced the new system to the design team, and rather than showing every knob and lever they could pull, I spent more time showing them how they could contribute and help grow the system. Second, I encouraged designers to create notes in their design documents connecting the design directly to components in the system. This would not only help designers learn about the system themselves, but it would help us educate the third audience about it.</p>
+          <p>Finally and perhaps the hardest, most important audience were the engineers. I was ready to have to march up and down the street waving the Dialtone flag in order to get our engineering team on board, because in past roles it had been an uphill battle getting engineering to adopt new design systems. However, the engineers at Dialpad were very happy to pick up Dialtone 6 and start running with it. Makes my story kind of boring, but hey, not everything has to be a battle.</p>
+      
+        </div>
+      </section>
+
+      <section id="ai-shift">
+        <div class="fd-sec-head">
+          <p class="fd-label">03</p>
+          <h2>The AI paradigm shift</h2>
+        </div>
+        <div class="fd-sec-body">
+          <p>For a good while the system was cruising along on its own. Contributions were being made at a decent pace, new icons were being designed, we were finding gaps and opportunities to grow the system. Then the AI floodgates opened and Dialpad rushed to adopt and adapt to new ways of thinking and working in this space.</p>
+          <p>I was tasked with leading design for Dialpad’s AI adoption over the course of two large scale initiatives. First was what leadership called “12 Months of AI” in which Dialpad would release an AI based feature every month for a year. 4 of those features were customer facing and required UX/UI work. Second was building the foundation for Dialpad’s agentic platform which I go into detail about <a href="/case-studies/dialpad-ai-platform">here</a>.</p>
+          <p>I was excited. Not only to work and learn in this new space, but also to stress test the design systems work we had done against a flood of new patterns and interactions.</p>
+          <p>As we got into the experience design I began to uncover the big questions:</p>
+          <ul>
+            <li>How do we let a user know that AI is actively doing something that they asked for?</li>
+            <li>How do we let a user know that AI is actively doing something in the background?</li>
+            <li>How do we let a user know that whatever artifact they are looking at was generated by AI?</li>
+            <li>When do we codify these things?</li>
+          </ul>
+          <aside class="fd-pull" aria-hidden="true">The signals would be loud while AI was actively working, then fade, leaving something quiet behind.</aside>
+          <p>The first real debate was about volume. Executive leadership wanted the AI signals to be loud. AI was a big bet for the company, and they wanted customers to notice it. My instinct went the other way. I wanted the activity to be as transparent as possible without getting in the user's way, because a signal that shouts on every screen quickly becomes noise. After a lot of back and forth, we stopped arguing about how loud and started asking when. The signals would be loud while AI was actively working, then fade, leaving something quiet behind to mark what had been generated.</p>
+          <p>As we iterated on the experience and UI, patterns naturally began to emerge. Dialpad already had a history of using a gradient as a graphic element, so we created versions of the gradient to represent AI. While this may not be revolutionary to the industry, it stood out in the context of our design language. Interactive elements which emerged from generative AI got a nice gradient border with extra border radius applied. A line of micro text which read “Generated by DiapladGPT*” was appended to chunks of generated content like call summaries. An animated gradient field was used to represent active AI work.</p>
+          <p>I also took the opportunity to begin layering motion into our design language, which was also new to Dialpad. Sliding cards, popping bubbles, animated checkmarks, etc. All of these things needed to be recorded, codified, and distributed to the larger team. With the work that we had done to build a strong foundation for Dialtone, this proved not to be too big of a challenge and we were able to scale the system quite gracefully.</p>
+
+          <aside class="fd-pull" aria-hidden="true">Lay the foundation, then make room for other smart folks to grow it.</aside>
+          <h3>Payoff</h3>
+          <p>When I picked up Dialtone, it had 24 variants of every color and very little meaning attached to any of them. If you needed something, it was probably in there. Good luck finding it.</p>
+          <p>What I took away from Dialpad is that flexibility doesn't come from having every option. It comes from a lean foundation with solid principles, and from a team willing to give a little on the details so those principles can hold. I gave up a few of my own ideas along the way, and the system was better for it.</p>
+          <p>That foundation paid off. When the AI floodgates opened, we didn't have to tear anything down. We built on what was already there. And because designers had a real way to contribute, the system kept growing without me having to push it. Dialtone had stopped being my system and became the team's.</p>
+          <p>That's the work I love most. Lay the foundation, then make room for other smart folks to grow it.</p>
+      
+        </div>
+      </section>
+    </main>
+  </div>
+
+</Layout>
+
+
+<style>
+  /* Footer (Contact) sits outside .fd-page and inherits the body background */
+  :global(body) {
+    background-color: #f4f2ff;
+  }
+
+  .fd-page {
+    --col: min(1080px, 100vw - 48px);
+    --accent: #8674ea;
+    --grid-line: #dcd5f5;
+    --h1: clamp(44px, 5.33vw, 92px);
+    --body: clamp(19px, 1.85vw, 32px);
+
+    position: relative;
+    min-height: 100vh;
+    overflow-x: clip;
+    background: #f4f2ff;
+    color: #000;
+    font-family: "Roboto Serif", Georgia, serif;
+  }
+
+  /* Column guide lines */
+  .fd-page::before,
+  .fd-page::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--grid-line);
+    pointer-events: none;
+  }
+  .fd-page::before { left: calc(50% - var(--col) / 2); }
+  .fd-page::after { left: calc(50% + var(--col) / 2); }
+
+  .fd-col {
+    position: relative;
+    z-index: 1;
+    width: var(--col);
+    margin-inline: auto;
+    padding-bottom: 160px;
+  }
+
+  /* ── Hero ── */
+  .fd-hero {
+    padding-top: clamp(140px, 14vw, 240px);
+  }
+
+  .fd-title {
+    position: relative;
+    font-size: var(--h1);
+  }
+
+  /* Sits in the left margin, right edge on the column line */
+  .fd-hero-art {
+    position: absolute;
+    right: 100%;
+    top: -0.42em;
+    width: min(278px, (100vw - var(--col)) / 2 - 24px);
+    height: auto;
+  }
+
+  .fd-title h1 {
+    margin: 0;
+    padding-left: 32px;
+    font-size: 1em;
+    font-weight: 400;
+    line-height: 1.17;
+  }
+
+  .fd-title em {
+    font-size: 0.826em;
+    font-style: italic;
+    text-transform: lowercase;
+    color: var(--accent);
+  }
+
+  /* Breaks out past the right column line */
+  .fd-helper {
+    margin: calc(var(--h1) * -0.25) 0 0 58.7%;
+    width: 749px;
+    max-width: calc(50vw - var(--col) * 0.087 - 24px);
+    font-family: "Work Sans", system-ui, sans-serif;
+    font-size: clamp(22px, 2.31vw, 40px);
+    line-height: 1.17;
+    color: var(--accent);
+  }
+
+  /* ── Sections ── */
+  section {
+    margin-top: clamp(96px, 8vw, 160px);
+    scroll-margin-top: 120px;
+  }
+
+  .fd-thesis {
+    margin-top: clamp(96px, 9.7vw, 168px);
+  }
+
+  .fd-label {
+    margin: 0 0 12px;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: clamp(14px, 1.27vw, 22px);
+    line-height: 1.2;
+    color: var(--accent);
+  }
+
+  h2,
+  h3,
+  h4 {
+    max-width: 926px;
+    font-weight: 400;
+  }
+
+  h2 {
+    margin: 0 0 0.6em;
+    font-size: clamp(32px, 3.24vw, 56px);
+    line-height: 1.15;
+  }
+
+  h3 {
+    margin: 1.6em 0 0.5em;
+    font-size: clamp(26px, 2.31vw, 40px);
+    line-height: 1.2;
+  }
+
+  h4 {
+    margin: 1.6em 0 0.5em;
+    font-size: clamp(22px, 1.62vw, 28px);
+    line-height: 1.3;
+  }
+
+  section p:not(.fd-label),
+  section ul {
+    max-width: 680px;
+    font-size: 16px;
+    line-height: 28px;
+  }
+
+  .fd-thesis p:not(.fd-label) {
+    max-width: none;
+    font-size: var(--body);
+    line-height: 1.75;
+  }
+
+  section p:not(.fd-label) {
+    margin: 0 0 1em;
+  }
+
+  section ul {
+    margin: 0 0 1em;
+    padding-left: 1.25em;
+    list-style: disc;
+  }
+
+  section li {
+    margin-bottom: 0.4em;
+  }
+
+  section a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  /* Margin too narrow for the illustration: bring it into the column */
+  @media (max-width: 1399px) {
+    .fd-hero-art {
+      position: static;
+      display: block;
+      width: clamp(120px, 14vw, 200px);
+      margin: 0 0 0.3em 32px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .fd-hero-art { margin-left: 0; }
+    .fd-title h1 { padding-left: 0; }
+    .fd-helper {
+      margin: 0.75em 0 0;
+      width: auto;
+      max-width: none;
+    }
+  }
+  /* ── Pull quotes and notes ── */
+  .fd-pull {
+    font-family: "Roboto Serif", Georgia, serif;
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .fd-note {
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--accent);
+  }
+
+  .fd-note span {
+    display: block;
+    margin-top: 0.5em;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #000;
+    opacity: 0.45;
+  }
+
+  .fd-note span:first-child {
+    margin-top: 0;
+  }
+
+  /* ── Chapters: tall openers, body alternates sides ── */
+  .fd-page .fd-sec-head {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: min(60vh, 640px);
+    margin-bottom: 64px;
+    border-bottom: 1px solid var(--grid-line);
+    padding-bottom: 32px;
+  }
+
+  .fd-page .fd-sec-head .fd-label {
+    font-family: "Roboto Serif", Georgia, serif;
+    font-size: clamp(64px, 8vw, 140px);
+    line-height: 1;
+  }
+
+  .fd-page h2 {
+    margin: 0;
+    font-size: clamp(36px, 4.2vw, 72px);
+    line-height: 1.08;
+  }
+
+  .fd-page .fd-sec-body > :not(.fd-pull, .fd-note) {
+    max-width: 640px;
+  }
+
+  .fd-page .fd-pull {
+    display: block;
+    float: right;
+    clear: right;
+    width: min(340px, var(--col) - 640px - 64px);
+    margin: 8px 0 32px;
+    font-size: clamp(22px, 1.9vw, 30px);
+    line-height: 1.3;
+  }
+
+  .fd-page .fd-note {
+    display: block;
+    float: right;
+    clear: right;
+    width: min(340px, var(--col) - 640px - 64px);
+    margin: 8px 0 32px;
+  }
+
+  /* Even chapters mirror: body against the right line, asides on the left */
+  .fd-page #adoption .fd-sec-head {
+    text-align: right;
+  }
+
+  .fd-page #adoption .fd-sec-body > :not(.fd-pull, .fd-note) {
+    margin-left: auto;
+  }
+
+  .fd-page #adoption .fd-pull {
+    float: left;
+    clear: left;
+    text-align: right;
+  }
+
+  .fd-page .fd-sec-body::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+
+  @media (max-width: 900px) {
+    .fd-page .fd-sec-body > :is(.fd-pull, .fd-note),
+    .fd-page #adoption .fd-pull {
+      float: none;
+      width: auto;
+      text-align: left;
+    }
+
+    .fd-page .fd-sec-head {
+      min-height: 40vh;
+    }
+
+    .fd-page #adoption .fd-sec-head {
+      text-align: left;
+    }
+  }
+</style>
