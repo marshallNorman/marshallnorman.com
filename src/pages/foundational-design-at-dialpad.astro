@@ -4,6 +4,7 @@ import Nav from '../components/Nav.astro';
 ---
 
 <Layout>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
   <link slot="head" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&family=Roboto+Serif:ital,opsz,wght@0,8..144,400;1,8..144,400&family=Work+Sans:wght@400&display=swap" rel="stylesheet" />
 
   <Nav activeHref="#case-studies" anchorLinks={[
