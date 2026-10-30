@@ -15,6 +15,11 @@
   --glass-border: rgba(255, 255, 255, 0.6);
   --glass-specular: inset 0 1px 1px rgba(255, 255, 255, 0.9), 0 2px 10px rgba(0, 0, 0, 0.07);
   --glass-backdrop: blur(14px) saturate(180%);
+
+  /* Lavender page-bottom fade with a grain overlay (behind the contact form on
+     the showcase and foundational design pages) */
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --lavender-fade: linear-gradient(to bottom, #f4f2ff 0%, #e6e0fd 45%, #b8a8f0 100%);
 }
 
 /* ── Liquid glass utility ────────────────────── */

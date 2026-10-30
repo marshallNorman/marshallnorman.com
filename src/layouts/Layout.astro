@@ -54,6 +54,7 @@ import Analytics from '@vercel/analytics/astro';
 	body {
 		margin: 0;
 		height: 100%;
-		background-color: #f9f9f9;
+		/* Pages can override with :global(:root) { --page-bg: ... } */
+		background-color: var(--page-bg, #f9f9f9);
 	}
 </style>

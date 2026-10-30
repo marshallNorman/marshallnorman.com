@@ -100,8 +100,15 @@ const items = [
 
 <style>
   /* Footer (Contact) inherits the body background */
-  :global(body) {
-    background-color: #f4f2ff;
+  :global(:root) {
+    --page-bg: #f4f2ff;
+  }
+
+  /* Lavender fades deeper toward the bottom of the page, behind the form,
+     with a grain overlay (tokens in src/styles/global.css) */
+  :global(#contact) {
+    background-image: var(--noise), var(--lavender-fade);
+    background-blend-mode: soft-light, normal;
   }
 
   .sc-page {
