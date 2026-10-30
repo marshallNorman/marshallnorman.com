@@ -6,7 +6,8 @@
 //   bun --env-file=.env.local scripts/upload-showcase-prototypes.mjs ~/agentic-studio-demo/design-studio [--only <path substring>]
 
 import { readdir, readFile } from 'node:fs/promises';
-import { join, relative, extname } from 'node:path';
+import { join, relative, extname, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { put } from '@vercel/blob';
 
 const root = process.argv[2];
@@ -53,6 +54,14 @@ const PATCHES = [
   ['X.$router.push(u.value.to)', 'window.location.assign("/showcase")'],
 ];
 
+// Showcase-only scripts (scripts/showcase-overrides/), uploaded next to the
+// mirror and loaded from its index.html
+const OVERRIDES_DIR = join(dirname(fileURLToPath(import.meta.url)), 'showcase-overrides');
+const OVERRIDES_PREFIX = 'showcase-overrides';
+const HTML_PATCHES = [
+  ['</body>', `  <script type="module" src="${TO_BASE}${OVERRIDES_PREFIX}/playbook-controls.js"></script>\n  </body>`],
+];
+
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
   const files = await Promise.all(
@@ -61,22 +70,25 @@ async function walk(dir) {
   return files.flat();
 }
 
-const files = (await walk(root)).filter(
-  (f) => !f.endsWith('.DS_Store') && (!only || relative(root, f).includes(only)),
-);
+// [local file, blob pathname]
+const files = [
+  ...(await walk(root)).map((f) => [f, relative(root, f)]),
+  ...(await walk(OVERRIDES_DIR)).map((f) => [f, `${OVERRIDES_PREFIX}/${relative(OVERRIDES_DIR, f)}`]),
+].filter(([f, path]) => !f.endsWith('.DS_Store') && (!only || path.includes(only)));
 let done = 0;
 
-async function upload(file) {
+async function upload([file, path]) {
   const ext = extname(file).toLowerCase();
   let body = await readFile(file);
   if (TEXT.has(ext)) {
     body = body.toString('utf8').replaceAll(FROM_BASE, TO_BASE);
     for (const [from, to] of PATCHES) body = body.replaceAll(from, to);
+    if (path === 'index.html') for (const [from, to] of HTML_PATCHES) body = body.replace(from, to);
   }
   // Blob rejects empty bodies; the mirror has an empty stylesheet
   if (body.length === 0) body = '\n';
 
-  await put(`prototypes/${relative(root, file)}`, body, {
+  await put(`prototypes/${path}`, body, {
     access: 'private',
     addRandomSuffix: false,
     allowOverwrite: true,

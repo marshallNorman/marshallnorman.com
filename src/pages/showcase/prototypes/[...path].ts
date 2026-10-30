@@ -20,6 +20,9 @@ export const GET: APIRoute = async ({ params, cookies, redirect }) => {
     access: 'private',
     storeId: serverEnv('BLOB_STORE_ID'),
     oidcToken: process.env.VERCEL_OIDC_TOKEN ? undefined : serverEnv('VERCEL_OIDC_TOKEN'),
+    // index.html and showcase overrides are small and change on re-upload;
+    // skip Blob's CDN cache so updates show up immediately
+    useCache: path.startsWith('assets/'),
   }).catch(() => null);
 
   if (!result || result.statusCode !== 200) {
