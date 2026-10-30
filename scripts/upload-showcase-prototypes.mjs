@@ -60,7 +60,8 @@ const PATCHES = [
     '{class:"lead-details-header flex-grow",importance:"clear",onClick:p=>i(g.name)}',
     '{class:"lead-details-header flex-grow",importance:"clear",tabindex:-1}',
   ],
-  // DPM Notifications column label
+  // DPM Notifications title (header bar) and column label
+  ['title:"DPM Notifications"', 'title:"Dialpad Notification System"'],
   ['"All notifications"', '"Notification stack simulation"'],
 ];
 
