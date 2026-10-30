@@ -5,7 +5,7 @@ import Nav from '../components/Nav.astro';
 
 <Layout>
   <meta slot="head" name="robots" content="noindex, nofollow" />
-  <link slot="head" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&family=Roboto+Serif:ital,opsz,wght@0,8..144,400;1,8..144,400&family=Work+Sans:wght@400&display=swap" rel="stylesheet" />
+  <link slot="head" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&family=Roboto+Serif:ital,opsz,wght@0,8..144,400;1,8..144,400&display=swap" rel="stylesheet" />
 
   <Nav activeHref="#case-studies" anchorLinks={[
     { label: "Intro", href: "#intro" },
@@ -166,18 +166,17 @@ import Nav from '../components/Nav.astro';
     font-size: var(--h1);
   }
 
-  /* Sits in the left margin, right edge on the column line */
+  /* Sits in the left margin, 32px outside the column line */
   .fd-hero-art {
     position: absolute;
-    right: 100%;
+    right: calc(100% + 32px);
     top: -0.42em;
-    width: min(278px, (100vw - var(--col)) / 2 - 24px);
+    width: min(278px, (100vw - var(--col)) / 2 - 56px);
     height: auto;
   }
 
   .fd-title h1 {
     margin: 0;
-    padding-left: 32px;
     font-size: 1em;
     font-weight: 400;
     line-height: 1.17;
@@ -195,7 +194,7 @@ import Nav from '../components/Nav.astro';
     margin: calc(var(--h1) * -0.25) 0 0 58.7%;
     width: 749px;
     max-width: calc(50vw - var(--col) * 0.087 - 24px);
-    font-family: "Work Sans", system-ui, sans-serif;
+    font-family: "Roboto Mono", ui-monospace, monospace;
     font-size: clamp(22px, 2.31vw, 40px);
     line-height: 1.17;
     color: var(--accent);
@@ -283,13 +282,11 @@ import Nav from '../components/Nav.astro';
       position: static;
       display: block;
       width: clamp(120px, 14vw, 200px);
-      margin: 0 0 0.3em 32px;
+      margin: 0 0 0.3em;
     }
   }
 
   @media (max-width: 900px) {
-    .fd-hero-art { margin-left: 0; }
-    .fd-title h1 { padding-left: 0; }
     .fd-helper {
       margin: 0.75em 0 0;
       width: auto;

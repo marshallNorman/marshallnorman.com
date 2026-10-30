@@ -49,6 +49,7 @@ const items = [
     description: "How I rebuilt Dialtone, Dialpad's design system, around a lean foundation, and how it held up through the company's shift to AI.",
     href: '/foundational-design-at-dialpad',
     newTab: true,
+    wip: true,
   },
 ];
 ---
@@ -72,7 +73,10 @@ const items = [
                 target={item.newTab ? '_blank' : undefined}
                 rel={item.newTab ? 'noopener' : undefined}
               >
-                <span class="sc-card-type">{item.type}</span>
+                <span class="sc-card-type">
+                  {item.type}
+                  {item.wip && <span class="sc-card-wip">Work in progress</span>}
+                </span>
                 <span class="sc-card-title">{item.title}</span>
                 <span class="sc-card-desc">{item.description}</span>
                 <span class="sc-card-arrow" aria-hidden="true">{item.newTab ? '↗' : '→'}</span>
@@ -126,6 +130,21 @@ const items = [
 
   .sc-label {
     margin: 0 0 12px;
+  }
+
+  .sc-card-type {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sc-card-wip {
+    padding: 2px 8px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 11px;
+    color: #000;
+    opacity: 0.6;
   }
 
   h1 {

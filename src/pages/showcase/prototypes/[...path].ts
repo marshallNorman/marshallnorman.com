@@ -29,10 +29,9 @@ export const GET: APIRoute = async ({ params, cookies, redirect }) => {
   return new Response(result.stream, {
     headers: {
       'Content-Type': result.blob.contentType,
-      // Asset filenames are content-hashed
-      'Cache-Control': path.startsWith('assets/')
-        ? 'private, max-age=31536000, immutable'
-        : 'private, no-cache',
+      // Asset filenames are hashed, but the upload script patches some of
+      // them in place, so cache for a day rather than forever
+      'Cache-Control': path.startsWith('assets/') ? 'private, max-age=86400' : 'private, no-cache',
       'X-Robots-Tag': 'noindex, nofollow',
     },
   });

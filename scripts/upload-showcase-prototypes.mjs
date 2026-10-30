@@ -3,13 +3,15 @@
 // backs /showcase/prototypes. Safe to re-run after refreshing the mirror.
 //
 // Usage (credentials from `vercel env pull .env.local`):
-//   bun --env-file=.env.local scripts/upload-showcase-prototypes.mjs ~/agentic-studio-demo/design-studio
+//   bun --env-file=.env.local scripts/upload-showcase-prototypes.mjs ~/agentic-studio-demo/design-studio [--only <path substring>]
 
 import { readdir, readFile } from 'node:fs/promises';
 import { join, relative, extname } from 'node:path';
 import { put } from '@vercel/blob';
 
 const root = process.argv[2];
+const onlyIdx = process.argv.indexOf('--only');
+const only = onlyIdx > -1 ? process.argv[onlyIdx + 1] : null;
 // The SDK reads BLOB_READ_WRITE_TOKEN, or VERCEL_OIDC_TOKEN + BLOB_STORE_ID, from the env
 const hasCreds = process.env.BLOB_READ_WRITE_TOKEN || (process.env.VERCEL_OIDC_TOKEN && process.env.BLOB_STORE_ID);
 if (!root || !hasCreds) {
@@ -44,6 +46,13 @@ const TEXT = new Set(['.html', '.js', '.mjs', '.css']);
 const FROM_BASE = '/design-studio/';
 const TO_BASE = '/showcase/prototypes/';
 
+// The prototype header's back button returns to /showcase instead of the
+// Design Studio home
+const PATCHES = [
+  ['{to:"/",label:"Prototypes"}', '{to:"/",label:"Showcase"}'],
+  ['X.$router.push(u.value.to)', 'window.location.assign("/showcase")'],
+];
+
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
   const files = await Promise.all(
@@ -52,13 +61,18 @@ async function walk(dir) {
   return files.flat();
 }
 
-const files = (await walk(root)).filter((f) => !f.endsWith('.DS_Store'));
+const files = (await walk(root)).filter(
+  (f) => !f.endsWith('.DS_Store') && (!only || relative(root, f).includes(only)),
+);
 let done = 0;
 
 async function upload(file) {
   const ext = extname(file).toLowerCase();
   let body = await readFile(file);
-  if (TEXT.has(ext)) body = body.toString('utf8').replaceAll(FROM_BASE, TO_BASE);
+  if (TEXT.has(ext)) {
+    body = body.toString('utf8').replaceAll(FROM_BASE, TO_BASE);
+    for (const [from, to] of PATCHES) body = body.replaceAll(from, to);
+  }
   // Blob rejects empty bodies; the mirror has an empty stylesheet
   if (body.length === 0) body = '\n';
 
