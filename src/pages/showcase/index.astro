@@ -1,0 +1,235 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { checkPassword, isAuthed, isConfigured, setAuthCookie } from '../../lib/showcase-auth';
+
+export const prerender = false;
+
+let error = '';
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const password = String(form.get('password') ?? '');
+  if (checkPassword(password)) {
+    setAuthCookie(Astro.cookies);
+    return Astro.redirect('/showcase', 303);
+  }
+  error = isConfigured() ? 'Incorrect password.' : "Showcase isn't configured.";
+}
+
+const authed = isAuthed(Astro.cookies);
+
+const items = [
+  {
+    type: 'Prototype',
+    title: 'Agentic Studio: Visual Builder',
+    description: 'Interactive prototype of a visual builder for composing AI agent workflows on a canvas.',
+    href: '/showcase/prototypes/#/AgenticStudioE2eDemo',
+  },
+  {
+    type: 'Prototype',
+    title: 'Playbook',
+    description: 'When AI detects a Playbook topic during a live call, the item checks itself off with an animation and a summary of the discussion.',
+    href: '/showcase/prototypes/#/Playbook',
+  },
+  {
+    type: 'Prototype',
+    title: 'DPM Notifications',
+    description: 'A notification system prototype with adjustable timeouts, hover interactions and real-time alerts.',
+    href: '/showcase/prototypes/#/DpmNotifications',
+  },
+  {
+    type: 'Case study',
+    title: "Designing Dialpad's Agentic AI Platform",
+    description: 'Defined a unified agent model that moved beyond reactive feature shipping — aligning product, engineering, and leadership around a coherent AI vision.',
+    href: '/case-studies/dialpad-ai-platform',
+    newTab: true,
+  },
+  {
+    type: 'Case study',
+    title: 'Foundational design at Dialpad',
+    description: "How I rebuilt Dialtone, Dialpad's design system, around a lean foundation, and how it held up through the company's shift to AI.",
+    href: '/foundational-design-at-dialpad',
+    newTab: true,
+  },
+];
+---
+
+<Layout>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+  <link slot="head" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&family=Roboto+Serif:ital,opsz,wght@0,8..144,400;1,8..144,400&display=swap" rel="stylesheet" />
+
+  <main class="sc-page">
+    <div class="sc-col">
+      <p class="sc-label">Showcase</p>
+      <h1>Selected work</h1>
+
+      {authed ? (
+        <ul class="sc-cards">
+          {items.map((item) => (
+            <li>
+              <a
+                class="sc-card"
+                href={item.href}
+                target={item.newTab ? '_blank' : undefined}
+                rel={item.newTab ? 'noopener' : undefined}
+              >
+                <span class="sc-card-type">{item.type}</span>
+                <span class="sc-card-title">{item.title}</span>
+                <span class="sc-card-desc">{item.description}</span>
+                <span class="sc-card-arrow" aria-hidden="true">{item.newTab ? '↗' : '→'}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <form class="sc-form" method="post">
+          <label for="sc-password">Password</label>
+          <div class="sc-form-row">
+            <input id="sc-password" name="password" type="password" autocomplete="current-password" required autofocus />
+            <button type="submit">Enter</button>
+          </div>
+          {error && <p class="sc-error" role="alert">{error}</p>}
+        </form>
+      )}
+    </div>
+  </main>
+</Layout>
+
+<style>
+  /* Footer (Contact) inherits the body background */
+  :global(body) {
+    background-color: #f4f2ff;
+  }
+
+  .sc-page {
+    --accent: #8674ea;
+    --line: #dcd5f5;
+
+    min-height: 100vh;
+    background: #f4f2ff;
+    color: #000;
+    font-family: "Roboto Serif", Georgia, serif;
+  }
+
+  .sc-col {
+    width: min(680px, 100vw - 48px);
+    margin-inline: auto;
+    padding: clamp(96px, 12vw, 180px) 0 120px;
+  }
+
+  .sc-label,
+  .sc-card-type,
+  .sc-form label {
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 13px;
+    color: var(--accent);
+  }
+
+  .sc-label {
+    margin: 0 0 12px;
+  }
+
+  h1 {
+    margin: 0 0 48px;
+    font-size: clamp(40px, 5vw, 64px);
+    font-weight: 400;
+    line-height: 1.1;
+  }
+
+  .sc-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sc-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px 56px 24px 24px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .sc-card:hover,
+  .sc-card:focus-visible {
+    border-color: var(--accent);
+  }
+
+  .sc-card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .sc-card-title {
+    font-size: 24px;
+    line-height: 1.25;
+  }
+
+  .sc-card-desc {
+    font-size: 16px;
+    line-height: 26px;
+    opacity: 0.75;
+  }
+
+  .sc-card-arrow {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    font-size: 20px;
+    color: var(--accent);
+  }
+
+  .sc-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 420px;
+  }
+
+  .sc-form-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .sc-form input {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    font: inherit;
+    font-size: 16px;
+  }
+
+  .sc-form input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  .sc-form button {
+    padding: 12px 20px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .sc-error {
+    margin: 4px 0 0;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 13px;
+    color: #c0392b;
+  }
+</style>
