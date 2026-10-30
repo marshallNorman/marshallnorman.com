@@ -2,8 +2,7 @@
 // pin the prototype's settings (normally in the hidden settings drawer) as an
 // always-visible "Controls" card in the top right, below the floating header.
 // Uses Dialtone classes from the app's own stylesheet so it matches the
-// drawer card. The header's settings (sliders) button is hidden on this route
-// since the card replaces the drawer.
+// drawer card.
 //
 // Imports the same state module the Playbook prototype uses, so the buttons
 // drive the prototype exactly like the drawer's buttons do. The hashed filename
@@ -50,16 +49,10 @@ function buildCard() {
 
 const card = buildCard();
 
-const hideSettingsButton = document.createElement('style');
-hideSettingsButton.textContent = '.d-btn--icon-only:has(.d-icon--sliders-horizontal) { display: none !important; }';
-
 function sync() {
   const onPlaybook = /^#\/Playbook(?:[/?]|$)/.test(location.hash);
-  if (onPlaybook && !card.isConnected) document.body.append(card, hideSettingsButton);
-  else if (!onPlaybook && card.isConnected) {
-    card.remove();
-    hideSettingsButton.remove();
-  }
+  if (onPlaybook && !card.isConnected) document.body.append(card);
+  else if (!onPlaybook && card.isConnected) card.remove();
 }
 
 window.addEventListener('hashchange', sync);

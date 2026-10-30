@@ -64,7 +64,13 @@ const HTML_PATCHES = [
     `<link rel="icon" href="${TO_BASE}favicon.png">`,
     '<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=4">\n    <link rel="icon" href="/favicon.ico">',
   ],
-  ['</body>', `  <script type="module" src="${TO_BASE}${OVERRIDES_PREFIX}/playbook-controls.js"></script>\n  </body>`],
+  [
+    '</body>',
+    '  ' +
+    ['showcase-chrome.js', 'playbook-controls.js']
+      .map((f) => `<script type="module" src="${TO_BASE}${OVERRIDES_PREFIX}/${f}"></script>`)
+      .join('\n    ') + '\n  </body>',
+  ],
 ];
 
 async function walk(dir) {
