@@ -47,11 +47,21 @@ const TEXT = new Set(['.html', '.js', '.mjs', '.css']);
 const FROM_BASE = '/design-studio/';
 const TO_BASE = '/showcase/prototypes/';
 
-// The prototype header's back button returns to /showcase instead of the
-// Design Studio home
+// Each "from" string occurs once in the mirror
 const PATCHES = [
+  // The prototype header's back button returns to /showcase instead of the
+  // Design Studio home
   ['{to:"/",label:"Prototypes"}', '{to:"/",label:"Showcase"}'],
   ['X.$router.push(u.value.to)', 'window.location.assign("/showcase")'],
+  // Settings sidebar card: "Settings" heading and no collapse toggle (the
+  // chevron is hidden in showcase-overrides/showcase-chrome.js)
+  ['{name:"General Settings",settings:L}', '{name:"Settings",settings:L}'],
+  [
+    '{class:"lead-details-header flex-grow",importance:"clear",onClick:p=>i(g.name)}',
+    '{class:"lead-details-header flex-grow",importance:"clear",tabindex:-1}',
+  ],
+  // DPM Notifications column label
+  ['"All notifications"', '"Notification stack simulation"'],
 ];
 
 // Showcase-only scripts (scripts/showcase-overrides/), uploaded next to the
@@ -67,7 +77,7 @@ const HTML_PATCHES = [
   [
     '</body>',
     '  ' +
-    ['showcase-chrome.js', 'playbook-controls.js']
+    ['showcase-chrome.js', 'playbook-controls.js', 'dpm-notes.js']
       .map((f) => `<script type="module" src="${TO_BASE}${OVERRIDES_PREFIX}/${f}"></script>`)
       .join('\n    ') + '\n  </body>',
   ],

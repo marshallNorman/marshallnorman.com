@@ -4,12 +4,16 @@
 //   the icon buttons on its right (docs, settings, link, tools, theme, close)
 //   are replaced by a "Reset prototype" button.
 // - On DPM Notifications, the settings sidebar opens by default and its close
-//   (X) button is hidden, so the controls are always visible.
+//   (X) button is hidden, so the controls are always visible. Its card's
+//   collapse chevron is hidden too (the toggle itself is removed by the
+//   upload script's patches).
 
 const style = document.createElement('style');
 style.textContent = `
   .d-uxes-component-settings-menu .d-btn--icon-only { display: none !important; }
   .uxe-studio-settings-sidebar .d-btn--icon-only:has(.d-icon--close) { display: none !important; }
+  .uxe-studio-settings-sidebar .lead-details-header { cursor: default !important; }
+  .uxe-studio-settings-sidebar .lead-details-header .d-icon { display: none !important; }
 `;
 document.head.append(style);
 
