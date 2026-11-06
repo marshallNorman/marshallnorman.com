@@ -20,7 +20,7 @@ function buildCard() {
   card.id = 'showcase-playbook-controls';
   card.style.cssText = [
     'position:fixed', 'top:84px', 'right:24px', 'z-index:50', 'width:299px',
-    'background:#fff', 'border:1px solid rgba(28,28,28,0.11)', 'border-radius:8px',
+    'background:var(--dt-color-surface-primary)', 'border:1px solid var(--dt-color-border-subtle)', 'border-radius:8px',
   ].join(';');
 
   const heading = document.createElement('div');

@@ -1,8 +1,9 @@
 // Showcase-only adjustments to the Design Studio mirror's chrome, for every
 // prototype:
-// - The floating header keeps only the "Showcase" back button and the title;
-//   the icon buttons on its right (docs, settings, link, tools, theme, close)
-//   are replaced by a "Reset prototype" button.
+// - The floating header keeps the "Showcase" back button, the title and the
+//   light/dark theme toggle; its other icon buttons (docs, settings, link,
+//   tools, close) are hidden, and a "Reset prototype" button is added after
+//   the theme toggle.
 // - On DPM Notifications, the settings sidebar opens by default and its close
 //   (X) button is hidden, so the controls are always visible. Its card's
 //   collapse chevron is hidden too (the toggle itself is removed by the
@@ -10,7 +11,7 @@
 
 const style = document.createElement('style');
 style.textContent = `
-  .d-uxes-component-settings-menu .d-btn--icon-only { display: none !important; }
+  .d-uxes-component-settings-menu .d-btn--icon-only:not(:has(.d-icon--circle-half-filled)) { display: none !important; }
   .uxe-studio-settings-sidebar .d-btn--icon-only:has(.d-icon--close) { display: none !important; }
   .uxe-studio-settings-sidebar .lead-details-header { cursor: default !important; }
   .uxe-studio-settings-sidebar .lead-details-header .d-icon { display: none !important; }
