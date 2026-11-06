@@ -1,0 +1,774 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { isAuthed } from '../../lib/showcase-auth';
+
+export const prerender = false;
+
+if (!isAuthed(Astro.cookies)) {
+  return Astro.redirect('/showcase');
+}
+
+const DEMO_URL = '/showcase/notifications-demo';
+
+const signals = [
+  { type: 'rta', title: 'Live Coach', body: 'Confirm team size before quoting.', tab: 'RTA' },
+  { type: 'chat', title: 'Chat', body: 'Can you share the deck after this?', tab: 'Chat' },
+  { type: 'playbook', title: 'Playbook', body: 'Budget · Item completed', tab: 'Playbooks' },
+];
+const tabs = ['Chat', 'Playbooks', 'RTA'];
+
+const rules = [
+  { title: 'Cards wait, then get out of the way.', body: 'They dismiss after 8 seconds, and hovering holds them.' },
+  { title: 'The panel makes room.', body: 'The UI compresses instead of being covered.' },
+  { title: 'Nothing notifies twice.', body: "If it's already on screen, there's no card." },
+  { title: 'AI shows its work.', body: 'A completed Playbook item comes with a summary of the discussion.' },
+];
+
+const keys = [
+  { keys: ['Shift', '1'], label: 'RTA' },
+  { keys: ['Shift', '2'], label: 'Chat' },
+  { keys: ['Shift', '3'], label: 'Next Playbook item' },
+  { keys: ['Shift', 'Q', 'W', 'E', 'R'], label: 'Specific Playbook item' },
+  { keys: ['Esc'], label: 'Close panel' },
+];
+---
+
+<Layout>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+  <link slot="head" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&family=Roboto+Serif:ital,opsz,wght@0,8..144,400;0,8..144,500;1,8..144,400&display=swap" rel="stylesheet" />
+
+  <div class="np-preso" id="np-preso">
+    <div class="np-track" id="np-track">
+      <!-- Cover -->
+      <section class="np-slide" aria-label="Cover">
+        <div class="np-inner">
+          <h1 class="np-cover-title">Unified Notification System</h1>
+          <p class="np-helper">Completed for Dialpad</p>
+          <p class="np-byline">Marshall Norman · Staff Product Designer</p>
+        </div>
+        <p class="np-hint">← → to navigate</p>
+      </section>
+
+      <!-- Problem -->
+      <section class="np-slide" aria-label="Problem">
+        <div class="np-inner">
+          <div class="np-head">
+            <p class="np-numeral">01</p>
+            <h2 class="np-heading">Help showed up differently depending on where the call was.</h2>
+          </div>
+          <p class="np-prose">During a live conversation, agents get coaching, messages and playbook progress all at once.</p>
+          <div class="np-surfaces" aria-hidden="true">
+            <figure class="np-surface-figure">
+              <div class="np-mini np-mini--meetings np-mini--notifications">
+                <div class="np-mini-tiles"><span></span><span></span><span></span><span></span></div>
+                <div class="np-mini-bar">
+                  <div><i></i><i></i><i></i><i></i></div>
+                  <div><i></i><i></i></div>
+                  <div><i></i><i></i><i></i><i></i></div>
+                </div>
+                <span class="np-mini-chip np-mini-chip--chat">Chat notification</span>
+                <span class="np-mini-chip np-mini-chip--playbook">Playbook notification?</span>
+                <span class="np-mini-chip np-mini-chip--rta">RTA notification</span>
+              </div>
+              <figcaption><strong>Meetings</strong> Notifications during a call</figcaption>
+            </figure>
+            <figure class="np-surface-figure">
+              <div class="np-mini np-mini--meetings">
+                <div class="np-mini-assist"></div>
+                <div class="np-mini-tiles"><span></span><span></span><span></span><span></span></div>
+              </div>
+              <figcaption><strong>Meetings</strong> Assist in a sidebar</figcaption>
+            </figure>
+            <figure class="np-surface-figure">
+              <div class="np-mini np-mini--app">
+                <div class="np-mini-nav"></div>
+                <div class="np-mini-conversation"><span></span><span></span><span></span></div>
+                <div class="np-mini-assist"></div>
+              </div>
+              <figcaption><strong>Dialpad app</strong> Assist in a right rail</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- System -->
+      <section class="np-slide" aria-label="The system">
+        <div class="np-inner">
+          <div class="np-head">
+            <p class="np-numeral">02</p>
+            <h2 class="np-heading">Three signals. One pattern.</h2>
+          </div>
+          <div class="np-flow">
+            <p class="np-flow-head">Signal</p>
+            <span></span>
+            <p class="np-flow-head">Card</p>
+            <span></span>
+            <p class="np-flow-head">Panel tab</p>
+            {signals.map((signal) => (
+              <>
+                <p class="np-flow-signal">{signal.title}</p>
+                <span class="np-flow-arrow" aria-hidden="true">→</span>
+                <div class:list={['np-card', `np-card--${signal.type}`]}>
+                  <p class="np-card-title">{signal.title}</p>
+                  <p class="np-card-body">{signal.body}</p>
+                </div>
+                <span class="np-flow-arrow" aria-hidden="true">→</span>
+                <div class="np-tabs">
+                  {tabs.map((tab) => (
+                    <span class:list={['np-tab', { 'is-active': tab === signal.tab }]}>{tab}</span>
+                  ))}
+                </div>
+              </>
+            ))}
+          </div>
+          <p class="np-pull">The same cards and the same panel, in Meetings and the app.</p>
+        </div>
+      </section>
+
+      <!-- Rules -->
+      <section class="np-slide" aria-label="The rules">
+        <div class="np-inner">
+          <div class="np-head">
+            <p class="np-numeral">03</p>
+            <h2 class="np-heading">The conversation keeps its space.</h2>
+          </div>
+          <ol class="np-rules">
+            {rules.map((rule) => (
+              <li>
+                <h3>{rule.title}</h3>
+                <p>{rule.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <!-- Handoff -->
+      <section class="np-slide np-slide--handoff" aria-label="Start the demo">
+        <div class="np-inner">
+          <h2 class="np-heading np-heading--handoff">Let's see it on a call.</h2>
+          <a class="np-start" id="np-start" href={DEMO_URL}>Start demo <span aria-hidden="true">→</span></a>
+          <ul class="np-keys">
+            {keys.map((item) => (
+              <li>
+                <span class="np-key-group">{item.keys.map((key) => <kbd>{key}</kbd>)}</span>
+                {item.label}
+              </li>
+            ))}
+          </ul>
+          <p class="np-footnote">
+            Selected work — certain product details omitted to protect confidential information.<br />
+            Demo is a recreation of the design, not production software.
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <button type="button" id="np-prev" class="np-nav np-nav--prev" aria-label="Previous slide">‹</button>
+    <button type="button" id="np-next" class="np-nav np-nav--next" aria-label="Next slide">›</button>
+    <div id="np-counter" class="np-counter" aria-live="polite"></div>
+  </div>
+</Layout>
+
+<script>
+  function init() {
+    const track = document.getElementById('np-track');
+    const counter = document.getElementById('np-counter');
+    const prev = document.getElementById('np-prev');
+    const next = document.getElementById('np-next');
+    const start = document.getElementById('np-start');
+    if (!track || !counter || !prev || !next || !start) return undefined;
+
+    const slides = [...track.querySelectorAll<HTMLElement>('.np-slide')];
+    const controller = new AbortController();
+    const { signal } = controller;
+    let current = 0;
+
+    function goTo(index: number) {
+      if (index < 0 || index >= slides.length) return;
+      current = index;
+      track!.style.transform = `translateX(${-current * 100}vw)`;
+      counter!.textContent = `${current + 1} / ${slides.length}`;
+      // Keeps off-screen links out of the tab order, where focusing one would scroll the track
+      slides.forEach((slide, slideIndex) => {
+        slide.inert = slideIndex !== current;
+      });
+      prev!.classList.toggle('is-hidden', current === 0);
+      // The hash brings browser back from the demo to this slide, not the cover.
+      // Keeping history.state stops the view transitions router from reloading on back
+      history.replaceState(history.state, '', `#${current + 1}`);
+    }
+
+    function advance() {
+      if (current === slides.length - 1) start!.click();
+      else goTo(current + 1);
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') advance();
+      if (event.key === 'ArrowLeft') goTo(current - 1);
+    }, { signal });
+    prev.addEventListener('click', () => goTo(current - 1), { signal });
+    next.addEventListener('click', advance, { signal });
+
+    const fromHash = Number.parseInt(location.hash.slice(1), 10) - 1;
+    goTo(fromHash >= 0 && fromHash < slides.length ? fromHash : 0);
+
+    return () => controller.abort();
+  }
+
+  let cleanup: (() => void) | undefined;
+
+  document.addEventListener('astro:page-load', () => {
+    cleanup = init();
+  });
+
+  document.addEventListener('astro:before-swap', () => {
+    cleanup?.();
+    cleanup = undefined;
+  });
+</script>
+
+<style>
+  :global(html) {
+    overflow: hidden !important;
+  }
+
+  /* Beats Contact's scoped display rule. Left visible, it covers the whole page */
+  :global(#contact) {
+    display: none !important;
+  }
+
+  /* Palette, type and column lines match foundational-design-at-dialpad.astro */
+  .np-preso {
+    --col: min(1080px, 100vw - 176px);
+    --accent: #8674ea;
+    --grid-line: #dcd5f5;
+    --h1: clamp(44px, 5.33vw, 92px);
+    --np-magenta: #ff1ba4;
+    --np-purple: #7c52ff;
+
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: #f4f2ff;
+    color: #000;
+    font-family: "Roboto Serif", Georgia, serif;
+  }
+
+  .np-track {
+    position: relative;
+    display: flex;
+    width: max-content;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .np-slide {
+    position: relative;
+    display: flex;
+    flex: none;
+    width: 100vw;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* Column guide lines */
+  .np-slide::before,
+  .np-slide::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--grid-line);
+    pointer-events: none;
+  }
+
+  .np-slide::before {
+    left: calc(50% - var(--col) / 2);
+  }
+
+  .np-slide::after {
+    left: calc(50% + var(--col) / 2);
+  }
+
+  /* Lavender deepens behind the handoff, with grain (tokens in src/styles/global.css) */
+  .np-slide--handoff {
+    background-image: var(--noise), var(--lavender-fade);
+    background-blend-mode: soft-light, normal;
+  }
+
+  .np-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: var(--col);
+    margin-inline: auto;
+    padding: clamp(24px, 4vh, 56px) 0 88px;
+  }
+
+  .np-head {
+    margin-bottom: clamp(20px, 3.5vh, 36px);
+    padding-bottom: clamp(16px, 2.5vh, 24px);
+    border-bottom: 1px solid var(--grid-line);
+  }
+
+  .np-numeral {
+    margin: 0 0 clamp(4px, 1vh, 12px);
+    color: var(--accent);
+    font-size: clamp(40px, 5vw, 80px);
+    line-height: 1;
+  }
+
+  .np-heading {
+    max-width: 926px;
+    margin: 0;
+    font-size: clamp(30px, 3.24vw, 56px);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .np-prose {
+    max-width: 680px;
+    margin: 0 0 clamp(20px, 3.5vh, 36px);
+    font-size: clamp(16px, 1.3vw, 19px);
+    line-height: 1.6;
+  }
+
+  .np-pull {
+    margin: clamp(20px, 3.5vh, 36px) 0 0;
+    color: var(--accent);
+    font-size: clamp(19px, 1.85vw, 28px);
+    font-style: italic;
+    line-height: 1.3;
+  }
+
+  /* Cover */
+  .np-cover-title {
+    margin: 0;
+    font-size: var(--h1);
+    font-weight: 400;
+    line-height: 1.17;
+  }
+
+  .np-cover-title em {
+    color: var(--accent);
+    font-size: 0.826em;
+    font-style: italic;
+  }
+
+  /* Breaks out past the right column line */
+  .np-helper {
+    width: 749px;
+    max-width: calc(50vw - var(--col) * 0.087 - 24px);
+    margin: calc(var(--h1) * -0.25) 0 0 58.7%;
+    color: var(--accent);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: clamp(20px, 2.31vw, 40px);
+    line-height: 1.17;
+  }
+
+  .np-byline {
+    margin: clamp(32px, 6vh, 64px) 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--grid-line);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: clamp(12px, 1.1vw, 14px);
+  }
+
+  .np-hint {
+    position: absolute;
+    right: calc(50% - var(--col) / 2 + 16px);
+    bottom: 44px;
+    z-index: 1;
+    margin: 0;
+    color: var(--accent);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 12px;
+  }
+
+  /* Problem */
+  .np-surfaces {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 28px);
+  }
+
+  .np-surface-figure {
+    margin: 0;
+  }
+
+  .np-surface-figure figcaption {
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .np-surface-figure strong {
+    display: block;
+    color: var(--accent);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  .np-mini {
+    display: flex;
+    gap: 6px;
+    height: clamp(120px, 24vh, 220px);
+    padding: 8px;
+    overflow: hidden;
+    border: 1px solid var(--grid-line);
+    border-radius: 12px;
+  }
+
+  .np-mini--meetings {
+    background: #262626;
+  }
+
+  .np-mini--app {
+    background: #fff;
+  }
+
+  .np-mini-assist {
+    flex: 0 0 26%;
+    border: 1.5px solid transparent;
+    border-radius: 8px;
+    background:
+      linear-gradient(#fff, #fff) padding-box,
+      linear-gradient(135deg, var(--np-magenta) 10%, var(--np-purple) 90%) border-box;
+  }
+
+  .np-mini-tiles {
+    flex: 1;
+    display: grid;
+    grid-template: 1fr 1fr / 1fr 1fr;
+    gap: 6px;
+  }
+
+  .np-mini-tiles span {
+    border-radius: 6px;
+    background: #3a3a3a;
+  }
+
+  .np-mini--notifications {
+    position: relative;
+    flex-direction: column;
+  }
+
+  .np-mini-bar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 24px;
+    padding: 0 4px;
+    border-radius: 6px;
+    background: #303030;
+  }
+
+  .np-mini-bar div {
+    display: flex;
+    gap: 2px;
+  }
+
+  .np-mini-bar i {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    background: #484848;
+  }
+
+  .np-mini-chip {
+    position: absolute;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: #fff;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 10px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .np-mini-chip--chat,
+  .np-mini-chip--rta {
+    bottom: 34px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .np-mini-chip--chat {
+    left: 14px;
+  }
+
+  .np-mini-chip--rta {
+    right: 14px;
+  }
+
+  .np-mini-chip--playbook {
+    top: 16px;
+    right: 14px;
+    border: 1px dashed var(--np-magenta);
+  }
+
+  .np-mini-nav {
+    flex: 0 0 20%;
+    border-radius: 6px;
+    background: #efefef;
+  }
+
+  .np-mini-conversation {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .np-mini-conversation span {
+    height: 8px;
+    border-radius: 4px;
+    background: #e4e4e4;
+  }
+
+  .np-mini-conversation span:nth-child(2) {
+    width: 72%;
+  }
+
+  .np-mini-conversation span:nth-child(3) {
+    width: 86%;
+  }
+
+  /* System */
+  .np-flow {
+    display: grid;
+    grid-template-columns: 120px 32px minmax(0, 340px) 32px max-content;
+    align-items: center;
+    gap: 10px 12px;
+  }
+
+  .np-flow-head {
+    margin: 0;
+    color: var(--accent);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 13px;
+  }
+
+  .np-flow-signal {
+    margin: 0;
+    font-size: 17px;
+  }
+
+  .np-flow-arrow {
+    color: var(--accent);
+    text-align: center;
+  }
+
+  /* Card styling matches the demo's notification cards */
+  .np-card {
+    padding: 10px 12px;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  .np-card--rta,
+  .np-card--playbook {
+    background:
+      linear-gradient(#fff, #fff) padding-box,
+      linear-gradient(135deg, var(--np-magenta) 10%, var(--np-purple) 90%) border-box;
+  }
+
+  .np-card--chat {
+    border-color: #1c1c1c2b;
+    background: #fff;
+  }
+
+  .np-card-title {
+    margin: 0 0 2px;
+    color: #535353;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .np-card-body {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .np-tabs {
+    display: flex;
+    gap: 2px;
+    padding: 4px 8px;
+    border: 1px solid var(--grid-line);
+    border-radius: 12px;
+    background: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+  }
+
+  .np-tab {
+    padding: 6px 8px;
+    border-bottom: 2px solid transparent;
+    color: #6e6e6e;
+  }
+
+  .np-tab.is-active {
+    border-bottom-color: var(--np-purple);
+    color: #111;
+    font-weight: 500;
+  }
+
+  /* Rules */
+  .np-rules {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(20px, 4vh, 40px) clamp(32px, 4vw, 64px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .np-rules h3 {
+    margin: 0 0 8px;
+    font-size: clamp(20px, 1.62vw, 28px);
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  .np-rules p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 28px;
+  }
+
+  /* Handoff */
+  .np-heading--handoff {
+    margin-bottom: clamp(24px, 4vh, 40px);
+    font-size: var(--h1);
+    line-height: 1.17;
+  }
+
+  .np-start {
+    align-self: flex-start;
+    padding: 14px 24px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: clamp(15px, 1.2vw, 18px);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .np-start:hover {
+    background: var(--np-purple);
+  }
+
+  .np-start:focus-visible,
+  .np-nav:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .np-keys {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+    margin: clamp(24px, 5vh, 48px) 0 0;
+    padding: 0;
+    font-size: 14px;
+    list-style: none;
+  }
+
+  .np-keys li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .np-key-group {
+    display: flex;
+    gap: 3px;
+  }
+
+  .np-keys kbd {
+    padding: 2px 6px;
+    border: 1px solid var(--grid-line);
+    border-radius: 4px;
+    background: #fff;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 11px;
+  }
+
+  .np-footnote {
+    margin: clamp(16px, 3vh, 28px) 0 0;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  /* Controls */
+  .np-nav {
+    position: fixed;
+    bottom: 36px;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding-bottom: 2px;
+    border: 1px solid var(--grid-line);
+    border-radius: 50%;
+    background: #fff;
+    color: var(--accent);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 28px;
+    cursor: pointer;
+    transition: opacity 0.3s ease, border-color 0.2s ease;
+  }
+
+  .np-nav:hover {
+    border-color: var(--accent);
+  }
+
+  .np-nav--prev {
+    left: 20px;
+  }
+
+  .np-nav--next {
+    right: 20px;
+  }
+
+  .np-nav.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .np-counter {
+    position: fixed;
+    bottom: 44px;
+    left: 50%;
+    z-index: 50;
+    color: rgba(0, 0, 0, 0.6);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 12px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .np-track,
+    .np-start,
+    .np-nav {
+      transition: none;
+    }
+  }
+</style>

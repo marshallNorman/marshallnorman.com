@@ -1,0 +1,1989 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { isAuthed } from '../../lib/showcase-auth';
+
+export const prerender = false;
+
+if (!isAuthed(Astro.cookies)) {
+  return Astro.redirect('/showcase');
+}
+
+const tiles = ['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4'];
+const navRows = [72, 56, 64, 48, 60, 52, 68];
+const messages = [
+  { name: 92, lines: [88, 62] },
+  { name: 64, lines: [74] },
+  { name: 80, lines: [92, 80, 44] },
+  { name: 72, lines: [58] },
+];
+const tabs = [
+  {
+    type: 'chat',
+    label: 'Chat',
+    zero: { title: 'No messages yet', body: 'Messages from this call will show up here.', icon: 'M21 12a8 8 0 0 1-11.6 7.1L4 20l.9-5.4A8 8 0 1 1 21 12z' },
+  },
+  { type: 'playbook', label: 'Playbooks' },
+  {
+    type: 'rta',
+    label: 'RTA',
+    zero: { title: 'No coaching yet', body: 'Live Coach tips will show up here during the call.', icon: 'M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z' },
+  },
+];
+---
+
+<Layout>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+
+  <div class="nd-stage" id="nd-stage" tabindex="-1">
+    <div class="nd-frame">
+      <div class="nd-bar">
+        <div class="nd-toggle" role="group" aria-label="Surface">
+          <button type="button" class="nd-toggle-btn is-active" data-surface="meetings" aria-pressed="true">Meetings</button>
+          <button type="button" class="nd-toggle-btn" data-surface="app" aria-pressed="false">App</button>
+        </div>
+        <p class="nd-hints">
+          <span><kbd>Shift</kbd><kbd>1</kbd> RTA</span>
+          <span><kbd>Shift</kbd><kbd>2</kbd> Chat</span>
+          <span><kbd>Shift</kbd><kbd>3</kbd> Playbook</span>
+          <span><kbd>Shift</kbd><kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd><kbd>R</kbd> Complete item</span>
+          <span><kbd>Esc</kbd> Close panel</span>
+        </p>
+      </div>
+
+      <div class="nd-surfaces">
+        <section class="nd-surface nd-meetings is-active" data-surface-view="meetings" aria-label="Meetings surface wireframe">
+          <div class="nd-tiles">
+            {tiles.map((name) => (
+              <div class="nd-tile">
+                <span class="nd-tile-avatar"></span>
+                <span class="nd-tile-name">{name}</span>
+              </div>
+            ))}
+          </div>
+          <div class="nd-controls">
+            <div class="nd-control-group"><span class="nd-control-pill"></span></div>
+            <div class="nd-control-group">
+              <span class="nd-control"></span>
+              <span class="nd-control"></span>
+              <span class="nd-control"></span>
+              <span class="nd-control nd-control--end"></span>
+            </div>
+            <div class="nd-control-group">
+              <span class="nd-control"></span>
+              <span class="nd-control"></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="nd-surface nd-app" data-surface-view="app" aria-label="App surface wireframe">
+          <div class="nd-topbar">
+            <span class="nd-sk nd-sk--logo"></span>
+            <span class="nd-sk nd-sk--search"></span>
+            <span class="nd-sk nd-sk--circle"></span>
+          </div>
+          <div class="nd-app-body">
+            <div class="nd-leftbar">
+              {navRows.map((width) => (
+                <div class="nd-nav-row">
+                  <span class="nd-sk nd-sk--dot"></span>
+                  <span class="nd-sk" style={`width:${width}%`}></span>
+                </div>
+              ))}
+            </div>
+            <div class="nd-conversation">
+              <div class="nd-conversation-head">
+                <span class="nd-sk nd-sk--circle"></span>
+                <span class="nd-sk" style="width:160px"></span>
+              </div>
+              <div class="nd-messages">
+                {messages.map((message) => (
+                  <div class="nd-message">
+                    <span class="nd-sk nd-sk--circle"></span>
+                    <div class="nd-message-lines">
+                      <span class="nd-sk nd-sk--strong" style={`width:${message.name}px`}></span>
+                      {message.lines.map((width) => (
+                        <span class="nd-sk" style={`width:${width}%`}></span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div class="nd-composer"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="nd-stacks" aria-live="polite">
+        <div class="nd-stack" data-stack="rta"></div>
+        <div class="nd-stack" data-stack="chat"></div>
+        <div class="nd-stack" data-stack="playbook"></div>
+      </div>
+    </div>
+
+    <aside class="nd-panel" id="nd-panel" tabindex="-1" aria-label="Current call" aria-hidden="true">
+      <div class="nd-panel-container">
+        <div class="nd-panel-header">
+          <div class="nd-tabs" role="tablist" aria-label="Call details">
+            {tabs.map((tab, index) => (
+              <button
+                type="button"
+                class:list={['nd-tab', { 'is-active': index === 0 }]}
+                role="tab"
+                id={`nd-tab-${tab.type}`}
+                data-tab={tab.type}
+                aria-controls={`nd-tabpanel-${tab.type}`}
+                aria-selected={index === 0 ? 'true' : 'false'}
+                tabindex={index === 0 ? 0 : -1}
+              >
+                {tab.label}
+                <span class="nd-tab-count" hidden></span>
+              </button>
+            ))}
+          </div>
+          <button type="button" class="nd-icon-btn" id="nd-panel-close" aria-label="Close panel">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <div class="nd-panel-content">
+          {tabs.map((tab, index) => (
+            <div
+              class:list={['nd-tabpanel', `nd-tabpanel--${tab.type}`, { 'is-offstage': tab.type === 'playbook' }]}
+              role="tabpanel"
+              id={`nd-tabpanel-${tab.type}`}
+              data-tabpanel={tab.type}
+              aria-labelledby={`nd-tab-${tab.type}`}
+              hidden={index !== 0 && tab.type !== 'playbook'}
+            >
+              {tab.type === 'playbook' ? (
+                <>
+                  <div class="nd-pb-header">
+                    <span>BANT</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 15 5 5 5-5M7 9l5-5 5 5" /></svg>
+                  </div>
+                  <div class="nd-pb-list" id="nd-pb-list"></div>
+                </>
+              ) : (
+                <>
+                  <div class="nd-rows" data-rows={tab.type}></div>
+                  <div class="nd-zero">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={tab.zero?.icon} /></svg>
+                    <p class="nd-zero-title">{tab.zero?.title}</p>
+                    <p class="nd-zero-body">{tab.zero?.body}</p>
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </aside>
+  </div>
+</Layout>
+
+<script>
+  type NotificationType = 'rta' | 'chat' | 'playbook';
+
+  type Card = {
+    type: NotificationType;
+    el: HTMLElement;
+    height: number;
+    remaining: number;
+    startedAt: number;
+    timer: number | undefined;
+    observer: ResizeObserver;
+  };
+
+  type Stack = {
+    el: HTMLElement;
+    cards: Card[];
+    isHovering: boolean;
+    hoverTimer: number | undefined;
+  };
+
+  type PlaybookItem = {
+    title: string;
+    description: string;
+    prompts: string[];
+    summary: string[];
+    // pending: triggered, but held until the Playbooks tab is on screen
+    state: 'open' | 'pending' | 'complete';
+    detected: boolean;
+    descriptionOpen: boolean;
+    timers: Set<number>;
+    card: HTMLElement;
+    checkbox: HTMLInputElement;
+    collapsible: HTMLElement;
+    toggle: HTMLButtonElement;
+    summarySection: HTMLElement;
+    chunks: HTMLElement;
+  };
+
+  const NOTIFICATION_TIMEOUT = 8000;
+  const HOVER_IN_DELAY = 500;
+  const HOVER_OUT_DELAY = 500;
+  const LEAVE_DURATION = 300;
+  const STACK_GAP = 4;
+  const PANEL_SLIDE = 450;
+  const TAB_FADE = 150;
+  const SEQUENCE_STAGGER = 250;
+  const WORD_INTERVAL = 80;
+
+  const SHORTCUTS: Record<string, 'rta' | 'chat'> = {
+    Digit1: 'rta',
+    Digit2: 'chat',
+  };
+
+  const ITEM_SHORTCUTS: Record<string, number> = {
+    KeyQ: 0,
+    KeyW: 1,
+    KeyE: 2,
+    KeyR: 3,
+  };
+
+  // Copy is from the Playbook prototype, except the Authority and Need summaries and all of Timing
+  const PLAYBOOK_COPY = [
+    {
+      title: 'Budget',
+      description: 'Find the allocated budget for this project or solution',
+      prompts: ['What is your allocated budget for this project or solution?', 'Have you considered any financial restraints?'],
+      summary: [
+        'The agent asked about budget that has been allocated to this effort.',
+        'The customer says the budget is flexible depending on the proposed solution.',
+        'The agent asks about factors driving the budget',
+        'The customer mentions high energy costs and inefficiencies impacting their operational costs and brand reputation, highlighting an urgency to adapt before the new environmental regulations take effect.',
+      ],
+    },
+    {
+      title: 'Authority',
+      description: 'Discover key decision-makers involved in the purchase?',
+      prompts: ['When was the last time you bought a similar product?', 'How did the decision making process go?'],
+      summary: ['The customer says the VP of Operations makes the final decision, with input from IT and finance, as they did on their last similar purchase.'],
+    },
+    {
+      title: 'Need',
+      description: 'Uncover the main challenges or pain points the customer is facing right now',
+      prompts: ['What happens to your team’s goals if you don’t address this need?', 'How many licenses do you anticipate to meet your team’s needs?'],
+      summary: [
+        'The agent asked what happens to the team’s goals if this need goes unaddressed.',
+        'The customer says they would likely miss their energy reduction targets and fall short of the new environmental regulations.',
+        'The agent asks how many licenses the team would need.',
+        'The customer estimates 40 licenses for the operations team, with room to add more if the initial rollout reduces inefficiencies across their other sites.',
+      ],
+    },
+    {
+      title: 'Timing',
+      description: 'Establish when the customer plans to have a solution in place and what is driving that date',
+      prompts: ['When are you hoping to have a solution in place?', 'Are there any upcoming events or milestones that could influence when you get started?'],
+      summary: [
+        'The agent asked when the team hopes to have a solution in place.',
+        'The customer says they want to be live before the new environmental regulations take effect at the start of Q3.',
+        'The agent asks whether any other milestones could influence the start date.',
+        'The customer says their current vendor contract ends in May, so they plan to make a decision within the next 60 days to leave time for rollout.',
+      ],
+    },
+  ];
+
+  const TITLES: Record<NotificationType, string> = {
+    rta: 'Live Coach',
+    chat: 'Chat',
+    playbook: 'Playbook',
+  };
+
+  const ICONS: Record<NotificationType, string> = {
+    rta: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
+    chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l.9-5.4A8 8 0 1 1 21 12z"/>',
+    playbook: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 3h6v3H9zM9 11h6M9 15h6"/>',
+  };
+
+  const CHECK_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg>';
+  const CLOSE_ICON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+
+  const RTA_LINES = [
+    'Customer mentioned a competitor. Ask what they like about it.',
+    "You've been talking for two minutes. Try an open question.",
+    'They asked about pricing. Confirm team size before quoting.',
+    'Sentiment dropped after the timeline. Acknowledge the concern.',
+  ];
+  const CHAT_LINES = [
+    { name: 'Priya', message: 'Can you share the deck after this?' },
+    { name: 'Jordan', message: 'Pulling up the renewal numbers now.' },
+    { name: 'Sam', message: 'Their legal team needs the security doc.' },
+    { name: 'Alex', message: 'Here are the screens we talked about.' },
+  ];
+  const SPARKLE_PATH = 'M9 1a.5.5 0 0 1 .5.5V2h.5a.5.5 0 0 1 0 1h-.5v.5a.5.5 0 0 1-1 0V3H8a.5.5 0 0 1 0-1h.5v-.5A.5.5 0 0 1 9 1ZM5 2a.5.5 0 0 1 .455.293L6.471 4.53l2.236 1.016a.5.5 0 0 1 0 .91L6.47 7.471 5.455 9.707a.5.5 0 0 1-.91 0L3.529 7.47 1.293 6.455a.5.5 0 0 1 0-.91L3.53 4.529l1.016-2.236A.5.5 0 0 1 5 2Zm0 1.708-.639 1.405a.5.5 0 0 1-.248.248L2.708 6l1.405.639a.5.5 0 0 1 .248.248L5 8.292l.639-1.405a.5.5 0 0 1 .248-.248L7.292 6l-1.405-.639a.5.5 0 0 1-.248-.248L5 3.708ZM9.5 8a.5.5 0 0 1 .5.5V9h.5a.5.5 0 0 1 0 1H10v.5a.5.5 0 0 1-1 0V10h-.5a.5.5 0 0 1 0-1H9v-.5a.5.5 0 0 1 .5-.5Z';
+
+  const pick = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.length)];
+
+  const make = (tag: string, className?: string, text?: string) => {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text) node.textContent = text;
+    return node;
+  };
+
+  function renderContent(type: NotificationType, topicTitle = '') {
+    const content = make('div', 'nd-card-content');
+    if (type === 'rta') {
+      content.append(make('p', 'nd-card-headline', pick(RTA_LINES)));
+    } else if (type === 'chat') {
+      const line = pick(CHAT_LINES);
+      const message = make('p', 'nd-card-body', line.message);
+      content.append(make('p', 'nd-card-headline', line.name), message);
+      if (Math.random() < 0.5) {
+        message.append(' ', make('span', 'nd-card-link', 'dialpad.com/share'));
+      } else {
+        const thumbs = make('div', 'nd-card-thumbs');
+        const count = 1 + Math.floor(Math.random() * 4);
+        for (let i = 0; i < count; i += 1) thumbs.append(make('span', 'nd-card-thumb'));
+        content.append(thumbs);
+      }
+    } else {
+      const topic = make('div', 'nd-card-topic');
+      const checkbox = make('span', 'nd-card-checkbox');
+      checkbox.innerHTML = CHECK_ICON;
+      topic.append(checkbox, make('p', 'nd-card-topic-text', topicTitle));
+      content.append(topic, make('p', 'nd-card-note', 'Item completed'));
+    }
+    return content;
+  }
+
+  function buildPlaybookItem(copy: (typeof PLAYBOOK_COPY)[number], index: number): PlaybookItem {
+    const inputId = `nd-pb-check-${index}`;
+
+    const card = make('div', 'nd-pb-card');
+    card.dataset.checkedByAi = 'false';
+
+    const checkbox = make('input', 'nd-pb-checkbox') as HTMLInputElement;
+    checkbox.type = 'checkbox';
+    checkbox.id = inputId;
+    checkbox.setAttribute('aria-label', `Complete ${copy.title} task`);
+
+    const titleRow = make('div', 'nd-pb-title-row');
+    const label = make('label', 'nd-pb-title', copy.title) as HTMLLabelElement;
+    label.htmlFor = inputId;
+    const sparkle = make('span', 'nd-pb-sparkle');
+    sparkle.innerHTML = `<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><defs><linearGradient id="nd-pb-sparkle-${index}" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fc5ea0"/><stop offset="100%" stop-color="#7c52ff"/></linearGradient></defs><path fill="url(#nd-pb-sparkle-${index})" fill-rule="evenodd" clip-rule="evenodd" d="${SPARKLE_PATH}"/></svg>`;
+    titleRow.append(label, sparkle);
+
+    const collapsible = make('div', 'nd-pb-collapsible');
+    collapsible.dataset.open = 'true';
+    const collapsibleInner = make('div');
+    const prompts = make('div', 'nd-pb-prompts');
+    copy.prompts.forEach((prompt) => prompts.append(make('p', 'nd-pb-compact', prompt)));
+    collapsibleInner.append(make('p', 'nd-pb-compact', copy.description), make('h6', 'nd-pb-heading nd-pb-heading--questions', 'Questions'), prompts);
+    collapsible.append(collapsibleInner);
+
+    const toggle = make('button', 'nd-pb-toggle') as HTMLButtonElement;
+    toggle.type = 'button';
+    toggle.hidden = true;
+
+    const details = make('div', 'nd-pb-details');
+    details.append(titleRow, collapsible, toggle);
+
+    const summarySection = make('div', 'nd-pb-summary');
+    summarySection.hidden = true;
+    const chunks = make('div', 'nd-pb-chunks');
+    summarySection.append(make('h4', 'nd-pb-heading', 'Summary:'), chunks);
+
+    const body = make('div', 'nd-pb-body');
+    body.append(details, summarySection);
+    card.append(checkbox, body);
+
+    return {
+      ...copy,
+      state: 'open',
+      detected: false,
+      descriptionOpen: true,
+      timers: new Set(),
+      card,
+      checkbox,
+      collapsible,
+      toggle,
+      summarySection,
+      chunks,
+    };
+  }
+
+  function init() {
+    const stage = document.getElementById('nd-stage');
+    const panel = document.getElementById('nd-panel');
+    const closeButton = document.getElementById('nd-panel-close');
+    const playbookList = document.getElementById('nd-pb-list');
+    if (!stage || !panel || !closeButton || !playbookList) return undefined;
+
+    const tabButtons = [...stage.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+    const toggleButtons = [...stage.querySelectorAll<HTMLButtonElement>('[data-surface]')];
+    const surfaces = [...stage.querySelectorAll<HTMLElement>('[data-surface-view]')];
+    const unread: Record<NotificationType, number> = { rta: 0, chat: 0, playbook: 0 };
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const items = PLAYBOOK_COPY.map(buildPlaybookItem);
+    const collapsibleObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        const card = entry.target.closest<HTMLElement>('.nd-pb-card')!;
+        card.style.setProperty('--collapsible-height', `${(entry.target as HTMLElement).offsetHeight}px`);
+      });
+    });
+
+    const makeStack = (type: NotificationType): Stack => ({
+      el: stage.querySelector<HTMLElement>(`[data-stack="${type}"]`)!,
+      cards: [],
+      isHovering: false,
+      hoverTimer: undefined,
+    });
+    const stacks: Record<NotificationType, Stack> = { rta: makeStack('rta'), chat: makeStack('chat'), playbook: makeStack('playbook') };
+    const stackList = Object.values(stacks);
+    const allCards = () => stackList.flatMap((stack) => stack.cards);
+    const anyHovering = () => stackList.some((stack) => stack.isHovering);
+
+    let isOpen = false;
+    let activeTab: NotificationType = 'chat';
+    const pendingRemovals = new Set<number>();
+
+    function layout(stack: Stack) {
+      const { cards } = stack;
+      let y = 0;
+      let total = 0;
+      cards.forEach((card, index) => {
+        card.el.style.setProperty('--y', `${y}px`);
+        card.el.style.setProperty('--index', String(index));
+        card.el.style.setProperty('--height', `${card.height}px`);
+        card.el.style.zIndex = String(Math.max(0, 3 - index));
+        card.el.classList.toggle('is-front', index === 0);
+        card.el.classList.toggle('is-buried', index > 2);
+        y += card.height;
+        total += card.height;
+      });
+      stack.el.classList.toggle('has-cards', cards.length > 0);
+      stack.el.style.setProperty('--stack-height', `${cards[0]?.height ?? 0}px`);
+      stack.el.style.setProperty('--notification-count', String(cards.length));
+      stack.el.style.setProperty('--unfurled-stack-height', `${total + STACK_GAP * Math.max(0, cards.length - 1)}px`);
+    }
+
+    function startTimer(card: Card) {
+      card.startedAt = Date.now();
+      card.timer = window.setTimeout(() => removeCard(card), card.remaining);
+    }
+
+    function pauseTimers() {
+      allCards().forEach((card) => {
+        if (card.timer === undefined) return;
+        window.clearTimeout(card.timer);
+        card.timer = undefined;
+        card.remaining -= Date.now() - card.startedAt;
+      });
+    }
+
+    function resumeTimers() {
+      allCards().forEach((card) => {
+        if (card.timer === undefined) startTimer(card);
+      });
+    }
+
+    function setUnfurled(stack: Stack, value: boolean) {
+      stack.el.classList.toggle('is-unfurled', value);
+    }
+
+    // Hovering any stack holds every card, as in the prototype, but only unfurls that stack
+    function enterStack(stack: Stack) {
+      if (stack.isHovering) return;
+      window.clearTimeout(stack.hoverTimer);
+      if (!anyHovering()) pauseTimers();
+      stack.isHovering = true;
+      stack.hoverTimer = window.setTimeout(() => setUnfurled(stack, true), HOVER_IN_DELAY);
+    }
+
+    function leaveStack(stack: Stack) {
+      if (!stack.isHovering) return;
+      window.clearTimeout(stack.hoverTimer);
+      stack.isHovering = false;
+      if (!anyHovering()) resumeTimers();
+      stack.hoverTimer = window.setTimeout(() => setUnfurled(stack, false), HOVER_OUT_DELAY);
+    }
+
+    function removeCard(card: Card) {
+      const stack = stacks[card.type];
+      if (!stack.cards.includes(card)) return;
+      window.clearTimeout(card.timer);
+      card.observer.disconnect();
+      stack.cards = stack.cards.filter((item) => item !== card);
+      card.el.classList.add('is-leaving');
+      const removal = window.setTimeout(() => {
+        card.el.remove();
+        pendingRemovals.delete(removal);
+      }, LEAVE_DURATION);
+      pendingRemovals.add(removal);
+      layout(stack);
+      // The cursor never fires mouseleave on a stack that has emptied under it
+      if (stack.cards.length === 0) {
+        leaveStack(stack);
+        setUnfurled(stack, false);
+      }
+    }
+
+    function revealInPanel(element: HTMLElement) {
+      // Not scrollIntoView: it would also scroll the stage while the panel is off-screen
+      const content = panel!.querySelector<HTMLElement>('.nd-panel-content')!;
+      const offset = element.getBoundingClientRect().top - content.getBoundingClientRect().top;
+      if (offset < 0 || offset > content.clientHeight - element.offsetHeight) content.scrollTop += offset;
+    }
+
+    function highlight(row: HTMLElement) {
+      row.classList.remove('is-highlighted');
+      void row.offsetWidth;
+      row.classList.add('is-highlighted');
+      revealInPanel(row);
+    }
+
+    function renderUnread() {
+      tabButtons.forEach((button) => {
+        const count = unread[button.dataset.tab as NotificationType];
+        const badge = button.querySelector<HTMLElement>('.nd-tab-count')!;
+        badge.textContent = String(count);
+        badge.hidden = count === 0;
+      });
+    }
+
+    function selectTab(type: NotificationType, settleDelay = TAB_FADE, first?: PlaybookItem) {
+      const changed = type !== activeTab;
+      activeTab = type;
+      tabButtons.forEach((button) => {
+        const selected = button.dataset.tab === type;
+        button.classList.toggle('is-active', selected);
+        button.setAttribute('aria-selected', String(selected));
+        button.tabIndex = selected ? 0 : -1;
+      });
+      stage!.querySelectorAll<HTMLElement>('[data-tabpanel]').forEach((tabpanel) => {
+        const selectedPanel = tabpanel.dataset.tabpanel === type;
+        if (tabpanel.dataset.tabpanel === 'playbook') tabpanel.classList.toggle('is-offstage', !selectedPanel);
+        else tabpanel.hidden = !selectedPanel;
+        if (selectedPanel && changed && !reducedMotion.matches) {
+          tabpanel.animate([{ opacity: 0 }, { opacity: 1 }], { duration: TAB_FADE, easing: 'ease' });
+        }
+      });
+      if (changed) panel!.querySelector('.nd-panel-content')!.scrollTop = 0;
+      unread[type] = 0;
+      renderUnread();
+      // Those rows are on screen now, so their cards would only repeat them
+      stacks[type].cards.forEach(removeCard);
+      if (type === 'playbook') runPending(settleDelay, first);
+    }
+
+    function openPanel(type: NotificationType, first?: PlaybookItem) {
+      const wasClosed = !isOpen;
+      if (wasClosed) {
+        isOpen = true;
+        stage!.classList.add('is-open');
+        panel!.setAttribute('aria-hidden', 'false');
+        // The stacks move out from under a stationary cursor
+        stackList.forEach(leaveStack);
+      }
+      selectTab(type, wasClosed ? PANEL_SLIDE : TAB_FADE, first);
+      panel!.focus({ preventScroll: true });
+    }
+
+    function closePanel() {
+      if (!isOpen) return;
+      isOpen = false;
+      stage!.classList.remove('is-open');
+      panel!.setAttribute('aria-hidden', 'true');
+      stackList.forEach(leaveStack);
+      // The card that opened the panel has already left, so focus the next one
+      const target = allCards()[0]?.el.querySelector<HTMLElement>('.nd-card-open') ?? stage!;
+      target.focus({ preventScroll: true });
+    }
+
+    function addRow(type: NotificationType, content: HTMLElement, timestamp: string) {
+      const row = make('div', 'nd-row');
+      const time = make('p', 'nd-row-time', timestamp);
+      row.append(content, time);
+      stage!.querySelector(`[data-rows="${type}"]`)!.prepend(row);
+      return row;
+    }
+
+    function fire(type: 'rta' | 'chat') {
+      const timestamp = new Date().toLocaleTimeString();
+      const content = renderContent(type);
+      const row = addRow(type, content.cloneNode(true) as HTMLElement, timestamp);
+
+      if (isOpen && activeTab === type) {
+        highlight(row);
+        return;
+      }
+
+      showCard(type, content, timestamp, () => {
+        openPanel(type);
+        highlight(row);
+      });
+    }
+
+    function showCard(type: NotificationType, content: HTMLElement, timestamp: string, onOpen: () => void) {
+      unread[type] += 1;
+      renderUnread();
+
+      const el = make('div', `nd-card nd-card--${type} is-entering`);
+      const open = make('button', 'nd-card-open') as HTMLButtonElement;
+      open.type = 'button';
+      open.setAttribute('aria-label', `Open ${TITLES[type]} notification`);
+
+      const close = make('button', 'nd-card-close') as HTMLButtonElement;
+      close.type = 'button';
+      close.setAttribute('aria-label', `Dismiss ${TITLES[type]} notification`);
+      close.innerHTML = CLOSE_ICON;
+
+      const header = make('div', 'nd-card-header');
+      const icon = make('span', 'nd-card-icon');
+      icon.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[type]}</svg>`;
+      header.append(icon, make('h4', 'nd-card-title', `${TITLES[type]} · ${timestamp}`));
+      el.append(open, close, header, content);
+
+      const stack = stacks[type];
+      const card: Card = {
+        type,
+        el,
+        height: 0,
+        remaining: NOTIFICATION_TIMEOUT,
+        startedAt: 0,
+        timer: undefined,
+        observer: new ResizeObserver((entries) => {
+          card.height = entries[0].borderBoxSize[0].blockSize;
+          layout(stack);
+        }),
+      };
+
+      open.addEventListener('click', onOpen);
+      close.addEventListener('click', () => removeCard(card));
+
+      stack.cards.unshift(card);
+      stack.el.prepend(el);
+      card.observer.observe(el);
+      card.height = el.offsetHeight;
+      layout(stack);
+      void el.offsetWidth;
+      el.classList.remove('is-entering');
+
+      if (!anyHovering()) startTimer(card);
+    }
+
+    function after(item: PlaybookItem, delay: number, run: () => void) {
+      const timer = window.setTimeout(() => {
+        item.timers.delete(timer);
+        run();
+      }, delay);
+      item.timers.add(timer);
+    }
+
+    function renderDescription(item: PlaybookItem) {
+      item.collapsible.dataset.open = String(item.descriptionOpen);
+      item.toggle.textContent = `${item.descriptionOpen ? 'Hide' : 'Show'} description and questions`;
+      item.toggle.classList.toggle('has-gap', item.descriptionOpen);
+    }
+
+    function completeItem(item: PlaybookItem) {
+      if (item.state !== 'open') return;
+      if (isOpen && activeTab === 'playbook') {
+        runSequence(item);
+        return;
+      }
+      item.state = 'pending';
+      showCard('playbook', renderContent('playbook', item.title), new Date().toLocaleTimeString(), () => openPanel('playbook', item));
+    }
+
+    function runPending(delay: number, first?: PlaybookItem) {
+      const pending = items.filter((item) => item.state === 'pending');
+      if (first && pending.includes(first)) pending.sort((a, b) => Number(b === first) - Number(a === first));
+      const start = reducedMotion.matches ? 0 : delay;
+      pending.forEach((item, index) => {
+        item.state = 'complete';
+        after(item, start + index * SEQUENCE_STAGGER, () => runSequence(item));
+      });
+    }
+
+    function runSequence(item: PlaybookItem) {
+      item.state = 'complete';
+      revealInPanel(item.card);
+      const check = make('div', 'nd-pb-check');
+      check.innerHTML = '<svg class="nd-pb-check-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg>';
+      item.card.prepend(check);
+      item.card.dataset.checkedByAi = 'true';
+    }
+
+    // The check's grow animation ends first, at about 1.34s
+    function onDetected(item: PlaybookItem) {
+      if (item.detected || item.card.dataset.checkedByAi !== 'true') return;
+      item.detected = true;
+      item.descriptionOpen = false;
+      item.toggle.hidden = false;
+      item.summarySection.hidden = false;
+      renderDescription(item);
+      playChunk(item, 0);
+    }
+
+    function playChunk(item: PlaybookItem, index: number) {
+      const text = item.summary[index];
+      if (text === undefined) return;
+
+      const chunk = make('div', 'nd-pb-chunk');
+      const marker = make('div', 'nd-pb-chunk-marker');
+      marker.append(make('span', 'nd-pb-chunk-dot'));
+      const words = make('div', 'nd-pb-chunk-text');
+      chunk.append(marker, words);
+      item.chunks.append(chunk);
+
+      const list = text.split(' ');
+      list.forEach((word, wordIndex) => {
+        const addWord = () => {
+          const span = make('span', undefined, `${word} `);
+          span.style.animationDelay = `${wordIndex * 0.01}s`;
+          words.append(span);
+          if (wordIndex === list.length - 1 && !reducedMotion.matches) {
+            span.addEventListener('animationend', () => playChunk(item, index + 1));
+          }
+        };
+        if (reducedMotion.matches) addWord();
+        else after(item, wordIndex * WORD_INTERVAL, addWord);
+      });
+      if (reducedMotion.matches) playChunk(item, index + 1);
+    }
+
+    function resetItem(item: PlaybookItem) {
+      item.timers.forEach((timer) => window.clearTimeout(timer));
+      item.timers.clear();
+      item.card.querySelector('.nd-pb-check')?.remove();
+      item.card.dataset.checkedByAi = 'false';
+      item.state = 'open';
+      item.detected = false;
+      item.descriptionOpen = true;
+      item.toggle.hidden = true;
+      item.summarySection.hidden = true;
+      item.chunks.replaceChildren();
+      item.checkbox.checked = false;
+      renderDescription(item);
+    }
+
+    function setSurface(name: string) {
+      surfaces.forEach((surface) => surface.classList.toggle('is-active', surface.dataset.surfaceView === name));
+      toggleButtons.forEach((button) => {
+        const active = button.dataset.surface === name;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+    }
+
+    function onKeydown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        closePanel();
+        return;
+      }
+      if (!event.shiftKey || event.metaKey || event.ctrlKey || event.altKey || event.repeat) return;
+      const type = SHORTCUTS[event.code];
+      if (type) {
+        event.preventDefault();
+        fire(type);
+        return;
+      }
+      const item = event.code === 'Digit3' ? items.find((candidate) => candidate.state === 'open') : items[ITEM_SHORTCUTS[event.code]];
+      if (event.code === 'Digit3' || item) event.preventDefault();
+      if (item) completeItem(item);
+    }
+
+    function onTabKeydown(event: KeyboardEvent) {
+      const index = tabButtons.indexOf(event.currentTarget as HTMLButtonElement);
+      const last = tabButtons.length - 1;
+      const targets: Record<string, number> = {
+        ArrowRight: index === last ? 0 : index + 1,
+        ArrowLeft: index === 0 ? last : index - 1,
+        Home: 0,
+        End: last,
+      };
+      const target = targets[event.key];
+      if (target === undefined) return;
+      event.preventDefault();
+      selectTab(tabButtons[target].dataset.tab as NotificationType);
+      tabButtons[target].focus({ preventScroll: true });
+    }
+
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    document.addEventListener('keydown', onKeydown, { signal });
+    // A mouse-focused control would show its focus ring on the next demo shortcut
+    stage.addEventListener('mousedown', (event) => {
+      if ((event.target as HTMLElement).closest('button, input')) event.preventDefault();
+    }, { signal });
+    closeButton.addEventListener('click', closePanel, { signal });
+    stackList.forEach((stack) => {
+      const enter = () => enterStack(stack);
+      const leave = () => leaveStack(stack);
+      stack.el.addEventListener('mouseenter', enter, { signal });
+      // Catches a cursor the stack has just moved under, which fires no mouseenter
+      stack.el.addEventListener('mousemove', enter, { signal });
+      stack.el.addEventListener('mouseleave', leave, { signal });
+      stack.el.addEventListener('focusin', enter, { signal });
+      stack.el.addEventListener('focusout', leave, { signal });
+    });
+    tabButtons.forEach((button) => {
+      button.addEventListener('click', () => selectTab(button.dataset.tab as NotificationType), { signal });
+      button.addEventListener('keydown', onTabKeydown, { signal });
+    });
+    toggleButtons.forEach((button) => {
+      button.addEventListener('click', () => setSurface(button.dataset.surface!), { signal });
+    });
+    items.forEach((item) => {
+      playbookList.append(item.card);
+      renderDescription(item);
+      collapsibleObserver.observe(item.collapsible.firstElementChild!);
+      item.card.addEventListener('animationend', () => onDetected(item), { signal });
+      item.toggle.addEventListener('click', () => {
+        item.descriptionOpen = !item.descriptionOpen;
+        renderDescription(item);
+      }, { signal });
+      item.checkbox.addEventListener('click', () => {
+        if (item.state === 'complete') {
+          resetItem(item);
+          return;
+        }
+        item.descriptionOpen = !item.checkbox.checked;
+        renderDescription(item);
+      }, { signal });
+    });
+
+    return () => {
+      controller.abort();
+      stackList.forEach((stack) => window.clearTimeout(stack.hoverTimer));
+      pendingRemovals.forEach((removal) => window.clearTimeout(removal));
+      collapsibleObserver.disconnect();
+      items.forEach((item) => item.timers.forEach((timer) => window.clearTimeout(timer)));
+      allCards().forEach((card) => {
+        window.clearTimeout(card.timer);
+        card.observer.disconnect();
+      });
+    };
+  }
+
+  let cleanup: (() => void) | undefined;
+
+  document.addEventListener('astro:page-load', () => {
+    cleanup = init();
+  });
+
+  document.addEventListener('astro:before-swap', () => {
+    cleanup?.();
+    cleanup = undefined;
+  });
+</script>
+
+<style is:global>
+  html {
+    overflow: hidden !important;
+  }
+
+  /* Beats Contact's scoped display rule. Left visible, it covers the whole demo */
+  #contact {
+    display: none !important;
+  }
+
+  .nd-stage {
+    --nd-surface: #fff;
+    --nd-border: #1c1c1c2b;
+    --nd-subtle: #1c1c1c14;
+    --nd-fg: #1c1c1c;
+    --nd-fg-tertiary: #535353;
+    --nd-sk: #e4e4e4;
+    --nd-sk-strong: #cfcfcf;
+    --nd-magenta: #ff1ba4;
+    --nd-purple: #7c52ff;
+    --nd-ai: linear-gradient(135deg, #471571 0%, #7c229e 14%, #b02290 35%, #e92f6f 60%, #fb7328 90%, #f3960f 100%);
+    --nd-space-300: 4px;
+    --nd-space-350: 6px;
+    --nd-panel-width: 468px;
+    --nd-panel-inset: 16px;
+    --nd-panel-offset: 484px;
+    --nd-content-right-open: 500px;
+    --nd-move: 0.45s cubic-bezier(0.34, 1.2, 0.64, 1);
+
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    outline: none;
+    color: var(--nd-fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .nd-stage p,
+  .nd-stage h4,
+  .nd-stage h6 {
+    margin: 0;
+  }
+
+  /* Backgrounds stay full width behind the panel. Only the content inside them
+     moves, all driven by this one value so it stays in sync with the panel */
+  @property --nd-content-right {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 16px;
+  }
+
+  .nd-frame {
+    --nd-content-right: 16px;
+
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    transition: --nd-content-right var(--nd-move);
+  }
+
+  .nd-stage.is-open .nd-frame {
+    --nd-content-right: var(--nd-content-right-open);
+  }
+
+  .nd-bar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 48px;
+    padding: 0 var(--nd-content-right) 0 16px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--nd-border);
+    background: #fff;
+  }
+
+  .nd-toggle {
+    flex: none;
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+    border-radius: 8px;
+    background: #ececec;
+  }
+
+  .nd-toggle-btn {
+    padding: 4px 12px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--nd-fg-tertiary);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .nd-toggle-btn.is-active {
+    background: #fff;
+    color: var(--nd-fg);
+    box-shadow: 0 1px 2px #00000014;
+  }
+
+  .nd-hints {
+    min-width: 0;
+    overflow: hidden;
+    display: flex;
+    gap: 16px;
+    color: var(--nd-fg-tertiary);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .nd-hints kbd {
+    margin-right: 2px;
+    padding: 1px 5px;
+    border: 1px solid var(--nd-border);
+    border-radius: 4px;
+    background: #f7f7f7;
+    font: inherit;
+    font-size: 11px;
+  }
+
+  .nd-surfaces {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .nd-surface {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+  }
+
+  .nd-surface.is-active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.2s ease, visibility 0s;
+  }
+
+  /* Wireframe primitives */
+  .nd-sk {
+    display: block;
+    height: 10px;
+    border-radius: 5px;
+    background: var(--nd-sk);
+  }
+
+  .nd-sk--strong {
+    background: var(--nd-sk-strong);
+  }
+
+  .nd-sk--circle {
+    flex: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+
+  .nd-sk--dot {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+  }
+
+  .nd-sk--logo {
+    flex: none;
+    width: 96px;
+    height: 20px;
+  }
+
+  .nd-sk--search {
+    flex: 1;
+    max-width: 420px;
+    height: 32px;
+    border-radius: 8px;
+  }
+
+  /* Meetings wireframe */
+  .nd-meetings {
+    display: flex;
+    flex-direction: column;
+    background: #262626;
+  }
+
+  .nd-tiles {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 8px;
+    padding: 16px var(--nd-content-right) 16px 16px;
+  }
+
+  .nd-tile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    border-radius: 12px;
+    background: #3a3a3a;
+  }
+
+  .nd-tile-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #555;
+  }
+
+  .nd-tile-name {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: #00000066;
+    color: #fff;
+    font-size: 12px;
+  }
+
+  .nd-controls {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 72px;
+    padding: 0 var(--nd-content-right) 0 16px;
+  }
+
+  .nd-control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nd-control {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #484848;
+  }
+
+  .nd-control--end {
+    width: 56px;
+    border-radius: 20px;
+    background: #6e3a3a;
+  }
+
+  .nd-control-pill {
+    width: 88px;
+    height: 16px;
+    border-radius: 8px;
+    background: #484848;
+  }
+
+  /* App wireframe */
+  .nd-app {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+  }
+
+  .nd-topbar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 60px;
+    padding: 0 var(--nd-content-right) 0 16px;
+    border-bottom: 1px solid var(--nd-subtle);
+  }
+
+  .nd-app-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+  }
+
+  .nd-leftbar {
+    flex: 0 1 280px;
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    border-right: 1px solid var(--nd-subtle);
+    background: #fafafa;
+  }
+
+  .nd-nav-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .nd-conversation {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nd-conversation-head {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 60px;
+    padding: 0 var(--nd-content-right) 0 16px;
+    border-bottom: 1px solid var(--nd-subtle);
+  }
+
+  .nd-messages {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 24px;
+    padding: 16px var(--nd-content-right) 16px 16px;
+    overflow: hidden;
+  }
+
+  .nd-message {
+    display: flex;
+    gap: 12px;
+  }
+
+  .nd-message-lines {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .nd-composer {
+    flex: none;
+    height: 72px;
+    margin: 0 var(--nd-content-right) 16px 16px;
+    border: 1px solid var(--nd-border);
+    border-radius: 12px;
+  }
+
+  /* Notification stack, ported from the DPM Notifications prototype */
+  .nd-stacks {
+    position: absolute;
+    top: calc(48px + 16px);
+    right: var(--nd-content-right);
+    z-index: 10;
+    width: 320px;
+  }
+
+  .nd-stack {
+    position: relative;
+    isolation: isolate;
+    height: calc(var(--stack-height, 0px) + var(--nd-space-350) * max(var(--notification-count, 0) - 1, 0));
+    max-height: calc(var(--stack-height, 0px) + var(--nd-space-350) * 2);
+    transition: height 0.3s ease, max-height 0.3s ease, margin-top 0.3s ease;
+  }
+
+  /* On the stacks rather than a flex gap, so an empty stack leaves no space */
+  .nd-stack.has-cards ~ .nd-stack.has-cards {
+    margin-top: 8px;
+  }
+
+  .nd-stack.is-unfurled {
+    height: var(--unfurled-stack-height);
+    max-height: var(--unfurled-stack-height);
+  }
+
+  .nd-card {
+    position: absolute;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px #0000001f;
+    transform-origin: bottom center;
+    transition: transform 0.3s cubic-bezier(0, 0.55, 0.45, 1), opacity 0.15s ease, height 0.15s linear;
+    will-change: transform, opacity, height;
+  }
+
+  .nd-card::after {
+    content: "";
+    position: absolute;
+    top: calc(100% - 2px);
+    left: 0;
+    width: 100%;
+    height: calc(var(--nd-space-300) + 4px);
+    background: transparent;
+  }
+
+  .nd-card--rta,
+  .nd-card--playbook {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(var(--nd-surface), var(--nd-surface)) padding-box,
+      linear-gradient(135deg, var(--nd-magenta) 10%, var(--nd-purple) 90%) border-box;
+  }
+
+  .nd-card--chat {
+    border: 1px solid var(--nd-border);
+    background: var(--nd-surface);
+  }
+
+  .nd-card:not(.is-front) {
+    height: 60px;
+    transform: translate3d(0, calc(var(--y) + calc(var(--nd-space-350) * var(--index)) - calc(60px * var(--index))), calc(var(--index) * -1px)) scale(calc(1 - calc(var(--index) * 0.05)));
+  }
+
+  .nd-card:not(.is-front) > * {
+    opacity: 0;
+    transition: opacity 0.05s ease;
+  }
+
+  .nd-card.is-buried {
+    opacity: 0;
+  }
+
+  .nd-card.is-entering {
+    transform: translateY(-50%);
+    opacity: 0;
+  }
+
+  .nd-card.is-leaving {
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .nd-card.is-front.is-leaving {
+    transform: translate3d(30%, 0, 0) scale(1);
+  }
+
+  .nd-card:not(.is-front).is-leaving {
+    transform: translate3d(30%, calc(100% - var(--height) + calc(var(--nd-space-350) * var(--index))), calc(var(--index) * -1px)) scale(calc(1 - calc(var(--index) * 0.05)));
+  }
+
+  .nd-stack.is-unfurled .nd-card:not(.is-front) {
+    height: auto;
+    opacity: 1;
+    transform: translate3d(0, calc(0% + var(--y) + calc(var(--nd-space-300) * var(--index))), calc(var(--index) * -1px)) scale(1);
+  }
+
+  .nd-stack.is-unfurled .nd-card:not(.is-front) > * {
+    opacity: 1;
+  }
+
+  .nd-stack.is-unfurled .nd-card:not(.is-front).is-leaving {
+    opacity: 0;
+    transform: translate3d(50%, calc(0% + var(--y) + calc(var(--nd-space-300) * var(--index))), calc(var(--index) * -1px)) scale(1);
+  }
+
+  .nd-card-open {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    padding: 0;
+    border: 0;
+    border-radius: inherit;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .nd-card-open:focus-visible {
+    outline: 2px solid var(--nd-purple);
+    outline-offset: 2px;
+  }
+
+  .nd-card-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--nd-fg-tertiary);
+    cursor: pointer;
+  }
+
+  .nd-card-close:hover,
+  .nd-icon-btn:hover {
+    background: #0000000f;
+  }
+
+  .nd-card-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-right: 24px;
+  }
+
+  .nd-card-icon {
+    display: flex;
+    color: var(--nd-fg-tertiary);
+  }
+
+  .nd-card--rta .nd-card-icon,
+  .nd-card--playbook .nd-card-icon {
+    color: var(--nd-purple);
+  }
+
+  .nd-card-title {
+    color: var(--nd-fg-tertiary);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .nd-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nd-card-headline {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .nd-card-link {
+    color: var(--nd-purple);
+    text-decoration: underline;
+  }
+
+  .nd-card-thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    padding-top: 4px;
+  }
+
+  .nd-card-thumb {
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--nd-subtle);
+    border-radius: 8px;
+    background: var(--nd-sk);
+  }
+
+  .nd-card-topic {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nd-card-checkbox {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    background: var(--nd-ai);
+  }
+
+  .nd-card-topic-text {
+    background: var(--nd-ai);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 700;
+  }
+
+  .nd-card-note {
+    color: var(--nd-fg-tertiary);
+    font-size: 12px;
+    font-style: italic;
+  }
+
+  /* Right panel, ported from the Agentic Studio agent panel */
+  .nd-panel {
+    position: fixed;
+    top: var(--nd-panel-inset);
+    right: calc(var(--nd-panel-inset) - var(--nd-panel-offset));
+    z-index: 20;
+    width: var(--nd-panel-width);
+    outline: none;
+    visibility: hidden;
+    transition: right var(--nd-move), visibility 0s linear 0.45s;
+  }
+
+  .nd-stage.is-open .nd-panel {
+    right: var(--nd-panel-inset);
+    visibility: visible;
+    transition: right var(--nd-move), visibility 0s;
+  }
+
+  .nd-panel-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: calc(100vh - 32px);
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 2px 16px #00000014, 0 2px 4px #0000000a, 0 1px 2px #00000008;
+  }
+
+  .nd-panel-header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 16px;
+    border-bottom: 1px solid var(--nd-border);
+  }
+
+  .nd-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--nd-fg-tertiary);
+    cursor: pointer;
+  }
+
+  .nd-tabs {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nd-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: -1px;
+    padding: 8px 12px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: var(--nd-fg-tertiary);
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .nd-tab.is-active {
+    border-bottom-color: var(--nd-purple);
+    color: var(--nd-fg);
+  }
+
+  .nd-tab-count {
+    min-width: 16px;
+    padding: 0 4px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    background: var(--nd-purple);
+    color: #fff;
+    font-size: 11px;
+    line-height: 16px;
+    text-align: center;
+  }
+
+  .nd-tab-count[hidden],
+  .nd-tabpanel[hidden],
+  .nd-pb-toggle[hidden],
+  .nd-pb-summary[hidden] {
+    display: none;
+  }
+
+  /* Not [hidden]: display: none would replay every completed item's animations on return */
+  .nd-tabpanel.is-offstage {
+    position: absolute;
+    right: 16px;
+    left: 16px;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+  }
+
+  .nd-panel-content {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    padding: 0 16px 16px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .nd-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .nd-rows:not(:empty) + .nd-zero {
+    display: none;
+  }
+
+  .nd-zero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding-top: 96px;
+    color: var(--nd-fg-tertiary);
+    text-align: center;
+  }
+
+  .nd-zero svg {
+    margin-bottom: 8px;
+  }
+
+  .nd-zero-title {
+    color: var(--nd-fg);
+    font-weight: 600;
+  }
+
+  .nd-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+    border: 1px solid var(--nd-subtle);
+    border-radius: 12px;
+  }
+
+  .nd-row.is-highlighted {
+    animation: nd-highlight 1.2s ease-out;
+  }
+
+  @keyframes nd-highlight {
+    from {
+      background-color: #7c52ff2e;
+    }
+  }
+
+  .nd-row-time {
+    color: var(--nd-fg-tertiary);
+    font-size: 12px;
+  }
+
+  /* Playbook, ported from the Playbook prototype */
+  @property --gradient-offset {
+    syntax: "<length-percentage>";
+    inherits: true;
+    initial-value: -100%;
+  }
+
+  @keyframes nd-pb-transport {
+    to {
+      --gradient-offset: 100%;
+    }
+  }
+
+  @keyframes nd-pb-grow {
+    60% {
+      transform: scale(1);
+    }
+    80% {
+      transform: scale(1.5);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes nd-pb-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes nd-pb-appear {
+    0% {
+      opacity: 0;
+      transform: scale(0);
+    }
+    90% {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes nd-pb-draw {
+    0% {
+      height: 0;
+    }
+    to {
+      height: var(--height);
+    }
+  }
+
+  .nd-tabpanel--playbook {
+    --nd-pb-magenta: #fc5ea0;
+    --nd-pb-purple: #7c52ff;
+    --nd-pb-moderate: #e9e9e9;
+    --nd-pb-gradient-duration: 1.4s;
+    --nd-pb-check-duration: 0.84s;
+  }
+
+  .nd-pb-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px 12px;
+    color: var(--nd-fg-tertiary);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .nd-pb-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .nd-pb-card {
+    position: relative;
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    background:
+      linear-gradient(var(--nd-surface), var(--nd-surface)) padding-box,
+      linear-gradient(135deg, rgba(255, 255, 255, 0) calc(0% + var(--gradient-offset)), var(--nd-pb-magenta) calc(5% + var(--gradient-offset)), var(--nd-pb-purple) calc(95% + var(--gradient-offset)), rgba(255, 255, 255, 0) calc(100% + var(--gradient-offset))) border-box;
+  }
+
+  .nd-pb-card[data-checked-by-ai="true"] {
+    animation: nd-pb-transport var(--nd-pb-gradient-duration) 1 cubic-bezier(0.75, 0, 0.25, 1) forwards;
+  }
+
+  .nd-pb-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0) calc(10% + var(--gradient-offset)), var(--nd-pb-magenta) calc(40% + var(--gradient-offset)), var(--nd-pb-purple) calc(60% + var(--gradient-offset)), rgba(255, 255, 255, 0) calc(90% + var(--gradient-offset)));
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  .nd-pb-checkbox {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin: 4px 0 0;
+    border: 1px solid #1c1c1c4d;
+    border-radius: 4px;
+    background: #1c1c1c05 center / 12px no-repeat;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .nd-pb-checkbox:checked {
+    border-color: var(--nd-purple);
+    background-color: var(--nd-purple);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5 10 17 19 7'/%3E%3C/svg%3E");
+  }
+
+  .nd-pb-checkbox:focus-visible,
+  .nd-pb-toggle:focus-visible {
+    outline: 2px solid var(--nd-purple);
+    outline-offset: 2px;
+  }
+
+  /* Clicks pass through to the checkbox beneath, which resets the item */
+  .nd-pb-check {
+    position: absolute;
+    top: 12px;
+    left: 8px;
+    z-index: 1;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--nd-purple);
+    border-radius: 4px;
+    background: linear-gradient(135deg, var(--nd-pb-magenta) calc(-90% + var(--gradient-offset)), var(--nd-pb-purple) calc(-10% + var(--gradient-offset)), var(--nd-pb-purple) calc(10% + var(--gradient-offset)), var(--nd-pb-magenta) calc(90% + var(--gradient-offset)), #1c1c1c05 calc(100% + var(--gradient-offset))) border-box;
+    color: #fff;
+    transform-origin: 50% 50%;
+    pointer-events: none;
+    animation: nd-pb-grow var(--nd-pb-check-duration) 1 0.5s ease-in-out forwards;
+  }
+
+  .nd-pb-check-icon {
+    animation: nd-pb-grow var(--nd-pb-check-duration) 1 0.5s ease-in-out forwards;
+  }
+
+  .nd-pb-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .nd-pb-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nd-pb-title-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .nd-pb-title {
+    background: linear-gradient(135deg, var(--nd-pb-magenta) calc(-90% + var(--gradient-offset)), var(--nd-pb-purple) calc(-10% + var(--gradient-offset)), var(--nd-pb-purple) calc(10% + var(--gradient-offset)), var(--nd-pb-magenta) calc(90% + var(--gradient-offset)), var(--nd-fg) calc(100% + var(--gradient-offset)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.6;
+    cursor: pointer;
+  }
+
+  .nd-pb-sparkle {
+    display: flex;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out calc(var(--nd-pb-gradient-duration) / 2);
+  }
+
+  .nd-pb-card[data-checked-by-ai="true"] .nd-pb-sparkle {
+    opacity: 1;
+  }
+
+  .nd-pb-collapsible {
+    display: flex;
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-in-out;
+  }
+
+  .nd-pb-collapsible[data-open="true"] {
+    max-height: var(--collapsible-height);
+  }
+
+  .nd-pb-compact {
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  .nd-pb-heading {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .nd-pb-heading--questions {
+    padding-top: 8px;
+  }
+
+  .nd-pb-prompts {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .nd-pb-toggle {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #3a3a3a;
+    font: inherit;
+    font-size: 12px;
+    line-height: 1.2;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .nd-pb-toggle.has-gap {
+    padding-top: 8px;
+  }
+
+  .nd-pb-summary {
+    width: 100%;
+  }
+
+  .nd-pb-chunks {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .nd-pb-chunk {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .nd-pb-chunk::before {
+    --height: calc(100% + 6px);
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 3px;
+    width: 2px;
+    background-color: var(--nd-pb-moderate);
+    animation: nd-pb-draw 0.8s ease-in-out 1 forwards;
+  }
+
+  .nd-pb-chunk:first-of-type::before {
+    top: 8px;
+  }
+
+  .nd-pb-chunk:last-of-type::before {
+    --height: calc(100% - 6px);
+    border-bottom-right-radius: 1px;
+    border-bottom-left-radius: 1px;
+  }
+
+  .nd-pb-chunk:only-of-type::before {
+    --height: calc(100% - 14px);
+  }
+
+  .nd-pb-chunk-marker {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 8px;
+  }
+
+  .nd-pb-chunk-dot {
+    z-index: 2;
+    display: block;
+    width: 8px;
+    height: 8px;
+    box-sizing: border-box;
+    border: 1px solid var(--nd-border);
+    border-radius: 50%;
+    background-color: var(--nd-pb-moderate);
+    animation: nd-pb-appear 0.4s ease-in-out 1 forwards;
+  }
+
+  .nd-pb-chunk-text {
+    padding: 4px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .nd-pb-chunk-text span {
+    opacity: 0;
+    animation: nd-pb-fade-in 0.2s forwards;
+  }
+
+  /* Too narrow to keep a usable surface: the panel overlays, only the cards move */
+  @media (max-width: 1059px) {
+    .nd-stage.is-open .nd-frame {
+      --nd-content-right: 16px;
+    }
+
+    .nd-stacks {
+      right: 16px;
+      transition: right var(--nd-move);
+    }
+
+    .nd-stage.is-open .nd-stacks {
+      right: var(--nd-content-right-open);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nd-stage *,
+    .nd-stage *::before,
+    .nd-frame {
+      transition-duration: 0s !important;
+      transition-delay: 0s !important;
+      animation-duration: 0s !important;
+      animation-delay: 0s !important;
+    }
+  }
+</style>
