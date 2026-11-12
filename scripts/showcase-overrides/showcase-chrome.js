@@ -8,6 +8,7 @@
 //   (X) button is hidden, so the controls are always visible. Its card's
 //   collapse chevron is hidden too (the toggle itself is removed by the
 //   upload script's patches).
+// - On Agentic Studio, the browser tab reads "Agentic Studio".
 
 const style = document.createElement('style');
 style.textContent = `
@@ -36,6 +37,17 @@ function openSettingsIfNeeded() {
 
 window.addEventListener('hashchange', openSettingsIfNeeded);
 openSettingsIfNeeded();
+
+// The mirror's index.html titles every tab "Design Studio"
+const DEFAULT_TITLE = document.title;
+const ROUTE_TITLES = [[/^#\/AgenticStudioE2eDemo(?:[/?]|$)/, 'Agentic Studio']];
+
+function setTitle() {
+  document.title = ROUTE_TITLES.find(([route]) => route.test(location.hash))?.[1] ?? DEFAULT_TITLE;
+}
+
+window.addEventListener('hashchange', setTitle);
+setTitle();
 
 // Prototype state lives in memory and its settings in the hash query
 // (#/Route?setting=value), so dropping the query and reloading restores the
