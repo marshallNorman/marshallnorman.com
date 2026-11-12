@@ -1,0 +1,472 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { isAuthed } from '../../lib/showcase-auth';
+
+export const prerender = false;
+
+if (!isAuthed(Astro.cookies)) {
+  return Astro.redirect('/showcase');
+}
+
+const DEMO_URL = '/showcase/prototypes/#/AgenticStudioE2eDemo';
+
+const context = [
+  {
+    label: 'The problem',
+    body: "Contact centers ran on rigid, scripted bots. In 2024 Dialpad bet on autonomous voice and chat agents that reason, act across enterprise systems and resolve issues end to end. What an agent even is, inside a real-time communications platform, was undefined.",
+    wide: true,
+  },
+  {
+    label: 'Who it was for',
+    body: 'Contact center admins and managers configuring agents, who had never thought about prompt engineering.',
+  },
+  {
+    label: 'My role',
+    body: 'The only designer on a 50-person task force. I defined the agent model and the creation system, then became DRI for the agent building experience as design grew from 1 to 8.',
+  },
+  {
+    label: 'Who I worked with',
+    body: 'Product and engineering leads, execs and the board, sales and GTM, and early-access customers like HopCo and Custom Ink.',
+  },
+  {
+    label: 'Why it mattered',
+    body: "Dialpad's first agentic product, and a company-level bet on where contact centers were going.",
+  },
+];
+
+const tour = [
+  'Create a new agent on the canvas',
+  'Manage it from the agent dashboard',
+  'Test it in Proving Ground',
+];
+---
+
+<Layout>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+  <link slot="head" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&family=Roboto+Serif:ital,opsz,wght@0,8..144,400;0,8..144,500;1,8..144,400&display=swap" rel="stylesheet" />
+
+  <div class="as-preso" id="as-preso">
+    <div class="as-track" id="as-track">
+      <!-- Cover -->
+      <section class="as-slide" aria-label="Cover">
+        <div class="as-inner">
+          <h1 class="as-cover-title">Agentic Studio <em>Designing Dialpad's agentic AI platform</em></h1>
+          <p class="as-byline">Marshall Norman · Staff Product Designer</p>
+        </div>
+        <p class="as-hint">← → to navigate</p>
+      </section>
+
+      <!-- Context -->
+      <section class="as-slide" aria-label="Context">
+        <div class="as-inner">
+          <div class="as-head">
+            <p class="as-numeral">01</p>
+            <h2 class="as-heading">A new kind of product, with no pattern to borrow.</h2>
+          </div>
+          <dl class="as-context">
+            {context.map((item) => (
+              <div class:list={['as-context-item', { 'is-wide': item.wide }]}>
+                <dt>{item.label}</dt>
+                <dd>{item.body}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      <!-- Handoff -->
+      <section class="as-slide as-slide--handoff" aria-label="Start the demo">
+        <div class="as-inner">
+          <h2 class="as-heading as-heading--handoff">Let's build an agent.</h2>
+          <!-- The prototype isn't an Astro page, so skip the view transitions router -->
+          <a class="as-start" id="as-start" href={DEMO_URL} data-astro-reload>Start demo <span aria-hidden="true">→</span></a>
+          <ol class="as-tour">
+            {tour.map((step) => <li>{step}</li>)}
+          </ol>
+          <p class="as-footnote">
+            Selected work — certain product details omitted to protect confidential information.<br />
+            Demo is a recreation of the design, not production software.
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <button type="button" id="as-prev" class="as-nav as-nav--prev" aria-label="Previous slide"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M8 2 2 8l6 6" /></svg></button>
+    <button type="button" id="as-next" class="as-nav as-nav--next" aria-label="Next slide"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="m2 2 6 6-6 6" /></svg></button>
+    <div id="as-counter" class="as-counter" aria-live="polite"></div>
+  </div>
+</Layout>
+
+<script>
+  function init() {
+    const track = document.getElementById('as-track');
+    const counter = document.getElementById('as-counter');
+    const prev = document.getElementById('as-prev');
+    const next = document.getElementById('as-next');
+    const start = document.getElementById('as-start');
+    if (!track || !counter || !prev || !next || !start) return undefined;
+
+    const slides = [...track.querySelectorAll<HTMLElement>('.as-slide')];
+    const controller = new AbortController();
+    const { signal } = controller;
+    let current = 0;
+
+    function goTo(index: number) {
+      if (index < 0 || index >= slides.length) return;
+      current = index;
+      track!.style.transform = `translateX(${-current * 100}vw)`;
+      counter!.textContent = `${current + 1} / ${slides.length}`;
+      // Keeps off-screen links out of the tab order, where focusing one would scroll the track
+      slides.forEach((slide, slideIndex) => {
+        slide.inert = slideIndex !== current;
+      });
+      prev!.classList.toggle('is-hidden', current === 0);
+      // The hash brings browser back from the prototype to this slide, not the cover.
+      // Keeping history.state stops the view transitions router from reloading on back
+      history.replaceState(history.state, '', `#${current + 1}`);
+    }
+
+    function advance() {
+      if (current === slides.length - 1) start!.click();
+      else goTo(current + 1);
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') advance();
+      if (event.key === 'ArrowLeft') goTo(current - 1);
+    }, { signal });
+    prev.addEventListener('click', () => goTo(current - 1), { signal });
+    next.addEventListener('click', advance, { signal });
+
+    const fromHash = Number.parseInt(location.hash.slice(1), 10) - 1;
+    goTo(fromHash >= 0 && fromHash < slides.length ? fromHash : 0);
+
+    return () => controller.abort();
+  }
+
+  let cleanup: (() => void) | undefined;
+
+  document.addEventListener('astro:page-load', () => {
+    cleanup = init();
+  });
+
+  document.addEventListener('astro:before-swap', () => {
+    cleanup?.();
+    cleanup = undefined;
+  });
+</script>
+
+
+<style>
+  :global(html) {
+    overflow: hidden !important;
+  }
+
+  /* Beats Contact's scoped display rule. Left visible, it covers the whole page */
+  :global(#contact) {
+    display: none !important;
+  }
+
+  /* Palette, type and column lines match foundational-design-at-dialpad.astro */
+  .as-preso {
+    --col: min(1080px, 100vw - 176px);
+    --accent: #8674ea;
+    --grid-line: #dcd5f5;
+    --h1: clamp(44px, 5.33vw, 92px);
+    --as-purple: #7c52ff;
+
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: #f4f2ff;
+    color: #000;
+    font-family: "Roboto Serif", Georgia, serif;
+  }
+
+  .as-track {
+    position: relative;
+    display: flex;
+    width: max-content;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .as-slide {
+    position: relative;
+    display: flex;
+    flex: none;
+    width: 100vw;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* Column guide lines */
+  .as-slide::before,
+  .as-slide::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--grid-line);
+    pointer-events: none;
+  }
+
+  .as-slide::before {
+    left: calc(50% - var(--col) / 2);
+  }
+
+  .as-slide::after {
+    left: calc(50% + var(--col) / 2);
+  }
+
+  /* Lavender deepens behind the handoff, with grain (tokens in src/styles/global.css) */
+  .as-slide--handoff {
+    background-image: var(--noise), var(--lavender-fade);
+    background-blend-mode: soft-light, normal;
+  }
+
+  .as-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: var(--col);
+    margin-inline: auto;
+    padding: clamp(24px, 4vh, 56px) 0 88px;
+  }
+
+  /* No divider of its own: the context items' top rules sit right below */
+  .as-head {
+    margin-bottom: clamp(20px, 3.5vh, 36px);
+  }
+
+  .as-numeral {
+    margin: 0 0 clamp(4px, 1vh, 12px);
+    color: var(--accent);
+    font-size: clamp(40px, 5vw, 80px);
+    line-height: 1;
+  }
+
+  .as-heading {
+    max-width: 926px;
+    margin: 0;
+    font-size: clamp(30px, 3.24vw, 56px);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .as-prose {
+    max-width: 680px;
+    margin: 0 0 clamp(20px, 3.5vh, 36px);
+    font-size: clamp(16px, 1.3vw, 19px);
+    line-height: 1.6;
+  }
+
+  .as-pull {
+    margin: clamp(20px, 3.5vh, 36px) 0 0;
+    color: var(--accent);
+    font-size: clamp(19px, 1.85vw, 28px);
+    font-style: italic;
+    line-height: 1.3;
+  }
+
+  /* Cover */
+  .as-cover-title {
+    margin: 0;
+    font-size: var(--h1);
+    font-weight: 400;
+    line-height: 1.17;
+  }
+
+  .as-cover-title em {
+    color: var(--accent);
+    display: block;
+    margin-top: 0.4em;
+    font-size: 0.5em;
+    font-style: italic;
+  }
+
+  .as-byline {
+    margin: clamp(32px, 6vh, 64px) 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--grid-line);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: clamp(12px, 1.1vw, 14px);
+  }
+
+  .as-hint {
+    position: absolute;
+    right: calc(50% - var(--col) / 2 + 16px);
+    bottom: 44px;
+    z-index: 1;
+    margin: 0;
+    color: var(--accent);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 12px;
+  }
+
+  /* Context */
+  .as-context {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(20px, 3.5vh, 36px) clamp(24px, 3vw, 48px);
+    margin: 0;
+  }
+
+  .as-context-item {
+    padding-top: 14px;
+    border-top: 1px solid var(--grid-line);
+  }
+
+  .as-context-item.is-wide {
+    grid-column: span 2;
+  }
+
+  .as-context dt {
+    margin-bottom: 8px;
+    color: var(--accent);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 13px;
+  }
+
+  .as-context dd {
+    margin: 0;
+    font-size: clamp(15px, 1.2vw, 18px);
+    line-height: 1.55;
+  }
+
+  .as-context-item.is-wide dd {
+    font-size: clamp(18px, 1.6vw, 24px);
+    line-height: 1.45;
+  }
+
+  /* Handoff */
+  .as-heading--handoff {
+    margin-bottom: clamp(24px, 4vh, 40px);
+    font-size: var(--h1);
+    line-height: 1.17;
+  }
+
+  .as-start {
+    align-self: flex-start;
+    padding: 14px 24px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: clamp(15px, 1.2vw, 18px);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .as-start:hover {
+    background: var(--as-purple);
+  }
+
+  .as-start:focus-visible,
+  .as-nav:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .as-tour {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 32px;
+    margin: clamp(24px, 5vh, 48px) 0 0;
+    padding: 0;
+    font-size: 15px;
+    list-style: none;
+    counter-reset: tour;
+  }
+
+  .as-tour li {
+    counter-increment: tour;
+  }
+
+  .as-tour li::before {
+    content: counter(tour, decimal-leading-zero);
+    margin-right: 8px;
+    color: var(--accent);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 12px;
+  }
+
+  .as-footnote {
+    margin: clamp(16px, 3vh, 28px) 0 0;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  /* Controls */
+  .as-nav {
+    position: fixed;
+    bottom: 36px;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1px solid var(--grid-line);
+    border-radius: 50%;
+    background: #fff;
+    color: var(--accent);
+    cursor: pointer;
+    transition: opacity 0.3s ease, border-color 0.2s ease;
+  }
+
+  /* An SVG chevron rather than a ‹ › glyph, so it centers on its own box
+     instead of on the font's baseline and side bearings */
+  .as-nav svg {
+    width: 10px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .as-nav:hover {
+    border-color: var(--accent);
+  }
+
+  .as-nav--prev {
+    left: 20px;
+  }
+
+  .as-nav--next {
+    right: 20px;
+  }
+
+  .as-nav.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .as-counter {
+    position: fixed;
+    bottom: 44px;
+    left: 50%;
+    z-index: 50;
+    color: rgba(0, 0, 0, 0.6);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 12px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .as-track,
+    .as-start,
+    .as-nav {
+      transition: none;
+    }
+  }
+</style>

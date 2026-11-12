@@ -164,8 +164,8 @@ const keys = [
       </section>
     </div>
 
-    <button type="button" id="np-prev" class="np-nav np-nav--prev" aria-label="Previous slide">‹</button>
-    <button type="button" id="np-next" class="np-nav np-nav--next" aria-label="Next slide">›</button>
+    <button type="button" id="np-prev" class="np-nav np-nav--prev" aria-label="Previous slide"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M8 2 2 8l6 6" /></svg></button>
+    <button type="button" id="np-next" class="np-nav np-nav--next" aria-label="Next slide"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="m2 2 6 6-6 6" /></svg></button>
     <div id="np-counter" class="np-counter" aria-live="polite"></div>
   </div>
 </Layout>
@@ -724,15 +724,25 @@ const keys = [
     justify-content: center;
     width: 48px;
     height: 48px;
-    padding-bottom: 2px;
+    padding: 0;
     border: 1px solid var(--grid-line);
     border-radius: 50%;
     background: #fff;
     color: var(--accent);
-    font-family: "Roboto Mono", ui-monospace, monospace;
-    font-size: 28px;
     cursor: pointer;
     transition: opacity 0.3s ease, border-color 0.2s ease;
+  }
+
+  /* An SVG chevron rather than a ‹ › glyph, so it centers on its own box
+     instead of on the font's baseline and side bearings */
+  .np-nav svg {
+    width: 10px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .np-nav:hover {
