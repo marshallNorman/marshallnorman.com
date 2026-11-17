@@ -1,0 +1,574 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { isAuthed } from '../../lib/showcase-auth';
+
+export const prerender = false;
+
+if (!isAuthed(Astro.cookies)) {
+  return Astro.redirect('/showcase');
+}
+
+const DEMO_URL = '/showcase/playbook-creation-demo';
+
+const context = [
+  {
+    label: 'The problem',
+    body: 'Call center managers wanted a way to help their agents stay on track and engaged during calls: covering the topics that matter, in a way that fits how their team actually sells, supports or hires.',
+    span: 'wide',
+  },
+  {
+    label: 'My role',
+    body: 'Lead designer, end to end, from discovery through early access and general availability.',
+  },
+  {
+    label: 'The solution',
+    points: [
+      'Admins build custom playbooks, starting from a proven template like BANT or MEDDIC, or from scratch.',
+      'They pick topics and questions from a library, or write their own.',
+      'A preview shows exactly what agents will see.',
+      'During the call, AI checks topics off as they’re covered.',
+    ],
+    span: 'full',
+  },
+];
+
+const metrics = [
+  { value: '570', label: 'Companies using AI Playbooks' },
+  { value: '897,910', label: 'Calls with AI Playbooks' },
+  { value: '650', label: 'Playbooks created' },
+];
+
+const tour = [
+  'Start from a template',
+  'Add, drag and reorder topics',
+  'Create a custom topic',
+];
+---
+
+<Layout>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+  <link slot="head" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&family=Roboto+Serif:ital,opsz,wght@0,8..144,400;0,8..144,500;1,8..144,400&display=swap" rel="stylesheet" />
+
+  <div class="pb-preso" id="pb-preso">
+    <div class="pb-track" id="pb-track">
+      <!-- Cover -->
+      <section class="pb-slide" aria-label="Cover">
+        <div class="pb-inner">
+          <h1 class="pb-cover-title">Custom AI Playbooks <em>Designing playbook creation for Dialpad admins</em></h1>
+          <p class="pb-byline">Marshall Norman · Staff Product Designer</p>
+        </div>
+        <p class="pb-hint">← → to navigate</p>
+      </section>
+
+      <!-- Problem, role, solution -->
+      <section class="pb-slide" aria-label="Context">
+        <div class="pb-inner">
+          <div class="pb-head">
+            <p class="pb-numeral">01</p>
+            <h2 class="pb-heading">Help agents stay on track, without scripting every call.</h2>
+          </div>
+          <dl class="pb-context">
+            {context.map((item) => (
+              <div class:list={['pb-context-item', { 'is-wide': item.span === 'wide', 'is-full': item.span === 'full' }]}>
+                <dt>{item.label}</dt>
+                <dd>{item.points ? <ul>{item.points.map((point) => <li>{point}</li>)}</ul> : item.body}</dd>
+              </div>
+            ))}
+          </dl>
+          <div class="pb-metrics">
+            <p class="pb-metrics-label">Latest metrics</p>
+            <dl class="pb-metrics-list">
+              {metrics.map((metric) => (
+                <div>
+                  <dt>{metric.label}</dt>
+                  <dd>{metric.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <!-- Handoff -->
+      <section class="pb-slide pb-slide--handoff" aria-label="Start the demo">
+        <div class="pb-inner">
+          <h2 class="pb-heading pb-heading--handoff">Let's build a playbook.</h2>
+          <a class="pb-start" id="pb-start" href={DEMO_URL}>Start demo <span aria-hidden="true">→</span></a>
+          <ol class="pb-tour">
+            {tour.map((step) => <li>{step}</li>)}
+          </ol>
+          <p class="pb-footnote">
+            Selected work — certain product details omitted to protect confidential information.<br />
+            Demo is a recreation of the design, not production software.
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <button type="button" id="pb-prev" class="pb-nav pb-nav--prev" aria-label="Previous slide"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="M8 2 2 8l6 6" /></svg></button>
+    <button type="button" id="pb-next" class="pb-nav pb-nav--next" aria-label="Next slide"><svg viewBox="0 0 10 16" aria-hidden="true"><path d="m2 2 6 6-6 6" /></svg></button>
+    <div id="pb-counter" class="pb-counter" aria-live="polite"></div>
+  </div>
+</Layout>
+
+<script>
+  function init() {
+    const track = document.getElementById('pb-track');
+    const counter = document.getElementById('pb-counter');
+    const prev = document.getElementById('pb-prev');
+    const next = document.getElementById('pb-next');
+    const start = document.getElementById('pb-start');
+    if (!track || !counter || !prev || !next || !start) return undefined;
+
+    const slides = [...track.querySelectorAll<HTMLElement>('.pb-slide')];
+    const controller = new AbortController();
+    const { signal } = controller;
+    let current = 0;
+
+    function goTo(index: number) {
+      if (index < 0 || index >= slides.length) return;
+      current = index;
+      track!.style.transform = `translateX(${-current * 100}vw)`;
+      counter!.textContent = `${current + 1} / ${slides.length}`;
+      // Keeps off-screen links out of the tab order, where focusing one would scroll the track
+      slides.forEach((slide, slideIndex) => {
+        slide.inert = slideIndex !== current;
+      });
+      prev!.classList.toggle('is-hidden', current === 0);
+      // The hash brings browser back from the demo to this slide, not the cover.
+      // Keeping history.state stops the view transitions router from reloading on back
+      history.replaceState(history.state, '', `#${current + 1}`);
+    }
+
+    function advance() {
+      if (current === slides.length - 1) start!.click();
+      else goTo(current + 1);
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') advance();
+      if (event.key === 'ArrowLeft') goTo(current - 1);
+    }, { signal });
+    prev.addEventListener('click', () => goTo(current - 1), { signal });
+    next.addEventListener('click', advance, { signal });
+
+    const fromHash = Number.parseInt(location.hash.slice(1), 10) - 1;
+    goTo(fromHash >= 0 && fromHash < slides.length ? fromHash : 0);
+
+    return () => controller.abort();
+  }
+
+  let cleanup: (() => void) | undefined;
+
+  document.addEventListener('astro:page-load', () => {
+    cleanup = init();
+  });
+
+  document.addEventListener('astro:before-swap', () => {
+    cleanup?.();
+    cleanup = undefined;
+  });
+</script>
+
+
+<style>
+  :global(html) {
+    overflow: hidden !important;
+  }
+
+  /* Beats Contact's scoped display rule. Left visible, it covers the whole page */
+  :global(#contact) {
+    display: none !important;
+  }
+
+  /* Palette, type and column lines match foundational-design-at-dialpad.astro */
+  .pb-preso {
+    --col: min(1080px, 100vw - 176px);
+    --accent: #8674ea;
+    --grid-line: #dcd5f5;
+    --h1: clamp(44px, 5.33vw, 92px);
+    --pb-purple: #7c52ff;
+
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: #f4f2ff;
+    color: #000;
+    font-family: "Roboto Serif", Georgia, serif;
+  }
+
+  .pb-track {
+    position: relative;
+    display: flex;
+    width: max-content;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .pb-slide {
+    position: relative;
+    display: flex;
+    flex: none;
+    width: 100vw;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* Column guide lines */
+  .pb-slide::before,
+  .pb-slide::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--grid-line);
+    pointer-events: none;
+  }
+
+  .pb-slide::before {
+    left: calc(50% - var(--col) / 2);
+  }
+
+  .pb-slide::after {
+    left: calc(50% + var(--col) / 2);
+  }
+
+  /* Lavender deepens behind the handoff, with grain (tokens in src/styles/global.css) */
+  .pb-slide--handoff {
+    background-image: var(--noise), var(--lavender-fade);
+    background-blend-mode: soft-light, normal;
+  }
+
+  .pb-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: var(--col);
+    margin-inline: auto;
+    padding: clamp(24px, 4vh, 56px) 0 88px;
+  }
+
+  /* No divider of its own: the context items' top rules sit right below */
+  .pb-head {
+    margin-bottom: clamp(20px, 3.5vh, 36px);
+  }
+
+  .pb-numeral {
+    margin: 0 0 clamp(4px, 1vh, 12px);
+    color: var(--accent);
+    font-size: clamp(40px, 5vw, 80px);
+    line-height: 1;
+  }
+
+  .pb-heading {
+    max-width: 926px;
+    margin: 0;
+    font-size: clamp(30px, 3.24vw, 56px);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .pb-prose {
+    max-width: 680px;
+    margin: 0 0 clamp(20px, 3.5vh, 36px);
+    font-size: clamp(16px, 1.3vw, 19px);
+    line-height: 1.6;
+  }
+
+  .pb-pull {
+    margin: clamp(20px, 3.5vh, 36px) 0 0;
+    color: var(--accent);
+    font-size: clamp(19px, 1.85vw, 28px);
+    font-style: italic;
+    line-height: 1.3;
+  }
+
+  /* Cover */
+  .pb-cover-title {
+    margin: 0;
+    font-size: var(--h1);
+    font-weight: 400;
+    line-height: 1.17;
+  }
+
+  .pb-cover-title em {
+    color: var(--accent);
+    display: block;
+    margin-top: 0.4em;
+    font-size: 0.5em;
+    font-style: italic;
+  }
+
+  .pb-byline {
+    margin: clamp(32px, 6vh, 64px) 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--grid-line);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: clamp(12px, 1.1vw, 14px);
+  }
+
+  .pb-hint {
+    position: absolute;
+    right: calc(50% - var(--col) / 2 + 16px);
+    bottom: 44px;
+    z-index: 1;
+    margin: 0;
+    color: var(--accent);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 12px;
+  }
+
+  /* Context */
+  .pb-context {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(20px, 3.5vh, 36px) clamp(24px, 3vw, 48px);
+    margin: 0;
+  }
+
+  .pb-context-item {
+    padding-top: 14px;
+    border-top: 1px solid var(--grid-line);
+  }
+
+  .pb-context-item.is-wide {
+    grid-column: span 2;
+  }
+
+  .pb-context dt {
+    margin-bottom: 8px;
+    color: var(--accent);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 13px;
+  }
+
+  .pb-context dd {
+    margin: 0;
+    font-size: clamp(15px, 1.2vw, 18px);
+    line-height: 1.55;
+  }
+
+  .pb-context-item.is-wide dd {
+    font-size: clamp(18px, 1.6vw, 24px);
+    line-height: 1.45;
+  }
+
+  .pb-context-item.is-full {
+    grid-column: 1 / -1;
+  }
+
+  .pb-context ul {
+    columns: 2;
+    column-gap: clamp(24px, 3vw, 48px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Markers on each item, so both columns indent the same */
+  .pb-context li {
+    position: relative;
+    margin-bottom: 6px;
+    padding-left: 1.1em;
+    break-inside: avoid;
+  }
+
+  .pb-context li::before {
+    content: "–";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  /* Latest metrics */
+  .pb-metrics {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(24px, 3vw, 48px);
+    margin-top: clamp(20px, 3.5vh, 32px);
+    padding-top: 14px;
+    border-top: 1px solid var(--grid-line);
+  }
+
+  .pb-metrics-label {
+    flex: none;
+    margin: 0;
+    padding-top: 6px;
+    color: var(--accent);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 13px;
+  }
+
+  .pb-metrics-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px clamp(28px, 4vw, 64px);
+    margin: 0;
+  }
+
+  /* Value above its label; dt stays first in the markup */
+  .pb-metrics-list div {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .pb-metrics-list dd {
+    margin: 0;
+    font-size: clamp(28px, 2.6vw, 44px);
+    line-height: 1.1;
+  }
+
+  .pb-metrics-list dt {
+    margin-top: 4px;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  /* Short screens (e.g. 1280×720): tighten so the metrics clear the controls */
+  @media (max-height: 760px) {
+    .pb-numeral {
+      font-size: 44px;
+    }
+
+    .pb-metrics {
+      margin-top: 16px;
+      padding-top: 10px;
+    }
+
+    .pb-metrics-list dd {
+      font-size: 28px;
+    }
+  }
+
+  /* Handoff */
+  .pb-heading--handoff {
+    margin-bottom: clamp(24px, 4vh, 40px);
+    font-size: var(--h1);
+    line-height: 1.17;
+  }
+
+  .pb-start {
+    align-self: flex-start;
+    padding: 14px 24px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: clamp(15px, 1.2vw, 18px);
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .pb-start:hover {
+    background: var(--pb-purple);
+  }
+
+  .pb-start:focus-visible,
+  .pb-nav:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .pb-tour {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 32px;
+    margin: clamp(24px, 5vh, 48px) 0 0;
+    padding: 0;
+    font-size: 15px;
+    list-style: none;
+    counter-reset: tour;
+  }
+
+  .pb-tour li {
+    counter-increment: tour;
+  }
+
+  .pb-tour li::before {
+    content: counter(tour, decimal-leading-zero);
+    margin-right: 8px;
+    color: var(--accent);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 12px;
+  }
+
+  .pb-footnote {
+    margin: clamp(16px, 3vh, 28px) 0 0;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  /* Controls */
+  .pb-nav {
+    position: fixed;
+    bottom: 36px;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1px solid var(--grid-line);
+    border-radius: 50%;
+    background: #fff;
+    color: var(--accent);
+    cursor: pointer;
+    transition: opacity 0.3s ease, border-color 0.2s ease;
+  }
+
+  /* An SVG chevron rather than a ‹ › glyph, so it centers on its own box
+     instead of on the font's baseline and side bearings */
+  .pb-nav svg {
+    width: 10px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .pb-nav:hover {
+    border-color: var(--accent);
+  }
+
+  .pb-nav--prev {
+    left: 20px;
+  }
+
+  .pb-nav--next {
+    right: 20px;
+  }
+
+  .pb-nav.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .pb-counter {
+    position: fixed;
+    bottom: 44px;
+    left: 50%;
+    z-index: 50;
+    color: rgba(0, 0, 0, 0.6);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 12px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pb-track,
+    .pb-start,
+    .pb-nav {
+      transition: none;
+    }
+  }
+</style>

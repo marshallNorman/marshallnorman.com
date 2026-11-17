@@ -1,0 +1,3003 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { isAuthed } from '../../lib/showcase-auth';
+
+export const prerender = false;
+
+if (!isAuthed(Astro.cookies)) {
+  return Astro.redirect('/showcase');
+}
+
+// Icons exported from the Figma file (DP-77007 Custom AI Playbook)
+const ICON = '/showcase/playbook-creation';
+
+const railItems = [
+  { name: 'Quick start guide', icon: 'nav-quick-start' },
+  { name: 'Your settings', icon: 'nav-your-settings' },
+  { name: 'Admin settings', icon: 'nav-settings', active: true },
+  { name: 'Coaching hub', icon: 'nav-coaching' },
+  { name: 'Live dashboard', icon: 'nav-live' },
+  { name: 'Call history', icon: 'nav-history' },
+  { name: 'Analytics', icon: 'nav-analytics' },
+];
+
+const adminNav = ['Office', 'Departments', 'Contact Centers', 'Geographic Routing', 'Coaching Teams', 'Playbooks', 'Ai Scorecards', 'Dialpad Ai', 'Billing', 'Privacy & Legal'];
+
+const filters = ['Type', 'Adherence', 'Date created', '# of call centers', '# of topics'];
+---
+
+<Layout>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+
+  <div class="pc-app" id="pc-app">
+    <nav class="pc-rail" aria-label="Dialpad">
+      <div class="pc-rail-top">
+        <img src={`${ICON}/nav-logo.svg`} width="32" height="32" alt="Dialpad" />
+        <div class="pc-rail-menu">
+          {railItems.map((item) => (
+            item.active ? (
+              <button type="button" class="pc-rail-item is-active" data-leave aria-label={item.name} aria-current="page">
+                <img src={`${ICON}/${item.icon}.svg`} width="18" height="18" alt="" />
+              </button>
+            ) : (
+              <button type="button" class="pc-rail-item" data-leave aria-label={item.name}>
+                <img src={`${ICON}/${item.icon}.svg`} width="38" height="38" alt="" />
+              </button>
+            )
+          ))}
+        </div>
+      </div>
+      <div class="pc-rail-bottom">
+        <img src={`${ICON}/nav-logomark.svg`} width="18" height="18" alt="" />
+        <img src={`${ICON}/nav-video.svg`} width="18" height="18" alt="" />
+        <img src={`${ICON}/nav-help.svg`} width="18" height="18" alt="" />
+        <span class="pc-avatar">
+          <img src={`${ICON}/nav-avatar.svg`} width="24" height="24" alt="" />
+          <span>C</span>
+        </span>
+      </div>
+    </nav>
+
+    <div class="pc-main">
+      <header class="pc-topbar">
+        <div class="pc-office">
+          <span class="pc-office-select">
+            Aerolabs Office
+            <img src={`${ICON}/chevron-down.svg`} width="18" height="18" alt="" />
+          </span>
+        </div>
+        <div class="pc-topbar-right">
+          <ol class="pc-crumbs" aria-label="Breadcrumb">
+            <li><button type="button" data-leave>Admin</button><span aria-hidden="true">/</span></li>
+            <li><button type="button" data-leave>Aerolabs Inc</button><span aria-hidden="true">/</span></li>
+            <li><button type="button" data-leave>Aerolabs Office</button><span aria-hidden="true">/</span></li>
+            <li><span class="pc-crumb-current" aria-current="page">Playbooks</span></li>
+          </ol>
+          <span class="pc-input pc-input--help">
+            <img src={`${ICON}/search.svg`} width="14" height="14" alt="" />
+            <span>Search Help Center</span>
+          </span>
+        </div>
+      </header>
+
+      <div class="pc-body">
+        <aside class="pc-adminnav" aria-label="Admin settings">
+          {adminNav.map((label) => (
+            <button type="button" class:list={['pc-adminnav-item', { 'is-active': label === 'Playbooks' }]} data-leave>
+              {label}
+              {label === 'Playbooks' && <span class="pc-badge pc-badge--new">New</span>}
+            </button>
+          ))}
+        </aside>
+
+        <main class="pc-work">
+          <!-- Listing -->
+          <section class="pc-listing" id="pc-listing" aria-label="Playbooks">
+            <div class="pc-listing-head">
+              <div>
+                <h1 class="pc-listing-title">Playbooks</h1>
+                <p class="pc-listing-desc">Playbooks can be used to ensure that your agents are covering the correct topics with customers during their calls.</p>
+              </div>
+              <button type="button" class="pc-btn pc-btn--primary" id="pc-create">Create Playbook</button>
+            </div>
+            <div class="pc-filters">
+              <label class="pc-input pc-input--table-search">
+                <input type="search" id="pc-listing-search" placeholder="Search playbooks" autocomplete="off" />
+                <img src={`${ICON}/search.svg`} width="14" height="14" alt="" />
+              </label>
+              {filters.map((filter) => (
+                <span class="pc-chip">{filter}<img src={`${ICON}/chevron-down.svg`} width="14" height="14" alt="" /></span>
+              ))}
+            </div>
+            <div class="pc-table" role="table" aria-label="Playbooks">
+              <div class="pc-row pc-row--head" role="row">
+                <span role="columnheader">Name</span>
+                <span role="columnheader">Type</span>
+                <span role="columnheader">Created</span>
+                <span role="columnheader" class="pc-num"># of call centers</span>
+                <span role="columnheader" class="pc-num"># of topics</span>
+              </div>
+              <div id="pc-rows"></div>
+            </div>
+            <div class="pc-pages" aria-hidden="true">
+              <span class="pc-page-arrow">‹</span>
+              <span class="pc-page is-current">1</span><span class="pc-page">2</span><span class="pc-page">3</span><span class="pc-page">4</span>
+              <span class="pc-page-arrow">›</span>
+            </div>
+          </section>
+
+          <!-- Editor -->
+          <section class="pc-editor" id="pc-editor" aria-label="Edit playbook" hidden>
+            <div class="pc-editor-head">
+              <div class="pc-editor-title-wrap">
+                <div class="pc-title-row" id="pc-title-row">
+                  <button type="button" class="pc-title" id="pc-title" aria-label="Rename playbook"></button>
+                  <input class="pc-title-input" id="pc-title-input" maxlength="60" aria-label="Playbook name" hidden />
+                  <img class="pc-title-edit" src={`${ICON}/edit.svg`} width="20" height="20" alt="" />
+                  <span class="pc-badge pc-badge--draft" id="pc-draft-badge">
+                    <img src={`${ICON}/edit-small.svg`} width="12" height="12" alt="" />Draft
+                  </span>
+                </div>
+                <span class="pc-access">Change access (15)</span>
+              </div>
+              <div class="pc-editor-actions">
+                <button type="button" class="pc-btn pc-btn--muted" id="pc-save-draft">Save draft</button>
+                <button type="button" class="pc-btn pc-btn--primary" id="pc-publish">Publish</button>
+              </div>
+            </div>
+
+            <div class="pc-editor-cols">
+              <div class="pc-library">
+                <div class="pc-library-head">
+                  <label class="pc-field-label" for="pc-library-search">
+                    <strong>Available topics and questions</strong>
+                    <span>Add questions from this list to your playbook.</span>
+                  </label>
+                  <div class="pc-library-search-row">
+                    <span class="pc-input pc-input--search">
+                      <img src={`${ICON}/search.svg`} width="14" height="14" alt="" />
+                      <input type="search" id="pc-library-search" placeholder="Search topics and questions" autocomplete="off" />
+                    </span>
+                    <button type="button" class="pc-btn pc-btn--outlined" id="pc-add-topic">Add</button>
+                  </div>
+                </div>
+                <div class="pc-library-list" id="pc-library-list"></div>
+              </div>
+
+              <div class="pc-preview-wrap">
+                <div class="pc-preview" id="pc-preview">
+                  <div class="pc-preview-head">
+                    <strong>Preview</strong>
+                    <span class="pc-preview-meta">
+                      <span id="pc-remaining"></span>
+                      <button type="button" class="pc-link" id="pc-clear">Clear all</button>
+                    </span>
+                  </div>
+                  <div class="pc-preview-scroll" id="pc-preview-scroll">
+                    <div class="pc-preview-list" id="pc-preview-list"></div>
+                    <p class="pc-preview-empty" id="pc-preview-empty">Use the list on the left to add items to your agent’s playbook.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Create custom Playbook -->
+    <div class="pc-backdrop" id="pc-template-modal" hidden>
+      <div class="pc-modal pc-modal--wizard" role="dialog" aria-modal="true" aria-labelledby="pc-template-title">
+        <div class="pc-wizard-title">
+          <h2 id="pc-template-title">Create custom Playbook</h2>
+          <button type="button" class="pc-icon-btn pc-wizard-close" data-close aria-label="Close">
+            <img src={`${ICON}/close.svg`} width="18" height="18" alt="" />
+          </button>
+        </div>
+        <div class="pc-wizard-main">
+          <label class="pc-wizard-name">
+            <strong>Name your playbook</strong>
+            <input id="pc-template-name" maxlength="60" placeholder="ex. Hiring Screen" autocomplete="off" />
+          </label>
+          <fieldset class="pc-templates">
+            <legend>Choose a template or create a custom Playbook</legend>
+            <div class="pc-template-grid" id="pc-template-grid"></div>
+          </fieldset>
+        </div>
+        <div class="pc-modal-footer">
+          <button type="button" class="pc-btn pc-btn--primary" id="pc-template-next" disabled>Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create / edit topic -->
+    <div class="pc-backdrop" id="pc-topic-modal" hidden>
+      <form class="pc-modal pc-modal--topic" role="dialog" aria-modal="true" aria-labelledby="pc-topic-title" id="pc-topic-form" novalidate>
+        <div class="pc-topic-header">
+          <h2 id="pc-topic-title">Create topic</h2>
+          <button type="button" class="pc-icon-btn pc-topic-close" data-close aria-label="Close">
+            <img src={`${ICON}/modal-close.svg`} width="20" height="20" alt="" />
+          </button>
+        </div>
+        <div class="pc-notice" id="pc-topic-notice">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3A3A3A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <p>Need guidance on creating an effective topic? Read <span class="pc-underline">this help center article</span>.</p>
+          <button type="button" class="pc-icon-btn pc-notice-close" id="pc-notice-close" aria-label="Dismiss">
+            <img src={`${ICON}/close.svg`} width="18" height="18" alt="" />
+          </button>
+        </div>
+        <div class="pc-field" data-field="name">
+          <label for="pc-topic-name">
+            <strong>Topic</strong>
+            <span>The ideal Topic name is between 4 and 40 characters.</span>
+          </label>
+          <input id="pc-topic-name" class="pc-control" maxlength="50" placeholder="Enter topic name here" autocomplete="off" />
+          <div class="pc-field-foot">
+            <span class="pc-field-msg"></span>
+            <span class="pc-count" data-max="50">0/50</span>
+          </div>
+        </div>
+        <div class="pc-field" data-field="description">
+          <label for="pc-topic-description">
+            <strong>Description</strong>
+            <span>In a few sentences, describe what information you’re trying to uncover (e.g. “The customer’s budget for the project and what they spend currently.”)</span>
+          </label>
+          <textarea id="pc-topic-description" class="pc-control" maxlength="200" rows="3" placeholder="Enter definition here"></textarea>
+          <div class="pc-field-foot">
+            <span class="pc-field-msg"></span>
+            <span class="pc-count" data-max="200">0/200</span>
+          </div>
+        </div>
+        <div class="pc-field pc-field--questions">
+          <div class="pc-field-label-static">
+            <strong>Questions</strong>
+            <span>These are shown to your agents.</span>
+          </div>
+          <div class="pc-questions" id="pc-questions"></div>
+          <button type="button" class="pc-add-question" id="pc-add-question">
+            <img src={`${ICON}/small-plus.svg`} width="14" height="14" alt="" />Add another question
+          </button>
+        </div>
+        <div class="pc-topic-footer" id="pc-topic-footer">
+          <div class="pc-harmful" id="pc-harmful" hidden>
+            <p><span id="pc-harmful-subject">A question</span> contains potentially harmful content. For more information on how to create effective topics, <span class="pc-underline">read here</span>.</p>
+            <label class="pc-check">
+              <input type="checkbox" id="pc-harmful-ack" />
+              <span>I understand, create topic anyway</span>
+            </label>
+          </div>
+          <div class="pc-topic-buttons">
+            <button type="button" class="pc-btn pc-btn--text" data-close>Cancel</button>
+            <button type="submit" class="pc-btn pc-btn--primary" id="pc-topic-submit">Create Topic</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Unsaved changes -->
+    <div class="pc-backdrop pc-backdrop--light" id="pc-unsaved-modal" hidden>
+      <div class="pc-modal pc-modal--confirm" role="alertdialog" aria-modal="true" aria-labelledby="pc-unsaved-title" aria-describedby="pc-unsaved-body">
+        <div class="pc-topic-header">
+          <h2 id="pc-unsaved-title">Unsaved changes</h2>
+          <button type="button" class="pc-icon-btn pc-topic-close" data-close aria-label="Close">
+            <img src={`${ICON}/modal-close.svg`} width="20" height="20" alt="" />
+          </button>
+        </div>
+        <p id="pc-unsaved-body">Exiting this screen now will cause you to lose any changes you have made. Would you like to create a draft before you go?</p>
+        <div class="pc-modal-footer">
+          <button type="button" class="pc-btn pc-btn--text" id="pc-exit-now">Exit now</button>
+          <button type="button" class="pc-btn pc-btn--primary" id="pc-draft-exit">Create draft and exit</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pc-toasts" id="pc-toasts" aria-live="polite"></div>
+    <p class="pc-sr" id="pc-announce" aria-live="assertive"></p>
+    <button type="button" class="pc-reset" id="pc-reset">Reset demo</button>
+  </div>
+</Layout>
+
+<script>
+  type Topic = { id: string; title: string; description: string; questions: string[] };
+  type TemplateId = 'bant' | 'meddic' | 'spiced' | 'prospecting' | 'blank';
+  type Row = {
+    id: string;
+    name: string;
+    type: string;
+    created: string;
+    by: string;
+    centers: number;
+    topics: string[];
+    badge?: 'default' | 'draft';
+  };
+  // The playbook open in the editor; rowId is null until it's first saved
+  type Draft = { rowId: string | null; name: string; type: string; preview: string[]; isDraft: boolean };
+
+  const ICON = '/showcase/playbook-creation';
+  const LIMIT = 10;
+  const REDUCED = matchMedia('(prefers-reduced-motion: reduce)');
+
+  // Library topics. The first six are the sales topics drawn in the Figma file
+  const LIBRARY: Topic[] = [
+    { id: 'critical-event', title: 'Critical event', description: 'Deadline or timeline to implement the solution.', questions: ['How important is it for you to solve these problems?', 'Are the problems critical enough for the prospect to invest in a solution?', 'What is the priority level of addressing these issues?'] },
+    { id: 'business-overview', title: 'Business overview', description: 'The nature of the business or company', questions: ['What is the overall function of your business?'] },
+    { id: 'decision', title: 'Decision', description: 'Key decision-makers involved in the purchase', questions: ['Who are the primary decision-makers for this purchase? What are their roles and responsibilities?', 'What is the purchasing process?'] },
+    { id: 'desired-features', title: 'Desired features', description: 'Specific features or functions sought in a new solution', questions: ['What specific features or functionalities are you looking for in a new solution?'] },
+    { id: 'impact', title: 'Impact', description: 'The impact of the problem on the customer organization morale', questions: ["How do these issues affect your company's bottom line and operations?", 'What are the consequences of not solving these problems?'] },
+    { id: 'key-stakeholders', title: 'Key stakeholders', description: 'Key decision-makers involved in this process', questions: ['Who are the decision-makers involved in this purchase?'] },
+    { id: 'current-solution', title: 'Current solution', description: 'Tools or vendors the customer relies on today', questions: ['What are you using to solve this today?', 'What do you like and dislike about it?'] },
+    { id: 'competition', title: 'Competition', description: 'Other vendors the customer is evaluating', questions: ['Are you evaluating any other solutions?', 'What would make you choose one over another?'] },
+    { id: 'success-criteria', title: 'Success criteria', description: 'How the customer will measure a successful rollout', questions: ['How will you measure success six months after rollout?', 'What would need to be true for you to call this a win?'] },
+    { id: 'objections', title: 'Objections', description: 'Concerns that could stall the deal', questions: ['Is there anything that would prevent you from moving forward?', 'What concerns have come up internally?'] },
+    { id: 'implementation', title: 'Implementation', description: 'Resources and timing needed to roll out', questions: ['Who on your team would own the rollout?', 'Are there any technical requirements we should plan for?'] },
+    { id: 'next-steps', title: 'Next steps', description: 'Agree on what happens after this call', questions: ['What would you like to see from us before our next conversation?', 'Who else should join the next call?'] },
+  ];
+
+  // Topics that only come with a template. Removing one from the preview
+  // returns it to the library like any other topic
+  const TEMPLATE_TOPICS: Topic[] = [
+    { id: 'budget', title: 'Budget', description: 'Find the allocated budget for this project or solution', questions: ['What is your allocated budget for this project or solution?', 'Have you considered any financial restraints?'] },
+    { id: 'authority', title: 'Authority', description: 'Discover key decision-makers involved in the purchase', questions: ['When was the last time you bought a similar product?', 'How did the decision making process go?'] },
+    { id: 'need', title: 'Need', description: 'Uncover the main challenges or pain points the customer is facing right now', questions: ['What happens to your team’s goals if you don’t address this need?', 'How many licenses do you anticipate to meet your team’s needs?'] },
+    { id: 'timing', title: 'Timing', description: 'Establish when the customer plans to have a solution in place and what is driving that date', questions: ['When are you hoping to have a solution in place?', 'Are there any upcoming events or milestones that could influence when you get started?'] },
+    { id: 'metrics', title: 'Metrics', description: 'Quantifiable results the customer expects from a solution', questions: ['What metrics would you use to measure success?', 'What results are you seeing today?'] },
+    { id: 'economic-buyer', title: 'Economic buyer', description: 'The person with final say over the budget', questions: ['Who has final sign-off on this purchase?', 'Have they approved similar purchases before?'] },
+    { id: 'decision-criteria', title: 'Decision criteria', description: 'How the customer will compare and choose between solutions', questions: ['What criteria will you use to evaluate solutions?', 'Which of those matters most to your team?'] },
+    { id: 'decision-process', title: 'Decision process', description: 'The steps and people involved in reaching a decision', questions: ['What steps does a purchase like this go through?', 'How long does that process usually take?'] },
+    { id: 'identify-pain', title: 'Identify pain', description: 'The business problem driving the purchase', questions: ['What’s the biggest challenge your team is facing right now?', 'What has it cost you so far?'] },
+    { id: 'champion', title: 'Champion', description: 'An internal advocate who will push the deal forward', questions: ['Who on your team is most invested in solving this?', 'How can we help them make the case internally?'] },
+    { id: 'situation', title: 'Situation', description: 'The customer’s current environment and context', questions: ['Can you walk me through how your team works today?', 'What tools are part of that process?'] },
+    { id: 'pain', title: 'Pain', description: 'The problems the customer wants to solve', questions: ['What’s not working in your current process?', 'How often does this problem come up?'] },
+    // Recruiting, from the Figma preview
+    { id: 'experience-skills', title: 'Experience & skills', description: 'In-detail discussion of the candidate’s prior jobs, experience, and achievements', questions: ['Briefly describe your relevant work experience and key skills that make you a strong fit for this role.', 'What’s your expected salary range?'] },
+    { id: 'motivation-interests', title: 'Motivation & interests', description: 'Candidate’s knowledge of the company and what motivated them to apply', questions: ['What excites you about our company and this particular role? How does it align with your career goals?', 'With what you know about our company, where do you see yourself getting most involved?'] },
+    { id: 'challenges-problem-solving', title: 'Challenges & problem solving', description: 'Candidate’s expectation of the challenging aspects of the role and their approach to addressing the challenges', questions: ['Can you share a specific challenging situation as a people manager and how you approached and resolved it?'] },
+    { id: 'teamwork-communication', title: 'Teamwork & communication', description: 'The candidate’s ability to effectively collaborate and communicate with other team members, stakeholders, and clients', questions: ['Describe a successful team project you were a part of and how you contributed to its success.'] },
+    { id: 'leadership', title: 'Leadership', description: 'How the candidate leads people and decisions', questions: ['Tell me about a time you led a team through a difficult change.', 'How do you give feedback to someone who is struggling?'] },
+    { id: 'compensation', title: 'Compensation', description: 'Salary expectations and benefits that matter to the candidate', questions: ['What are your salary expectations for this role?', 'Which benefits matter most to you?'] },
+    { id: 'availability', title: 'Availability', description: 'When the candidate could start and any scheduling constraints', questions: ['When would you be able to start?', 'Are you interviewing anywhere else right now?'] },
+    { id: 'culture-values', title: 'Culture & values', description: 'How the candidate likes to work and what they value in a team', questions: ['What kind of team environment do you do your best work in?', 'Which of our company values resonates most with you?'] },
+    // Support
+    { id: 'issue-details', title: 'Issue details', description: 'What the customer is experiencing and when it started', questions: ['Can you describe what’s happening, in your own words?', 'When did you first notice the problem?'] },
+    { id: 'account-verification', title: 'Account verification', description: 'Confirm the caller’s identity before discussing the account', questions: ['Can you confirm the email address on the account?', 'What are the last four digits of the card on file?'] },
+    { id: 'environment', title: 'Environment', description: 'The device, browser, and version the customer is using', questions: ['Which device and browser are you using?', 'Which version of the app do you have installed?'] },
+    { id: 'troubleshooting', title: 'Troubleshooting steps', description: 'What the customer has already tried', questions: ['Have you tried signing out and back in?', 'Does the problem happen on another device?'] },
+    { id: 'impact-urgency', title: 'Impact & urgency', description: 'How the issue affects the customer’s work', questions: ['How many people on your team are affected?', 'Is this blocking any work right now?'] },
+    { id: 'resolution', title: 'Resolution', description: 'Confirm the fix and agree on next steps', questions: ['Is everything working as expected now?', 'Is there anything else I can help you with today?'] },
+    { id: 'billing-history', title: 'Billing history', description: 'Recent charges and changes to the customer’s plan', questions: ['Which charge are you calling about?', 'Have there been any recent changes to your plan or seats?'] },
+    { id: 'refund-request', title: 'Refund request', description: 'What the customer is asking for and why', questions: ['What outcome are you hoping for today?', 'Would a credit on your next invoice work for you?'] },
+  ];
+
+  const TEMPLATES: Record<TemplateId, { name: string; used?: string; summary: string; type: string; topics: string[] }> = {
+    bant: {
+      name: 'BANT',
+      used: 'Used in 4 groups',
+      summary: 'Inquire about Budget, Authority, Need, and Timing.',
+      type: 'Sales',
+      topics: ['budget', 'authority', 'need', 'timing'],
+    },
+    meddic: {
+      name: 'MEDDIC',
+      used: 'Used in 1 group',
+      summary: 'Focus on Metrics, Economic buyer, Decision criteria, Decision process, Identify pain, and Champion.',
+      type: 'Sales',
+      topics: ['metrics', 'economic-buyer', 'decision-criteria', 'decision-process', 'identify-pain', 'champion'],
+    },
+    spiced: {
+      name: 'SPICED',
+      used: 'Used in 2 groups',
+      summary: 'Emphasizes Storytelling, Problem identification, Implication development, Solution presentation, Comparison, Evaluation, and Decision.',
+      type: 'Sales',
+      topics: ['situation', 'pain', 'impact', 'critical-event', 'decision'],
+    },
+    prospecting: {
+      name: 'Prospecting',
+      used: 'Used in 4 groups',
+      summary: 'Systematically identify and target potential leads or prospects through various channels.',
+      type: 'Prospecting',
+      topics: ['business-overview', 'current-solution', 'key-stakeholders', 'next-steps'],
+    },
+    blank: {
+      name: 'Create your own custom playbook',
+      summary: 'Start from a blank slate.',
+      type: 'Custom',
+      topics: [],
+    },
+  };
+
+  // Rows drawn on the Figma listing page, each with its own topics
+  const SEED_ROWS: Row[] = (
+    [
+      ['r1', 'Cold Call - SaaS', 'Prospecting', ['business-overview', 'current-solution', 'identify-pain', 'next-steps']],
+      ['r2', 'Cold Call - Physical Product', 'Prospecting', ['business-overview', 'current-solution', 'desired-features', 'budget', 'key-stakeholders', 'next-steps']],
+      ['r3', 'Software Support', 'Support', ['issue-details', 'environment', 'troubleshooting', 'resolution']],
+      ['r4', 'Second round A', 'Recruiting', ['experience-skills', 'motivation-interests', 'challenges-problem-solving', 'teamwork-communication', 'leadership', 'culture-values']],
+      ['r5', 'Second round B', 'Recruiting', ['experience-skills', 'challenges-problem-solving', 'leadership', 'teamwork-communication', 'motivation-interests', 'compensation']],
+      ['r6', 'In progress playbook', 'Prospecting', ['business-overview', 'key-stakeholders', 'competition', 'next-steps']],
+      ['r7', 'Recruiter screen', 'Recruiting', ['experience-skills', 'motivation-interests', 'compensation', 'availability', 'culture-values', 'teamwork-communication']],
+      ['r8', 'Billing dispute', 'Support', ['account-verification', 'billing-history', 'issue-details', 'impact-urgency', 'refund-request', 'resolution']],
+      ['r9', 'BANT', 'Sales', ['budget', 'authority', 'need', 'timing']],
+      ['r10', 'Sales template 1', 'Sales', ['critical-event', 'decision', 'impact', 'key-stakeholders', 'desired-features', 'budget']],
+      ['r11', 'Sales template 2', 'Sales', ['situation', 'pain', 'impact', 'decision-criteria', 'champion', 'next-steps']],
+      ['r12', 'Sales template 3', 'Sales', ['metrics', 'economic-buyer', 'decision-process', 'identify-pain', 'competition', 'objections']],
+    ] as const
+  ).map(([id, name, type, topics]) => ({
+    id,
+    name,
+    type,
+    created: 'Oct 5, 2023',
+    by: id === 'r9' ? 'Default playbook' : id === 'r6' ? 'by You' : 'by Ted Goas',
+    centers: 10,
+    topics: [...topics],
+    badge: id === 'r9' ? 'default' : undefined,
+  }));
+
+  // Sensitive subjects that trip the demo's content check
+  const SENSITIVE = ['ethnicity', 'race', 'racial', 'religion', 'religious', 'gender', 'sexual orientation', 'age', 'disability', 'pregnancy', 'marital status', 'national origin', 'citizenship', 'political', 'health'];
+
+  const esc = (text: string) =>
+    text.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
+  const isSensitive = (text: string) => {
+    const lower = text.toLowerCase();
+    return SENSITIVE.some((word) => new RegExp(`\\b${word}\\b`).test(lower));
+  };
+  const icon = (name: string, size: number) => `<img src="${ICON}/${name}.svg" width="${size}" height="${size}" alt="" />`;
+
+  function init() {
+    const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T | null;
+    const app = $('pc-app');
+    if (!app) return undefined;
+
+    const el = {
+      listing: $('pc-listing')!,
+      editor: $('pc-editor')!,
+      rows: $('pc-rows')!,
+      listingSearch: $<HTMLInputElement>('pc-listing-search')!,
+      title: $('pc-title')!,
+      titleRow: $('pc-title-row')!,
+      titleInput: $<HTMLInputElement>('pc-title-input')!,
+      libraryList: $('pc-library-list')!,
+      librarySearch: $<HTMLInputElement>('pc-library-search')!,
+      preview: $('pc-preview')!,
+      previewScroll: $('pc-preview-scroll')!,
+      previewList: $('pc-preview-list')!,
+      previewEmpty: $('pc-preview-empty')!,
+      remaining: $('pc-remaining')!,
+      templateModal: $('pc-template-modal')!,
+      templateGrid: $('pc-template-grid')!,
+      templateName: $<HTMLInputElement>('pc-template-name')!,
+      templateNext: $<HTMLButtonElement>('pc-template-next')!,
+      topicModal: $('pc-topic-modal')!,
+      topicForm: $<HTMLFormElement>('pc-topic-form')!,
+      topicTitle: $('pc-topic-title')!,
+      topicNotice: $('pc-topic-notice')!,
+      topicName: $<HTMLInputElement>('pc-topic-name')!,
+      topicDescription: $<HTMLTextAreaElement>('pc-topic-description')!,
+      questions: $('pc-questions')!,
+      topicFooter: $('pc-topic-footer')!,
+      harmful: $('pc-harmful')!,
+      harmfulSubject: $('pc-harmful-subject')!,
+      harmfulAck: $<HTMLInputElement>('pc-harmful-ack')!,
+      topicSubmit: $<HTMLButtonElement>('pc-topic-submit')!,
+      unsavedModal: $('pc-unsaved-modal')!,
+      toasts: $('pc-toasts')!,
+      announce: $('pc-announce')!,
+    };
+
+    const controller = new AbortController();
+    const { signal } = controller;
+    const on = <K extends keyof HTMLElementEventMap>(target: EventTarget, type: K, handler: (event: HTMLElementEventMap[K]) => void) =>
+      target.addEventListener(type, handler as EventListener, { signal });
+
+    // State
+    const topics = new Map<string, Topic>([...LIBRARY, ...TEMPLATE_TOPICS].map((topic) => [topic.id, { ...topic, questions: [...topic.questions] }]));
+    // Library order: the Figma topics first, template topics join at the end once they've been in a preview
+    const libraryOrder = LIBRARY.map((topic) => topic.id);
+    let rows: Row[] = SEED_ROWS.map((row) => ({ ...row, topics: [...row.topics] }));
+    let draft: Draft | null = null;
+    let dirty = false;
+    let selectedTemplate: TemplateId | null = null;
+    let editingTopicId: string | null = null;
+    let harmfulShown = false;
+    let customCount = 0;
+    let flashRowId: string | null = null;
+    let newPreviewId: string | null = null;
+
+    const announce = (text: string) => {
+      el.announce.textContent = '';
+      requestAnimationFrame(() => {
+        el.announce.textContent = text;
+      });
+    };
+
+    // FLIP: animate elements (matched by data-key) from where they were to where
+    // a DOM change put them
+    function flip(container: HTMLElement, mutate: () => void) {
+      const before = new Map<string, number>();
+      container.querySelectorAll<HTMLElement>(':scope > [data-key]').forEach((node) => {
+        before.set(node.dataset.key!, node.getBoundingClientRect().top);
+      });
+      mutate();
+      if (REDUCED.matches) return;
+      container.querySelectorAll<HTMLElement>(':scope > [data-key]').forEach((node) => {
+        const top = before.get(node.dataset.key!);
+        if (top === undefined) return;
+        const delta = top - node.getBoundingClientRect().top;
+        if (Math.abs(delta) < 1) return;
+        node.animate([{ transform: `translateY(${delta}px)` }, { transform: 'translateY(0)' }], {
+          duration: 220,
+          easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+        });
+      });
+    }
+
+    function toast(message: string, tone: 'info' | 'success' = 'info') {
+      const node = document.createElement('div');
+      node.className = `pc-toast pc-toast--${tone}`;
+      node.setAttribute('role', 'status');
+      node.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">${
+          tone === 'success' ? '<circle cx="12" cy="12" r="10"/><path d="m8 12.5 2.8 2.8L16.5 9.5"/>' : '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>'
+        }</svg>
+        <span>${esc(message)}</span>
+        <button type="button" class="pc-icon-btn" aria-label="Dismiss">${icon('close', 18)}</button>`;
+      const remove = () => {
+        node.classList.add('is-leaving');
+        setTimeout(() => node.remove(), 200);
+      };
+      node.querySelector('button')!.addEventListener('click', remove);
+      el.toasts.replaceChildren(node);
+      setTimeout(remove, 4500);
+    }
+
+    // Listing
+    function renderRows() {
+      const query = el.listingSearch.value.trim().toLowerCase();
+      const visible = rows.filter((row) => row.name.toLowerCase().includes(query));
+      el.rows.innerHTML = visible
+        .map((row) => {
+          const badge =
+            row.badge === 'draft'
+              ? `<span class="pc-badge">${icon('edit-small', 12)}Draft</span>`
+              : row.badge === 'default'
+                ? `<span class="pc-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 16V8l-9-5-9 5v8l9 5 9-5z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg>Default playbook</span>`
+                : '';
+          return `
+            <div class="pc-row pc-row--link${row.id === flashRowId ? ' is-flash' : ''}" role="row" tabindex="0" data-row="${row.id}" aria-label="Open ${esc(row.name)}">
+              <span role="cell" class="pc-row-name">${esc(row.name)}${badge}</span>
+              <span role="cell" class="pc-row-type">${esc(row.type)}</span>
+              <span role="cell" class="pc-row-created">${esc(row.created)}<small>${esc(row.by)}</small></span>
+              <span role="cell" class="pc-num">${row.centers}</span>
+              <span role="cell" class="pc-num">${row.topics.length}</span>
+            </div>`;
+        })
+        .join('');
+      flashRowId = null;
+    }
+
+    function showListing() {
+      el.editor.hidden = true;
+      el.listing.hidden = false;
+      renderRows();
+    }
+
+    // Template modal
+    function openTemplateModal() {
+      selectedTemplate = null;
+      el.templateName.value = '';
+      el.templateGrid.innerHTML = (Object.keys(TEMPLATES) as TemplateId[])
+        .map((id) => {
+          const template = TEMPLATES[id];
+          return `
+            <label class="pc-template-card">
+              <input type="radio" name="pc-template" value="${id}" />
+              <span class="pc-template-name">${esc(template.name)}</span>
+              ${template.used ? `<span class="pc-template-used">${esc(template.used)}</span>` : ''}
+              <span class="pc-template-summary">${esc(template.summary)}</span>
+            </label>`;
+        })
+        .join('');
+      updateTemplateNext();
+      openModal(el.templateModal, el.templateName);
+    }
+
+    function updateTemplateNext() {
+      el.templateNext.disabled = !el.templateName.value.trim() || !selectedTemplate;
+    }
+
+    // Editor
+    function startDraft(name: string, template: TemplateId) {
+      const { type, topics: starter } = TEMPLATES[template];
+      draft = { rowId: null, name, type, preview: [...starter], isDraft: true };
+      dirty = true;
+      openEditor();
+    }
+
+    function openRow(id: string) {
+      const row = rows.find((candidate) => candidate.id === id);
+      if (!row) return;
+      draft = { rowId: row.id, name: row.name, type: row.type, preview: [...row.topics], isDraft: row.badge === 'draft' };
+      dirty = false;
+      openEditor();
+    }
+
+    function openEditor() {
+      if (!draft) return;
+      el.listing.hidden = true;
+      el.editor.hidden = false;
+      el.librarySearch.value = '';
+      setTitle(draft.name);
+      document.getElementById('pc-draft-badge')!.hidden = !draft.isDraft;
+      el.previewScroll.scrollTop = 0;
+      renderLibrary(false);
+      renderPreview(false);
+    }
+
+    // The pencil sits just past the title, wherever it ends
+    function setTitle(name: string) {
+      el.title.textContent = name;
+      el.titleRow.style.setProperty('--pc-title-w', `${el.title.offsetWidth}px`);
+    }
+
+    function libraryIds() {
+      if (!draft) return [];
+      const inPreview = new Set(draft.preview);
+      const query = el.librarySearch.value.trim().toLowerCase();
+      return libraryOrder.filter((id) => {
+        if (inPreview.has(id)) return false;
+        if (!query) return true;
+        const topic = topics.get(id)!;
+        return [topic.title, topic.description, ...topic.questions].some((text) => text.toLowerCase().includes(query));
+      });
+    }
+
+    function renderLibrary(animate = true) {
+      const ids = libraryIds();
+      const html = ids.length
+        ? ids
+            .map((id) => {
+              const topic = topics.get(id)!;
+              return `
+                <div class="pc-topic-card" data-key="${id}" data-topic="${id}" role="button" tabindex="0" aria-label="Add ${esc(topic.title)} to the playbook">
+                  <span class="pc-topic-card-plus">${icon('card-plus', 18)}</span>
+                  <span class="pc-topic-card-body">
+                    <strong>${esc(topic.title)}</strong>
+                    <small>${esc(topic.description)}</small>
+                    ${topic.questions.map((question) => `<span>${esc(question)}</span>`).join('')}
+                  </span>
+                </div>`;
+            })
+            .join('')
+        : `<p class="pc-library-empty">${
+            el.librarySearch.value.trim()
+              ? `No topics match “${esc(el.librarySearch.value.trim())}”. Use <strong>Add</strong> to create it.`
+              : 'Every topic is in your playbook. Use <strong>Add</strong> to create a new one.'
+          }</p>`;
+      if (animate) flip(el.libraryList, () => (el.libraryList.innerHTML = html));
+      else el.libraryList.innerHTML = html;
+    }
+
+    function previewItemHtml(topic: Topic) {
+      return `
+        <div class="pc-item${topic.id === newPreviewId ? ' is-new' : ''}" data-key="${topic.id}" data-topic="${topic.id}">
+          <button type="button" class="pc-item-grip" aria-label="Reorder ${esc(topic.title)}. Use the up and down arrow keys to move it.">${icon('preview-grip', 14)}</button>
+          <div class="pc-item-main">
+            <div class="pc-item-head">
+              <div class="pc-item-text">
+                <strong>${esc(topic.title)}</strong>
+                <small>${esc(topic.description)}</small>
+              </div>
+              <div class="pc-item-actions">
+                <button type="button" class="pc-icon-btn pc-item-edit" aria-label="Edit ${esc(topic.title)}">${icon('edit', 14)}</button>
+                <button type="button" class="pc-icon-btn pc-item-remove" aria-label="Remove ${esc(topic.title)}">${icon('preview-trash', 14)}</button>
+              </div>
+            </div>
+            ${
+              topic.questions.length
+                ? `<div class="pc-item-questions"><span class="pc-item-questions-label">Questions</span>${topic.questions.map((question) => `<p>${esc(question)}</p>`).join('')}</div>`
+                : ''
+            }
+          </div>
+        </div>`;
+    }
+
+    function renderPreview(animate = true) {
+      if (!draft) return;
+      const remaining = LIMIT - draft.preview.length;
+      el.remaining.textContent = `${remaining} topic${remaining === 1 ? '' : 's'} remaining`;
+      el.remaining.classList.toggle('is-full', remaining <= 0);
+      const html = draft.preview.map((id) => previewItemHtml(topics.get(id)!)).join('');
+      if (animate) flip(el.previewList, () => (el.previewList.innerHTML = html));
+      else el.previewList.innerHTML = html;
+      el.previewEmpty.hidden = draft.preview.length > 0;
+      if (newPreviewId) {
+        const added = el.previewList.querySelector<HTMLElement>(`[data-key="${newPreviewId}"]`);
+        if (added) revealInPreview(added);
+        newPreviewId = null;
+      }
+    }
+
+    // Scrolls the preview (only) so an item is in view
+    function revealInPreview(node: HTMLElement) {
+      const box = el.previewScroll.getBoundingClientRect();
+      const rect = node.getBoundingClientRect();
+      if (rect.bottom > box.bottom) el.previewScroll.scrollBy({ top: rect.bottom - box.bottom + 16, behavior: REDUCED.matches ? 'auto' : 'smooth' });
+      else if (rect.top < box.top) el.previewScroll.scrollBy({ top: rect.top - box.top - 16, behavior: REDUCED.matches ? 'auto' : 'smooth' });
+    }
+
+    function limitToast() {
+      toast('You’ve reached your topic limit for this Playbook. Remove a topic to add a new one.');
+      el.remaining.classList.remove('is-shake');
+      void el.remaining.offsetWidth;
+      el.remaining.classList.add('is-shake');
+    }
+
+    function addTopic(id: string, index?: number) {
+      if (!draft || draft.preview.includes(id)) return false;
+      if (draft.preview.length >= LIMIT) {
+        limitToast();
+        return false;
+      }
+      if (index === undefined) draft.preview.push(id);
+      else draft.preview.splice(index, 0, id);
+      dirty = true;
+      newPreviewId = id;
+      renderLibrary();
+      renderPreview();
+      announce(`${topics.get(id)!.title} added. ${LIMIT - draft.preview.length} topics remaining.`);
+      return true;
+    }
+
+    function removeTopic(id: string) {
+      if (!draft) return;
+      draft.preview = draft.preview.filter((topicId) => topicId !== id);
+      if (!libraryOrder.includes(id)) libraryOrder.push(id);
+      dirty = true;
+      renderPreview();
+      renderLibrary();
+      announce(`${topics.get(id)!.title} removed.`);
+    }
+
+    function moveTopic(id: string, delta: number) {
+      if (!draft) return;
+      const from = draft.preview.indexOf(id);
+      const to = from + delta;
+      if (from < 0 || to < 0 || to >= draft.preview.length) return;
+      draft.preview.splice(from, 1);
+      draft.preview.splice(to, 0, id);
+      dirty = true;
+      renderPreview();
+      const grip = el.previewList.querySelector<HTMLElement>(`[data-key="${id}"] .pc-item-grip`);
+      grip?.focus();
+      if (grip) revealInPreview(grip.closest('.pc-item')!);
+      announce(`${topics.get(id)!.title} moved to position ${to + 1} of ${draft.preview.length}.`);
+    }
+
+    // Rename
+    function startRename() {
+      if (!draft) return;
+      el.titleInput.value = draft.name;
+      el.titleInput.style.width = `${Math.max(el.title.offsetWidth, 120)}px`;
+      el.title.hidden = true;
+      el.titleInput.hidden = false;
+      el.titleRow.classList.add('is-renaming');
+      el.titleInput.focus();
+      el.titleInput.select();
+    }
+
+    function endRename(commit: boolean, refocus = false) {
+      if (!draft || el.titleInput.hidden) return;
+      const value = el.titleInput.value.trim();
+      if (commit && value && value !== draft.name) {
+        draft.name = value;
+        dirty = true;
+      }
+      el.titleInput.hidden = true;
+      el.title.hidden = false;
+      setTitle(draft.name);
+      el.titleRow.classList.remove('is-renaming');
+      if (refocus) el.title.focus();
+    }
+
+    // Save / publish
+    // Writes the open playbook to its row. Saving a draft of a playbook that's
+    // already published keeps it published
+    function upsertRow(asDraft: boolean) {
+      if (!draft) return;
+      const existing = rows.find((row) => row.id === draft!.rowId);
+      const badge = existing?.badge === 'default' ? 'default' : asDraft && (!existing || existing.badge === 'draft') ? 'draft' : undefined;
+      const row: Row = {
+        id: existing?.id ?? `own-${Date.now()}`,
+        name: draft.name,
+        type: draft.type,
+        created: existing?.created ?? 'Today',
+        by: existing?.by ?? 'by You',
+        centers: existing?.centers ?? 15,
+        topics: [...draft.preview],
+        badge,
+      };
+      rows = existing ? rows.map((candidate) => (candidate.id === row.id ? row : candidate)) : [row, ...rows];
+      draft.rowId = row.id;
+      draft.isDraft = badge === 'draft';
+      flashRowId = row.id;
+      dirty = false;
+    }
+
+    function saveDraft() {
+      if (!draft) return;
+      upsertRow(true);
+      showListing();
+      toast(draft.isDraft ? `“${draft.name}” saved as a draft.` : `Changes to “${draft.name}” saved.`, 'success');
+    }
+
+    function publish() {
+      if (!draft) return;
+      if (!draft.preview.length) {
+        toast('Add at least one topic before publishing this Playbook.');
+        return;
+      }
+      upsertRow(false);
+      el.listingSearch.value = '';
+      showListing();
+      toast(`“${draft.name}” is published.`, 'success');
+    }
+
+    function leaveEditor() {
+      if (el.editor.hidden) return;
+      if (dirty) {
+        openModal(el.unsavedModal, document.getElementById('pc-draft-exit'));
+        return;
+      }
+      showListing();
+    }
+
+    function exitWithoutSaving() {
+      draft = null;
+      dirty = false;
+      closeModal(el.unsavedModal);
+      showListing();
+    }
+
+    // Modals
+    let lastFocus: HTMLElement | null = null;
+    function openModal(modal: HTMLElement, focusTarget?: HTMLElement | null) {
+      lastFocus = document.activeElement as HTMLElement | null;
+      modal.hidden = false;
+      modal.classList.remove('is-open');
+      void modal.offsetWidth;
+      modal.classList.add('is-open');
+      (focusTarget ?? modal.querySelector<HTMLElement>('button, input, textarea'))?.focus();
+    }
+
+    function closeModal(modal: HTMLElement) {
+      modal.hidden = true;
+      modal.classList.remove('is-open');
+      if (lastFocus && document.contains(lastFocus) && !lastFocus.closest('[hidden]')) lastFocus.focus();
+    }
+
+    const openModals = () => [el.unsavedModal, el.topicModal, el.templateModal].filter((modal) => !modal.hidden);
+
+    // Topic modal
+    let noticeDismissed = false;
+
+    function questionRow(value = '') {
+      const row = document.createElement('div');
+      row.className = 'pc-question';
+      row.dataset.key = `q${Math.random().toString(36).slice(2, 8)}`;
+      row.innerHTML = `
+        <button type="button" class="pc-q-grip" aria-label="Reorder question. Use the up and down arrow keys to move it.">${icon('question-grip', 14)}</button>
+        <textarea class="pc-control pc-q-input" rows="1" maxlength="200" placeholder="Add question" aria-label="Question"></textarea>
+        <button type="button" class="pc-icon-btn pc-q-remove" aria-label="Delete question">${icon('question-trash', 14)}</button>`;
+      const input = row.querySelector('textarea')!;
+      input.value = value;
+      return row;
+    }
+
+    function syncQuestions() {
+      const rowsInModal = el.questions.querySelectorAll('.pc-question');
+      el.questions.classList.toggle('is-single', rowsInModal.length === 1);
+      rowsInModal.forEach((row, index) => {
+        const input = row.querySelector('textarea')!;
+        input.placeholder = rowsInModal.length === 1 && index === 0 ? 'Enter a question' : 'Add question';
+        autosize(input);
+      });
+    }
+
+    function autosize(input: HTMLTextAreaElement) {
+      input.style.height = 'auto';
+      input.style.height = `${input.scrollHeight + 3}px`;
+    }
+
+    function openTopicModal(topicId: string | null, presetName = '') {
+      editingTopicId = topicId;
+      const topic = topicId ? topics.get(topicId)! : null;
+      el.topicTitle.textContent = topic ? 'Edit topic' : 'Create topic';
+      el.topicSubmit.textContent = topic ? 'Save' : 'Create Topic';
+      el.topicNotice.hidden = Boolean(topic) || noticeDismissed;
+      el.topicName.value = topic?.title ?? presetName;
+      el.topicDescription.value = topic?.description ?? '';
+      el.questions.replaceChildren(...(topic?.questions.length ? topic.questions : ['']).map((question) => questionRow(question)));
+      if (topic) el.questions.append(questionRow());
+      harmfulShown = false;
+      el.harmfulAck.checked = false;
+      el.topicForm.classList.remove('was-submitted');
+      clearFieldStates();
+      openModal(el.topicModal, topic ? el.questions.querySelector<HTMLElement>('.pc-question:last-child textarea') : el.topicName);
+      syncQuestions();
+      updateCounts();
+    }
+
+    function updateCounts() {
+      el.topicForm.querySelectorAll<HTMLElement>('.pc-field[data-field]').forEach((field) => {
+        const control = field.querySelector<HTMLInputElement | HTMLTextAreaElement>('.pc-control')!;
+        const count = field.querySelector<HTMLElement>('.pc-count')!;
+        count.textContent = `${control.value.length}/${count.dataset.max}`;
+      });
+    }
+
+    function setFieldState(name: 'name' | 'description', state: 'required' | 'harmful' | null) {
+      const field = el.topicForm.querySelector<HTMLElement>(`.pc-field[data-field="${name}"]`)!;
+      const message = field.querySelector<HTMLElement>('.pc-field-msg')!;
+      const control = field.querySelector<HTMLElement>('.pc-control')!;
+      field.classList.toggle('has-warning', state !== null);
+      control.setAttribute('aria-invalid', String(state !== null));
+      message.innerHTML = state
+        ? `${icon('alert-triangle', 16)}${state === 'required' ? 'This is a required field' : 'This field contains potentially harmful content'}`
+        : '';
+    }
+
+    function clearFieldStates() {
+      setFieldState('name', null);
+      setFieldState('description', null);
+      el.questions.querySelectorAll('.pc-question').forEach((row) => row.classList.remove('has-warning'));
+      el.harmful.hidden = true;
+      el.topicFooter.classList.remove('is-harmful');
+    }
+
+    // Returns whether the topic can be published
+    function validateTopic(fromSubmit: boolean) {
+      const name = el.topicName.value.trim();
+      const description = el.topicDescription.value.trim();
+      const questionInputs = [...el.questions.querySelectorAll<HTMLTextAreaElement>('.pc-q-input')];
+
+      const nameState = !name ? 'required' : isSensitive(name) ? 'harmful' : null;
+      const descriptionState = !description ? 'required' : isSensitive(description) ? 'harmful' : null;
+      const harmfulQuestions = questionInputs.filter((input) => input.value.trim() && isSensitive(input.value));
+
+      // Required errors appear once Publish is tried, then clear as the user types
+      const showRequired = fromSubmit || el.topicForm.classList.contains('was-submitted');
+      setFieldState('name', nameState === 'required' && !showRequired ? null : nameState);
+      setFieldState('description', descriptionState === 'required' && !showRequired ? null : descriptionState);
+      questionInputs.forEach((input) => input.closest('.pc-question')!.classList.toggle('has-warning', harmfulQuestions.includes(input)));
+
+      const anyHarmful = nameState === 'harmful' || descriptionState === 'harmful' || harmfulQuestions.length > 0;
+      if (anyHarmful && (fromSubmit || harmfulShown)) {
+        harmfulShown = true;
+        el.harmfulSubject.textContent = harmfulQuestions.length ? 'A question' : 'This topic';
+        el.harmful.hidden = false;
+        el.topicFooter.classList.add('is-harmful');
+      } else {
+        el.harmful.hidden = true;
+        el.topicFooter.classList.remove('is-harmful');
+        el.harmfulAck.checked = false;
+      }
+
+      if (nameState === 'required' || descriptionState === 'required') return false;
+      if (anyHarmful && !el.harmfulAck.checked) return false;
+      return true;
+    }
+
+    function submitTopic() {
+      el.topicForm.classList.add('was-submitted');
+      if (!validateTopic(true)) {
+        const firstProblem = el.topicForm.querySelector<HTMLElement>('.has-warning .pc-control, .pc-question.has-warning textarea');
+        if (!el.harmful.hidden && firstProblem === null) el.harmfulAck.focus();
+        else firstProblem?.focus();
+        return;
+      }
+      const questions = [...el.questions.querySelectorAll<HTMLTextAreaElement>('.pc-q-input')].map((input) => input.value.trim()).filter(Boolean);
+      const data = { title: el.topicName.value.trim(), description: el.topicDescription.value.trim(), questions };
+      el.topicForm.classList.remove('was-submitted');
+      closeModal(el.topicModal);
+
+      if (editingTopicId) {
+        Object.assign(topics.get(editingTopicId)!, data);
+        dirty = true;
+        renderPreview(false);
+        renderLibrary(false);
+        const item = el.previewList.querySelector<HTMLElement>(`[data-key="${editingTopicId}"]`);
+        if (item) {
+          item.classList.add('is-new');
+          revealInPreview(item);
+        }
+        toast(`“${data.title}” updated.`, 'success');
+        return;
+      }
+
+      customCount += 1;
+      const id = `custom-${customCount}`;
+      topics.set(id, { id, ...data });
+      libraryOrder.unshift(id);
+      el.librarySearch.value = '';
+      if (draft && draft.preview.length < LIMIT) {
+        addTopic(id);
+        toast(`“${data.title}” created and added to your playbook.`, 'success');
+      } else {
+        dirty = true;
+        renderLibrary();
+        toast(`“${data.title}” created. Your playbook is full, so it’s waiting in the topic list.`);
+      }
+    }
+
+    // Drag and drop (pointer events, so it works with touch and can animate)
+    type DragKind = 'library' | 'preview' | 'question';
+    type DragState = {
+      kind: DragKind;
+      source: HTMLElement;
+      pointerId: number;
+      startX: number;
+      startY: number;
+      offsetX: number;
+      offsetY: number;
+      started: boolean;
+      ghost?: HTMLElement;
+      slot?: HTMLElement;
+      list: HTMLElement;
+      scroller: HTMLElement;
+      lastX: number;
+      lastY: number;
+      frame?: number;
+    };
+    let drag: DragState | null = null;
+    let suppressClick = false;
+
+    function beginDrag(event: PointerEvent, kind: DragKind, source: HTMLElement) {
+      if (event.button !== 0) return;
+      const rect = source.getBoundingClientRect();
+      const list = kind === 'question' ? el.questions : el.previewList;
+      drag = {
+        kind,
+        source,
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        offsetX: event.clientX - rect.left,
+        offsetY: event.clientY - rect.top,
+        started: false,
+        list,
+        scroller: kind === 'question' ? el.questions.closest<HTMLElement>('.pc-modal')! : el.previewScroll,
+        lastX: event.clientX,
+        lastY: event.clientY,
+      };
+    }
+
+    function liftDrag(state: DragState) {
+      state.started = true;
+      const rect = state.source.getBoundingClientRect();
+      const ghost = state.source.cloneNode(true) as HTMLElement;
+      ghost.classList.add('pc-ghost');
+      ghost.removeAttribute('data-key');
+      ghost.style.width = `${rect.width}px`;
+      ghost.style.left = `${rect.left}px`;
+      ghost.style.top = `${rect.top}px`;
+      if (state.kind === 'question') {
+        ghost.querySelector('textarea')!.value = state.source.querySelector('textarea')!.value;
+      }
+      app!.append(ghost);
+      state.ghost = ghost;
+      app!.classList.add('is-dragging');
+
+      if (state.kind === 'library') {
+        state.source.classList.add('is-lifted');
+        state.slot = document.createElement('div');
+        state.slot.className = 'pc-slot';
+        state.slot.dataset.key = '__slot';
+        state.slot.style.height = `${Math.min(rect.height, 96)}px`;
+      } else {
+        state.slot = state.source;
+        state.source.classList.add('is-slot');
+      }
+      autoScroll();
+    }
+
+    function positionGhost(state: DragState, x: number, y: number) {
+      if (!state.ghost) return;
+      const dx = x - state.offsetX - parseFloat(state.ghost.style.left);
+      const dy = y - state.offsetY - parseFloat(state.ghost.style.top);
+      state.ghost.style.transform = `translate(${dx}px, ${dy}px) rotate(${state.kind === 'question' ? 0 : 1.2}deg)`;
+    }
+
+    function overPreview(x: number, y: number) {
+      const rect = el.preview.getBoundingClientRect();
+      return x >= rect.left - 24 && x <= rect.right + 24 && y >= rect.top && y <= rect.bottom;
+    }
+
+    function placeSlot(state: DragState, y: number) {
+      const slot = state.slot!;
+      const itemSelector = state.kind === 'question' ? '.pc-question' : '.pc-item';
+      const items = [...state.list.querySelectorAll<HTMLElement>(`:scope > ${itemSelector}`)].filter((node) => node !== slot);
+      let index = items.findIndex((node) => {
+        const rect = node.getBoundingClientRect();
+        return y < rect.top + rect.height / 2;
+      });
+      if (index === -1) index = items.length;
+      const reference = items[index] ?? null;
+      const alreadyThere = slot.parentElement === state.list && slot.nextElementSibling === (reference ?? null) && (reference !== null || state.list.lastElementChild === slot);
+      if (alreadyThere) return;
+      flip(state.list, () => state.list.insertBefore(slot, reference));
+    }
+
+    function moveDrag(event: PointerEvent) {
+      const state = drag;
+      if (!state || event.pointerId !== state.pointerId) return;
+      state.lastX = event.clientX;
+      state.lastY = event.clientY;
+      if (!state.started) {
+        if (Math.hypot(event.clientX - state.startX, event.clientY - state.startY) < 5) return;
+        liftDrag(state);
+      }
+      event.preventDefault();
+      positionGhost(state, event.clientX, event.clientY);
+
+      if (state.kind === 'library') {
+        const inside = overPreview(event.clientX, event.clientY);
+        el.preview.classList.toggle('is-drop-target', inside);
+        if (inside) {
+          el.previewEmpty.hidden = true;
+          placeSlot(state, event.clientY);
+        } else if (state.slot!.parentElement) {
+          flip(state.list, () => state.slot!.remove());
+          el.previewEmpty.hidden = Boolean(draft?.preview.length);
+        }
+      } else {
+        placeSlot(state, event.clientY);
+      }
+    }
+
+    // Scrolls the list under the pointer while dragging near its edges
+    function autoScroll() {
+      const state = drag;
+      if (!state?.started) return;
+      const box = state.scroller.getBoundingClientRect();
+      const edge = 56;
+      const insideX = state.kind !== 'library' || overPreview(state.lastX, state.lastY);
+      if (insideX) {
+        if (state.lastY < box.top + edge) state.scroller.scrollTop -= Math.ceil((box.top + edge - state.lastY) / 4);
+        else if (state.lastY > box.bottom - edge) state.scroller.scrollTop += Math.ceil((state.lastY - (box.bottom - edge)) / 4);
+      }
+      state.frame = requestAnimationFrame(autoScroll);
+    }
+
+    function settleGhost(state: DragState, target: HTMLElement | null, done: () => void) {
+      const ghost = state.ghost;
+      if (!ghost) {
+        done();
+        return;
+      }
+      const finish = () => {
+        ghost.remove();
+        done();
+      };
+      if (!target || REDUCED.matches) {
+        finish();
+        return;
+      }
+      const to = target.getBoundingClientRect();
+      const dx = to.left - parseFloat(ghost.style.left);
+      const dy = to.top - parseFloat(ghost.style.top);
+      ghost.classList.add('is-settling');
+      const animation = ghost.animate([{ transform: ghost.style.transform }, { transform: `translate(${dx}px, ${dy}px) rotate(0deg)` }], {
+        duration: 180,
+        easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+      });
+      animation.onfinish = finish;
+      animation.oncancel = finish;
+    }
+
+    function endDrag(event: PointerEvent, cancelled = false) {
+      const state = drag;
+      if (!state || event.pointerId !== state.pointerId) return;
+      drag = null;
+      if (state.frame) cancelAnimationFrame(state.frame);
+      if (!state.started) return;
+      suppressClick = true;
+      setTimeout(() => (suppressClick = false), 0);
+      app!.classList.remove('is-dragging');
+      el.preview.classList.remove('is-drop-target');
+
+      if (state.kind === 'library') {
+        const slot = state.slot!;
+        const dropped = !cancelled && slot.parentElement === state.list;
+        const index = dropped ? [...state.list.children].filter((node) => node.matches('.pc-item, .pc-slot')).indexOf(slot) : -1;
+        slot.remove();
+        if (dropped && draft) {
+          const id = state.source.dataset.topic!;
+          const added = addTopic(id, index);
+          if (added) {
+            settleGhost(state, el.previewList.querySelector<HTMLElement>(`[data-key="${id}"]`), () => undefined);
+            return;
+          }
+        }
+        el.previewEmpty.hidden = Boolean(draft?.preview.length);
+        settleGhost(state, state.source, () => state.source.classList.remove('is-lifted'));
+        return;
+      }
+
+      const source = state.source;
+      settleGhost(state, source, () => source.classList.remove('is-slot'));
+      if (state.kind === 'preview' && draft) {
+        const order = [...el.previewList.querySelectorAll<HTMLElement>(':scope > .pc-item')].map((node) => node.dataset.topic!);
+        if (order.join() !== draft.preview.join()) {
+          draft.preview = order;
+          dirty = true;
+          const position = order.indexOf(source.dataset.topic!) + 1;
+          announce(`${topics.get(source.dataset.topic!)!.title} moved to position ${position} of ${order.length}.`);
+        }
+      }
+      if (state.kind === 'question') syncQuestions();
+    }
+
+    // Events
+    on(document.getElementById('pc-create')!, 'click', openTemplateModal);
+    on(el.listingSearch, 'input', renderRows);
+    on(el.rows, 'click', (event) => {
+      const row = (event.target as HTMLElement).closest<HTMLElement>('[data-row]');
+      if (row) openRow(row.dataset.row!);
+    });
+    on(el.rows, 'keydown', (event) => {
+      const row = event.target as HTMLElement;
+      if ((event.key === 'Enter' || event.key === ' ') && row.matches('[data-row]')) {
+        event.preventDefault();
+        openRow(row.dataset.row!);
+      }
+    });
+
+    on(el.templateName, 'input', updateTemplateNext);
+    on(el.templateName, 'keydown', (event) => {
+      if (event.key === 'Enter' && !el.templateNext.disabled) el.templateNext.click();
+    });
+    on(el.templateGrid, 'change', (event) => {
+      selectedTemplate = (event.target as HTMLInputElement).value as TemplateId;
+      updateTemplateNext();
+    });
+    on(el.templateNext, 'click', () => {
+      if (el.templateNext.disabled || !selectedTemplate) return;
+      const name = el.templateName.value.trim();
+      closeModal(el.templateModal);
+      startDraft(name, selectedTemplate);
+    });
+
+    on(el.title, 'click', startRename);
+    on(el.titleRow.querySelector('.pc-title-edit')!, 'click', startRename);
+    on(el.titleInput, 'keydown', (event) => {
+      if (event.key === 'Enter') endRename(true, true);
+      if (event.key === 'Escape') {
+        event.stopPropagation();
+        endRename(false, true);
+      }
+    });
+    on(el.titleInput, 'blur', () => endRename(true));
+
+    on(document.getElementById('pc-save-draft')!, 'click', saveDraft);
+    on(document.getElementById('pc-publish')!, 'click', publish);
+    on(document.getElementById('pc-clear')!, 'click', () => {
+      if (!draft?.preview.length) return;
+      draft.preview.forEach((id) => {
+        if (!libraryOrder.includes(id)) libraryOrder.push(id);
+      });
+      draft.preview = [];
+      dirty = true;
+      renderPreview();
+      renderLibrary();
+      announce('All topics removed.');
+    });
+    on(el.librarySearch, 'input', () => renderLibrary(false));
+    on(el.librarySearch, 'keydown', (event) => {
+      if (event.key === 'Enter') openTopicModal(null, el.librarySearch.value.trim());
+    });
+    on(document.getElementById('pc-add-topic')!, 'click', () => openTopicModal(null, el.librarySearch.value.trim()));
+
+    on(el.libraryList, 'click', (event) => {
+      if (suppressClick) return;
+      const card = (event.target as HTMLElement).closest<HTMLElement>('.pc-topic-card');
+      if (card) addTopic(card.dataset.topic!);
+    });
+    on(el.libraryList, 'keydown', (event) => {
+      const card = (event.target as HTMLElement).closest<HTMLElement>('.pc-topic-card');
+      if (!card || (event.key !== 'Enter' && event.key !== ' ')) return;
+      event.preventDefault();
+      const next = (card.nextElementSibling ?? card.previousElementSibling) as HTMLElement | null;
+      if (addTopic(card.dataset.topic!)) (next?.dataset.topic ? el.libraryList.querySelector<HTMLElement>(`[data-key="${next.dataset.topic}"]`) : el.librarySearch)?.focus();
+    });
+
+    on(el.previewList, 'click', (event) => {
+      const target = event.target as HTMLElement;
+      const item = target.closest<HTMLElement>('.pc-item');
+      if (!item) return;
+      if (target.closest('.pc-item-remove')) removeTopic(item.dataset.topic!);
+      if (target.closest('.pc-item-edit')) openTopicModal(item.dataset.topic!);
+    });
+    on(el.previewList, 'keydown', (event) => {
+      const grip = (event.target as HTMLElement).closest<HTMLElement>('.pc-item-grip');
+      if (!grip || (event.key !== 'ArrowUp' && event.key !== 'ArrowDown')) return;
+      event.preventDefault();
+      moveTopic(grip.closest<HTMLElement>('.pc-item')!.dataset.topic!, event.key === 'ArrowUp' ? -1 : 1);
+    });
+    on(el.previewList, 'animationend', (event) => (event.target as HTMLElement).classList.remove('is-new'));
+
+    on(app, 'pointerdown', (event) => {
+      const target = event.target as HTMLElement;
+      if (!el.editor.hidden && openModals().length === 0) {
+        const card = target.closest<HTMLElement>('.pc-topic-card');
+        if (card) return beginDrag(event, 'library', card);
+        const grip = target.closest<HTMLElement>('.pc-item-grip');
+        if (grip) return beginDrag(event, 'preview', grip.closest<HTMLElement>('.pc-item')!);
+      }
+      const questionGrip = target.closest<HTMLElement>('.pc-q-grip');
+      if (questionGrip) beginDrag(event, 'question', questionGrip.closest<HTMLElement>('.pc-question')!);
+    });
+    // The icons are <img>s; a native image drag would cancel the pointer drag
+    on(app, 'dragstart', (event) => event.preventDefault());
+    on(window, 'pointermove', (event) => moveDrag(event as PointerEvent));
+    on(window, 'pointerup', (event) => endDrag(event as PointerEvent));
+    on(window, 'pointercancel', (event) => endDrag(event as PointerEvent, true));
+
+    // Topic modal
+    on(document.getElementById('pc-notice-close')!, 'click', () => {
+      noticeDismissed = true;
+      el.topicNotice.hidden = true;
+      el.topicName.focus();
+    });
+    on(el.topicForm, 'input', (event) => {
+      const target = event.target as HTMLElement;
+      if (target instanceof HTMLTextAreaElement && target.classList.contains('pc-q-input')) autosize(target);
+      updateCounts();
+      if (target !== el.harmfulAck) validateTopic(false);
+    });
+    on(el.topicForm, 'submit', (event) => {
+      event.preventDefault();
+      submitTopic();
+    });
+    on(el.topicForm, 'keydown', (event) => {
+      const target = event.target as HTMLElement;
+      // Enter in a question adds the next one rather than submitting
+      if (event.key === 'Enter' && target.classList.contains('pc-q-input') && !event.shiftKey) {
+        event.preventDefault();
+        const row = target.closest('.pc-question')!;
+        const next = row.nextElementSibling?.querySelector('textarea');
+        if (next) next.focus();
+        else document.getElementById('pc-add-question')!.click();
+      }
+      const grip = target.closest<HTMLElement>('.pc-q-grip');
+      if (grip && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
+        event.preventDefault();
+        const row = grip.closest<HTMLElement>('.pc-question')!;
+        const sibling = (event.key === 'ArrowUp' ? row.previousElementSibling : row.nextElementSibling) as HTMLElement | null;
+        if (!sibling) return;
+        flip(el.questions, () => (event.key === 'ArrowUp' ? sibling.before(row) : sibling.after(row)));
+        grip.focus();
+      }
+    });
+    on(document.getElementById('pc-add-question')!, 'click', () => {
+      const row = questionRow();
+      el.questions.append(row);
+      syncQuestions();
+      row.querySelector('textarea')!.focus();
+    });
+    on(el.questions, 'click', (event) => {
+      const remove = (event.target as HTMLElement).closest('.pc-q-remove');
+      if (!remove) return;
+      const row = remove.closest<HTMLElement>('.pc-question')!;
+      const focusAfter = (row.nextElementSibling ?? row.previousElementSibling)?.querySelector('textarea');
+      flip(el.questions, () => row.remove());
+      if (!el.questions.children.length) el.questions.append(questionRow());
+      syncQuestions();
+      validateTopic(false);
+      (focusAfter ?? el.questions.querySelector('textarea'))?.focus();
+    });
+
+    // Leaving the editor
+    app.querySelectorAll<HTMLElement>('[data-leave]').forEach((node) => on(node, 'click', leaveEditor));
+    on(document.getElementById('pc-exit-now')!, 'click', exitWithoutSaving);
+    on(document.getElementById('pc-draft-exit')!, 'click', () => {
+      closeModal(el.unsavedModal);
+      saveDraft();
+    });
+
+    // Closing modals
+    [el.templateModal, el.topicModal, el.unsavedModal].forEach((modal) => {
+      on(modal, 'click', (event) => {
+        const target = event.target as HTMLElement;
+        if (target.closest('[data-close]') || target === modal) closeModal(modal);
+      });
+    });
+    on(document, 'keydown', (event) => {
+      if (event.key === 'Escape') {
+        const [top] = openModals();
+        if (top) {
+          event.preventDefault();
+          closeModal(top);
+        }
+        return;
+      }
+      // Keeps Tab inside the open modal
+      if (event.key === 'Tab') {
+        const [top] = openModals();
+        if (!top) return;
+        const focusable = [...top.querySelectorAll<HTMLElement>('button:not([disabled]), input, textarea, [tabindex="0"]')].filter((node) => !node.closest('[hidden]'));
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    on(document.getElementById('pc-reset')!, 'click', () => location.reload());
+
+    renderRows();
+    return () => controller.abort();
+  }
+
+  let cleanup: (() => void) | undefined;
+
+  document.addEventListener('astro:page-load', () => {
+    cleanup = init();
+  });
+
+  document.addEventListener('astro:before-swap', () => {
+    cleanup?.();
+    cleanup = undefined;
+  });
+</script>
+
+<style is:global>
+  html {
+    overflow: hidden !important;
+  }
+
+  /* Beats Contact's scoped display rule. Left visible, it covers the whole page */
+  #contact {
+    display: none !important;
+  }
+
+  /* Values from the Figma file's Dialtone tokens */
+  .pc-app {
+    --pc-purple: #7c52ff;
+    --pc-purple-dark: #6a3ff5;
+    --pc-black: #000;
+    --pc-fg-secondary: #3a3a3a;
+    --pc-fg-tertiary: #555;
+    --pc-placeholder: #808080;
+    --pc-border-subtle: rgba(0, 0, 0, 0.1);
+    --pc-border: rgba(0, 0, 0, 0.18);
+    --pc-surface-secondary: #f9f9f9;
+    --pc-surface-info: #eaf2fa;
+    --pc-surface-warning: #fff4cc;
+    --pc-warning-border: #d28f2b;
+    --pc-warning-fg: #815008;
+    --pc-critical: #ec0e0e;
+    --pc-input-bg: rgba(0, 0, 0, 0.03);
+    --pc-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.03), 0 2px 4px rgba(0, 0, 0, 0.04), 0 2px 16px rgba(0, 0, 0, 0.08);
+    --pc-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    position: fixed;
+    inset: 0;
+    display: flex;
+    overflow: hidden;
+    background: #fff;
+    color: var(--pc-black);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .pc-app button,
+  .pc-app input,
+  .pc-app textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  .pc-app button {
+    cursor: pointer;
+  }
+
+  .pc-app img {
+    display: block;
+  }
+
+  .pc-app.is-dragging,
+  .pc-app.is-dragging * {
+    cursor: grabbing !important;
+    user-select: none;
+  }
+
+  .pc-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .pc-app :focus-visible {
+    outline: 2px solid var(--pc-purple);
+    outline-offset: 2px;
+  }
+
+  /* Rail */
+  .pc-rail {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 50px;
+    padding: 12px 8px;
+    border-right: 1px solid var(--pc-border-subtle);
+    background: var(--pc-surface-secondary);
+  }
+
+  .pc-rail-top,
+  .pc-rail-menu,
+  .pc-rail-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pc-rail-top {
+    gap: 30px;
+  }
+
+  .pc-rail-menu,
+  .pc-rail-bottom {
+    gap: 8px;
+  }
+
+  .pc-rail-item {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 0;
+    border-radius: 19px;
+    background: none;
+  }
+
+  .pc-rail-item.is-active {
+    background: rgba(34, 34, 34, 0.16);
+  }
+
+  .pc-avatar {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .pc-avatar img {
+    position: absolute;
+    inset: 0;
+  }
+
+  .pc-avatar span {
+    position: relative;
+  }
+
+  .pc-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  /* Top bar */
+  .pc-topbar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    height: 70px;
+    padding-right: 16px;
+    border-bottom: 1px solid var(--pc-border);
+    background: var(--pc-surface-secondary);
+  }
+
+  .pc-office {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 16px;
+    border-right: 1px solid var(--pc-border);
+  }
+
+  .pc-office-select {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 200px;
+    height: 32px;
+    padding: 0 7px 0 8px;
+    border: 1px solid var(--pc-fg-tertiary);
+    border-radius: 8px;
+    color: #141721;
+    line-height: 1.6;
+  }
+
+  .pc-topbar-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 16px;
+  }
+
+  .pc-crumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pc-crumbs li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pc-crumbs button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--pc-fg-secondary);
+    line-height: 1.4;
+  }
+
+  .pc-crumbs button:hover {
+    text-decoration: underline;
+  }
+
+  .pc-crumbs li > span[aria-hidden] {
+    color: #808080;
+    font-size: 12px;
+  }
+
+  .pc-crumb-current {
+    font-weight: 510;
+    line-height: 1.4;
+  }
+
+  /* Inputs */
+  .pc-input {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1.5px solid var(--pc-border-subtle);
+    border-radius: 8px;
+    background: var(--pc-input-bg);
+    color: var(--pc-placeholder);
+    line-height: 1.2;
+  }
+
+  .pc-input input {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: none;
+    color: var(--pc-fg-secondary) !important;
+    line-height: 1.2;
+  }
+
+  .pc-input input::placeholder {
+    color: var(--pc-placeholder);
+  }
+
+  .pc-input input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+
+  .pc-input:focus-within {
+    border-color: var(--pc-purple);
+  }
+
+  .pc-input--help {
+    width: 300px;
+  }
+
+  /* Admin nav */
+  .pc-body {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+  }
+
+  .pc-adminnav {
+    flex: none;
+    width: 232px;
+    padding: 0;
+    overflow-y: auto;
+    border-right: 1px solid var(--pc-border-subtle);
+    background: var(--pc-surface-secondary);
+  }
+
+  .pc-adminnav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px;
+    border: 0;
+    background: none;
+    line-height: 1.6;
+    text-align: left;
+  }
+
+  .pc-adminnav-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .pc-adminnav-item.is-active {
+    font-weight: 700;
+  }
+
+  .pc-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.09);
+    font-size: 12px;
+    font-weight: 590;
+    letter-spacing: 0.25px;
+    line-height: 18px;
+    white-space: nowrap;
+  }
+
+  .pc-badge--new {
+    border: 1px solid rgba(124, 82, 255, 0.5);
+    background: rgba(218, 199, 255, 0.5);
+    color: #3a1d95;
+  }
+
+  /* Buttons */
+  .pc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5.5px;
+    padding: 8px 12px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: none;
+    font-weight: 510 !important;
+    line-height: 1.2;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, opacity 0.15s ease;
+  }
+
+  .pc-btn--primary {
+    background: var(--pc-purple);
+    color: #fff !important;
+  }
+
+  .pc-btn--primary:hover:not(:disabled) {
+    background: var(--pc-purple-dark);
+  }
+
+  .pc-btn--primary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed !important;
+  }
+
+  .pc-btn--muted {
+    color: var(--pc-fg-secondary) !important;
+  }
+
+  .pc-btn--muted:hover {
+    background: rgba(34, 34, 34, 0.08);
+  }
+
+  .pc-btn--outlined {
+    border-color: var(--pc-purple);
+    color: var(--pc-purple) !important;
+  }
+
+  .pc-btn--outlined:hover {
+    background: rgba(124, 82, 255, 0.08);
+  }
+
+  .pc-btn--text {
+    color: var(--pc-purple) !important;
+  }
+
+  .pc-btn--text:hover {
+    background: rgba(124, 82, 255, 0.08);
+  }
+
+  .pc-icon-btn {
+    display: grid;
+    place-items: center;
+    padding: 2px;
+    border: 0;
+    border-radius: 4px;
+    background: none;
+  }
+
+  .pc-icon-btn:hover {
+    background: rgba(34, 34, 34, 0.1);
+  }
+
+  .pc-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--pc-fg-tertiary) !important;
+    font-size: 12px;
+    text-decoration: underline;
+  }
+
+  .pc-underline {
+    text-decoration: underline;
+  }
+
+  /* Working area */
+  .pc-work {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  /* Listing */
+  .pc-listing {
+    height: 100%;
+    padding: 24px 24px 32px;
+    overflow-y: auto;
+  }
+
+  .pc-listing-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .pc-listing-title {
+    margin: 0 0 4px;
+    font-size: 27px;
+    font-weight: 510;
+    line-height: 1.2;
+  }
+
+  .pc-listing-desc {
+    margin: 0;
+    color: var(--pc-fg-secondary);
+    line-height: 1.6;
+  }
+
+  .pc-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+
+  .pc-input--table-search {
+    width: 296px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .pc-input--table-search input {
+    font-size: 12px;
+  }
+
+  .pc-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px 6px 11px;
+    border: 1px solid var(--pc-border-subtle);
+    border-radius: 6px;
+    color: var(--pc-fg-secondary);
+    font-size: 12px;
+    font-weight: 510;
+  }
+
+  .pc-table {
+    overflow: hidden;
+    border: 1px solid var(--pc-border-subtle);
+    border-radius: 16px;
+  }
+
+  .pc-row {
+    display: grid;
+    grid-template-columns: minmax(0, 2.3fr) minmax(0, 0.65fr) minmax(0, 0.85fr) minmax(0, 0.6fr) minmax(0, 0.6fr);
+    align-items: center;
+    gap: 16px;
+    min-height: 54px;
+    padding: 4px 16px;
+    border-top: 1px solid var(--pc-border-subtle);
+  }
+
+  .pc-row--head {
+    min-height: 40px;
+    border-top: 0;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .pc-row-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 590;
+  }
+
+  .pc-row-type {
+    color: var(--pc-fg-secondary);
+  }
+
+  .pc-row-created {
+    display: flex;
+    flex-direction: column;
+    color: var(--pc-fg-secondary);
+    line-height: 1.2;
+  }
+
+  .pc-row-created small {
+    margin-top: 2px;
+    color: var(--pc-fg-tertiary);
+    font-size: 12px;
+  }
+
+  .pc-num {
+    text-align: right;
+  }
+
+  .pc-row--link {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  .pc-row--link:hover {
+    background: #f6f6f6;
+  }
+
+  .pc-row--link:focus-visible {
+    outline-offset: -2px;
+  }
+
+  .pc-row.is-flash {
+    animation: pc-flash 1.6s ease-out;
+  }
+
+  @keyframes pc-flash {
+    0%,
+    30% {
+      background-color: rgba(124, 82, 255, 0.16);
+    }
+  }
+
+  .pc-pages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 24px;
+    color: var(--pc-fg-secondary);
+  }
+
+  .pc-page,
+  .pc-page-arrow {
+    display: grid;
+    place-items: center;
+    min-width: 32px;
+    height: 32px;
+    border-radius: 6px;
+  }
+
+  .pc-page-arrow {
+    color: #aaa;
+    font-size: 20px;
+  }
+
+  .pc-page.is-current {
+    background: var(--pc-purple);
+    color: #fff;
+  }
+
+  /* Editor */
+  .pc-editor {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .pc-editor-head {
+    flex: none;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 16px 24px 16px 32px;
+    border-bottom: 1px solid #d2d2d2;
+  }
+
+  .pc-title-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 32px;
+  }
+
+  .pc-title {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 27px !important;
+    font-weight: 510 !important;
+    line-height: 1.2;
+    text-align: left;
+    cursor: text !important;
+  }
+
+  .pc-title-input {
+    padding: 0 6px;
+    margin-left: -7px;
+    border: 1.5px solid var(--pc-purple);
+    border-radius: 6px;
+    outline: none;
+    font-size: 27px !important;
+    font-weight: 510;
+    line-height: 1.2;
+  }
+
+  /* Hovering the title shows the pencil; the Draft badge slides right to make room */
+  .pc-title-edit {
+    position: absolute;
+    left: calc(var(--pc-title-w, 0px) + 12px);
+    opacity: 0;
+    pointer-events: none;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+
+  .pc-badge--draft {
+    transition: transform 0.25s var(--pc-ease);
+  }
+
+  .pc-title-row:hover:not(.is-renaming) .pc-title-edit,
+  .pc-title:focus-visible ~ .pc-title-edit {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .pc-title-row:hover:not(.is-renaming) .pc-badge--draft,
+  .pc-title:focus-visible ~ .pc-badge--draft {
+    transform: translateX(32px);
+  }
+
+  .pc-access {
+    color: var(--pc-fg-secondary);
+    line-height: 1.6;
+    text-decoration: underline;
+  }
+
+  .pc-editor-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .pc-editor-cols {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 0;
+  }
+
+  /* Library */
+  .pc-library {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .pc-library-head {
+    padding: 32px 24px 16px 32px;
+  }
+
+  .pc-field-label,
+  .pc-field-label-static {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 4px;
+  }
+
+  .pc-field-label strong,
+  .pc-field-label-static strong {
+    line-height: 1.6;
+  }
+
+  .pc-field-label span {
+    color: var(--pc-fg-tertiary);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .pc-library-search-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+  }
+
+  .pc-input--search {
+    flex: 1;
+  }
+
+  .pc-library-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 24px 32px 32px;
+    overflow-y: auto;
+  }
+
+  .pc-topic-card {
+    display: flex;
+    align-items: center;
+    padding: 4px 0;
+    border: 1px solid var(--pc-border-subtle);
+    border-radius: 12px;
+    background: #fff;
+    cursor: pointer;
+    touch-action: pan-y;
+    user-select: none;
+    transition: background-color 0.15s ease, opacity 0.15s ease;
+  }
+
+  .pc-topic-card:hover {
+    background: #f6f6f6;
+  }
+
+  .pc-topic-card-plus {
+    flex: none;
+    padding-left: 8px;
+    opacity: 0.4;
+    transition: opacity 0.15s ease;
+  }
+
+  .pc-topic-card:hover .pc-topic-card-plus,
+  .pc-topic-card:focus-visible .pc-topic-card-plus {
+    opacity: 1;
+  }
+
+  .pc-topic-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding: 4px 12px 8px;
+  }
+
+  .pc-topic-card-body strong {
+    padding-top: 4px;
+    line-height: 1.4;
+  }
+
+  .pc-topic-card-body small {
+    margin-bottom: 4px;
+    color: var(--pc-fg-tertiary);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .pc-topic-card-body span {
+    padding: 2px 0;
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+
+  .pc-topic-card.is-lifted {
+    opacity: 0.35;
+  }
+
+  .pc-library-empty {
+    margin: 0;
+    padding: 24px;
+    border: 1px dashed var(--pc-border);
+    border-radius: 12px;
+    color: var(--pc-fg-tertiary);
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  /* Preview */
+  .pc-preview-wrap {
+    display: flex;
+    min-height: 0;
+    padding: 24px 24px 24px 16px;
+  }
+
+  .pc-preview {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    padding: 1px;
+    border: 1px solid var(--pc-border-subtle);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: var(--pc-shadow-card);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .pc-preview.is-drop-target {
+    border-color: var(--pc-purple);
+    box-shadow: var(--pc-shadow-card), 0 0 0 3px rgba(124, 82, 255, 0.15);
+  }
+
+  .pc-preview-head {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--pc-border-subtle);
+    border-radius: 15px 15px 0 0;
+    background: var(--pc-surface-info);
+    line-height: 1.4;
+  }
+
+  .pc-preview-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--pc-fg-tertiary);
+    font-size: 12px;
+  }
+
+  #pc-remaining.is-full {
+    color: var(--pc-critical);
+  }
+
+  #pc-remaining.is-shake {
+    animation: pc-shake 0.4s ease;
+  }
+
+  @keyframes pc-shake {
+    25% {
+      transform: translateX(-3px);
+    }
+    50% {
+      transform: translateX(3px);
+    }
+    75% {
+      transform: translateX(-2px);
+    }
+  }
+
+  .pc-preview-scroll {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
+  .pc-preview-list {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+  }
+
+  .pc-preview-list:empty {
+    padding: 0;
+  }
+
+  .pc-preview-empty {
+    margin: 0;
+    padding: 32px 40px;
+    font-size: 19px;
+    line-height: 1.6;
+  }
+
+  .pc-item {
+    display: flex;
+    gap: 4px;
+    padding: 10px 8px 10px 4px;
+    background: #fff;
+    transition: background-color 0.15s ease;
+  }
+
+  .pc-item:hover {
+    background: #f9f9f9;
+  }
+
+  .pc-item.is-new {
+    animation: pc-added 1.4s ease-out;
+  }
+
+  @keyframes pc-added {
+    0%,
+    25% {
+      background-color: rgba(124, 82, 255, 0.12);
+    }
+  }
+
+  .pc-item-grip,
+  .pc-q-grip {
+    flex: none;
+    display: grid;
+    place-items: center;
+    align-self: flex-start;
+    width: 22px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: none;
+    cursor: grab !important;
+    touch-action: none;
+  }
+
+  /* The grip, edit and delete icons show only while the item is hovered or
+     has focus (and on the copy being dragged) */
+  .pc-item-grip,
+  .pc-item-actions {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .pc-item:hover .pc-item-grip,
+  .pc-item:hover .pc-item-actions,
+  .pc-item:focus-within .pc-item-grip,
+  .pc-item:focus-within .pc-item-actions,
+  .pc-ghost .pc-item-grip,
+  .pc-ghost .pc-item-actions {
+    opacity: 1;
+  }
+
+  .pc-item-grip:hover,
+  .pc-q-grip:hover {
+    background: rgba(34, 34, 34, 0.08);
+  }
+
+  .pc-item-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .pc-item-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .pc-item-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pc-item-text strong {
+    line-height: 1.6;
+  }
+
+  .pc-item-text small {
+    color: var(--pc-fg-tertiary);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .pc-item-actions {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 24px;
+  }
+
+  .pc-item-questions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-right: 24px;
+  }
+
+  .pc-item-questions-label {
+    font-size: 12px;
+    font-weight: 590;
+    line-height: 1.4;
+  }
+
+  .pc-item-questions p {
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .pc-item.is-slot,
+  .pc-question.is-slot,
+  .pc-slot {
+    position: relative;
+    border-radius: 12px;
+    background: rgba(124, 82, 255, 0.06);
+    box-shadow: inset 0 0 0 1.5px rgba(124, 82, 255, 0.45);
+  }
+
+  .pc-item.is-slot > *,
+  .pc-question.is-slot > * {
+    visibility: hidden;
+  }
+
+  .pc-slot {
+    flex: none;
+    margin: 6px 12px;
+  }
+
+  /* Dragged copy */
+  .pc-ghost {
+    position: fixed !important;
+    z-index: 200;
+    margin: 0 !important;
+    pointer-events: none;
+    background: #fff !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+    border-radius: 12px;
+    opacity: 0.97;
+    will-change: transform;
+  }
+
+  .pc-ghost.pc-question {
+    padding: 4px 0;
+  }
+
+  /* Modals */
+  .pc-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .pc-backdrop--light {
+    background: rgba(0, 0, 0, 0.12);
+  }
+
+  .pc-backdrop.is-open {
+    animation: pc-fade 0.2s ease;
+  }
+
+  .pc-backdrop.is-open .pc-modal {
+    animation: pc-rise 0.25s var(--pc-ease);
+  }
+
+  @keyframes pc-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes pc-rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+    }
+  }
+
+  .pc-modal {
+    position: relative;
+    border: 1px solid var(--pc-border-subtle);
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .pc-modal h2 {
+    margin: 0;
+  }
+
+  .pc-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .pc-modal--wizard {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    /* 848px of content, as drawn */
+    width: min(914px, 100%);
+    max-height: 100%;
+    padding: 24px 32px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  .pc-wizard-title {
+    position: relative;
+  }
+
+  .pc-wizard-title h2 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.6;
+  }
+
+  .pc-wizard-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  /* Room for focus rings (2px outline at a 2px offset), which the scroll
+     container would otherwise clip */
+  .pc-wizard-main {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    min-height: 0;
+    margin: -4px;
+    padding: 4px;
+    overflow-y: auto;
+  }
+
+  .pc-wizard-name {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 416px;
+    max-width: 100%;
+  }
+
+  .pc-wizard-name strong {
+    line-height: 1.4;
+  }
+
+  .pc-wizard-name input {
+    padding: 10px 16px;
+    border: 1.5px solid var(--pc-border-subtle);
+    border-radius: 12px;
+    outline: none;
+    background: var(--pc-input-bg);
+    font-size: 19px !important;
+    line-height: 1.2;
+  }
+
+  .pc-wizard-name input::placeholder {
+    color: var(--pc-placeholder);
+  }
+
+  .pc-wizard-name input:focus {
+    border-color: var(--pc-purple);
+  }
+
+  .pc-templates {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .pc-templates legend {
+    margin-bottom: 8px;
+    padding: 0;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .pc-template-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .pc-template-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    border: 1px solid var(--pc-border);
+    border-radius: 16px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .pc-template-card:hover {
+    border-color: rgba(124, 82, 255, 0.5);
+  }
+
+  .pc-template-card:has(input:checked) {
+    border-color: var(--pc-purple);
+    background: rgba(124, 82, 255, 0.04);
+    box-shadow: inset 0 0 0 1px var(--pc-purple);
+  }
+
+  .pc-template-card:has(input:focus-visible) {
+    outline: 2px solid var(--pc-purple);
+    outline-offset: 2px;
+  }
+
+  .pc-template-card input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .pc-template-name {
+    font-weight: 700;
+    line-height: 1.6;
+  }
+
+  .pc-template-used {
+    margin-top: 2px;
+    font-size: 12px;
+    line-height: 1.2;
+  }
+
+  .pc-template-summary {
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+
+  .pc-modal--topic {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 540px;
+    max-width: 100%;
+    max-height: calc(100vh - 48px);
+    padding: 24px;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .pc-topic-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-left: 8px;
+  }
+
+  .pc-topic-header h2 {
+    font-size: 27px;
+    font-weight: 510;
+    line-height: 1.2;
+  }
+
+  .pc-topic-close {
+    width: 43px;
+    height: 43px;
+    margin: -8px -8px 0 0;
+    border-radius: 50%;
+  }
+
+  .pc-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--pc-border-subtle);
+    border-radius: 8px;
+    background: var(--pc-surface-info);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .pc-notice svg {
+    flex: none;
+  }
+
+  .pc-notice p {
+    flex: 1;
+    margin: 0;
+  }
+
+  .pc-field {
+    display: flex;
+    flex-direction: column;
+    padding: 0 8px;
+  }
+
+  .pc-field label {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 4px;
+  }
+
+  .pc-field label strong,
+  .pc-field-label-static strong {
+    color: var(--pc-fg-secondary);
+    font-weight: 590;
+    line-height: 1.4;
+  }
+
+  .pc-field label span,
+  .pc-field-label-static span {
+    color: var(--pc-fg-tertiary);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .pc-control {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1.5px solid var(--pc-border-subtle);
+    border-radius: 8px;
+    outline: none;
+    background: var(--pc-input-bg);
+    color: var(--pc-fg-secondary) !important;
+    line-height: 1.2;
+    resize: none;
+    transition: border-color 0.15s ease;
+  }
+
+  textarea.pc-control:not(.pc-q-input) {
+    min-height: 80px;
+    resize: vertical;
+  }
+
+  .pc-control::placeholder {
+    color: var(--pc-placeholder);
+  }
+
+  .pc-control:focus {
+    border-color: var(--pc-purple);
+  }
+
+  .pc-field-foot {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 25px;
+    padding-top: 8px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .pc-field-msg {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--pc-warning-fg);
+    font-weight: 510;
+  }
+
+  .pc-count {
+    color: rgba(34, 34, 34, 0.5);
+  }
+
+  .pc-field.has-warning .pc-control,
+  .pc-question.has-warning .pc-control {
+    border-color: var(--pc-warning-border);
+  }
+
+  .pc-field--questions {
+    padding: 0;
+  }
+
+  .pc-field--questions .pc-field-label-static {
+    padding-left: 8px;
+  }
+
+  .pc-questions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .pc-question {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding-left: 4px;
+  }
+
+  .pc-q-grip,
+  .pc-q-remove {
+    flex: none;
+    width: 22px;
+    height: 28px;
+    margin-top: 3px;
+  }
+
+  .pc-q-input {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* One question: no grip or delete, as drawn */
+  .pc-questions.is-single .pc-q-grip,
+  .pc-questions.is-single .pc-q-remove {
+    display: none;
+  }
+
+  .pc-add-question {
+    display: inline-flex;
+    align-items: center;
+    gap: 3.5px;
+    align-self: flex-start;
+    margin: 8px 0 0 8px;
+    padding: 7px 2px;
+    border: 0;
+    border-radius: 4px;
+    background: none;
+    color: var(--pc-fg-secondary) !important;
+    font-size: 12px !important;
+    font-weight: 510 !important;
+  }
+
+  .pc-add-question:hover {
+    background: rgba(34, 34, 34, 0.06);
+  }
+
+  .pc-topic-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 16px;
+  }
+
+  .pc-topic-footer.is-harmful {
+    padding: 16px 24px;
+    border: 1px solid var(--pc-border);
+    border-radius: 8px;
+    background: var(--pc-surface-warning);
+    animation: pc-fade 0.2s ease;
+  }
+
+  .pc-harmful {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .pc-harmful p {
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .pc-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.6;
+    cursor: pointer;
+  }
+
+  .pc-check input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--pc-purple);
+  }
+
+  .pc-topic-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .pc-modal--confirm {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 460px;
+    max-width: 100%;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .pc-modal--confirm p {
+    margin: 0;
+    padding-left: 8px;
+    color: var(--pc-fg-secondary);
+    line-height: 1.4;
+  }
+
+  /* Toast */
+  .pc-toasts {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    z-index: 300;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .pc-toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 560px;
+    padding: 10px 10px 10px 16px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+    background: var(--pc-surface-info);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    font-size: 14px;
+    font-weight: 590;
+    line-height: 1.4;
+    pointer-events: auto;
+    animation: pc-drop 0.25s var(--pc-ease);
+  }
+
+  .pc-toast--success {
+    background: #e8f6ee;
+  }
+
+  .pc-toast svg {
+    flex: none;
+    color: var(--pc-fg-secondary);
+  }
+
+  .pc-toast.is-leaving {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  @keyframes pc-drop {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  .pc-reset {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 50;
+    padding: 6px 12px;
+    border: 1px solid var(--pc-border-subtle);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--pc-fg-tertiary) !important;
+    font-size: 12px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .pc-reset:hover {
+    color: var(--pc-black) !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pc-app *,
+    .pc-app *::before,
+    .pc-app *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
