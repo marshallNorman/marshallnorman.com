@@ -1,0 +1,117 @@
+---
+import ShowcasePage from '../../components/ShowcasePage.astro';
+import { checkPassword, isAuthed, isConfigured, setAuthCookie } from '../../lib/showcase-auth';
+import { showcaseItems } from '../../lib/showcase-items';
+import type { ShowcaseItem } from '../../lib/showcase-items';
+
+export const prerender = false;
+
+let error = '';
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const password = String(form.get('password') ?? '');
+  if (checkPassword(password)) {
+    setAuthCookie(Astro.cookies);
+    return Astro.redirect('/showcase/rippling', 303);
+  }
+  error = isConfigured() ? 'Incorrect password.' : "Showcase isn't configured.";
+}
+
+const authed = isAuthed(Astro.cookies);
+
+// Loom walkthroughs (titles and lengths from Loom's oEmbed)
+const videos = [
+  { id: '465acf1df2cc4c0d96b97fcb8e111818', title: 'Agentic Studio Demo, Building and Testing Agents', length: '9:38' },
+  { id: '3038b1ff8dff43f7963540b0084eefdf', title: 'Creating and Using Call Center Playbooks with AI', length: '5:02' },
+];
+
+const playbookCreation: ShowcaseItem = {
+  type: 'Prototype',
+  title: 'AI Playbooks creation',
+  description: 'Build a custom AI Playbook: start from a template, drag topics into place and create your own, with a live preview of what agents will see.',
+  href: '/showcase/playbook-creation-presentation',
+};
+
+// The showcase list, with the playbook demo after the notification system
+const notificationsIndex = showcaseItems.findIndex((item) => item.href === '/showcase/notifications-demo');
+const items = [...showcaseItems.slice(0, notificationsIndex + 1), playbookCreation, ...showcaseItems.slice(notificationsIndex + 1)];
+---
+
+<ShowcasePage eyebrow="Presented for Rippling" items={items} authed={authed} error={error}>
+  <section class="rp-videos" aria-labelledby="rp-videos-title">
+    <h2 class="rp-videos-title" id="rp-videos-title">Video walkthroughs</h2>
+    {videos.map((video) => (
+      <figure class="rp-video">
+        <div class="rp-video-frame">
+          <iframe
+            src={`https://www.loom.com/embed/${video.id}?hide_owner=true&hide_share=true&hide_title=true&hideEmbedTopBar=true`}
+            title={video.title}
+            loading="lazy"
+            allow="fullscreen"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <figcaption>
+          <span class="rp-video-length">Video · {video.length}</span>
+          <span class="rp-video-name">{video.title}</span>
+        </figcaption>
+      </figure>
+    ))}
+  </section>
+</ShowcasePage>
+
+<style>
+  .rp-videos {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .rp-videos-title {
+    margin: 0;
+    color: #8674ea;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  .rp-video {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid #dcd5f5;
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  /* The recordings are 16:10 (Loom's oEmbed reports 4:3, which letterboxes) */
+  .rp-video-frame {
+    aspect-ratio: 16 / 10;
+    background: #ece9fb;
+  }
+
+  .rp-video-frame iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .rp-video figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 24px 24px;
+  }
+
+  .rp-video-length {
+    color: #8674ea;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 13px;
+  }
+
+  .rp-video-name {
+    font-size: 24px;
+    line-height: 1.25;
+  }
+</style>
