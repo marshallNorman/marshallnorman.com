@@ -1891,7 +1891,10 @@ const filters = ['Type', 'Adherence', 'Date created', '# of call centers', '# of
     line-height: 1.6;
   }
 
+  /* The search field and filter chips share one height */
   .pc-filters {
+    --pc-control-h: 32px;
+
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -1900,8 +1903,10 @@ const filters = ['Type', 'Adherence', 'Date created', '# of call centers', '# of
   }
 
   .pc-input--table-search {
+    box-sizing: border-box;
     width: 296px;
-    padding: 6px 10px;
+    height: var(--pc-control-h);
+    padding: 0 10px;
     font-size: 12px;
   }
 
@@ -1910,10 +1915,12 @@ const filters = ['Type', 'Adherence', 'Date created', '# of call centers', '# of
   }
 
   .pc-chip {
+    box-sizing: border-box;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 8px 6px 11px;
+    height: var(--pc-control-h);
+    padding: 0 8px 0 11px;
     border: 1px solid var(--pc-border-subtle);
     border-radius: 6px;
     color: var(--pc-fg-secondary);
@@ -2144,10 +2151,21 @@ const filters = ['Type', 'Adherence', 'Date created', '# of call centers', '# of
     line-height: 1.6;
   }
 
+  /* The search field and Add button share one height (34px in the Figma) */
   .pc-library-search-row {
+    --pc-control-h: 34px;
+
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     gap: 8px;
+  }
+
+  .pc-input--search,
+  .pc-library-search-row .pc-btn {
+    box-sizing: border-box;
+    height: var(--pc-control-h);
+    padding-top: 0;
+    padding-bottom: 0;
   }
 
   .pc-input--search {
