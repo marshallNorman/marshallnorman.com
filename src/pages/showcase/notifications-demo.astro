@@ -8,7 +8,35 @@ if (!isAuthed(Astro.cookies)) {
   return Astro.redirect('/showcase');
 }
 
-const tiles = ['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4'];
+// Meetings call. Photos from Unsplash (free license):
+// backdrop-lake unsplash.com/photos/7Z94A-v9kvw, backdrop-cliff unsplash.com/photos/mlGM03fKONE,
+// backdrop-lattice unsplash.com/photos/tphmfy3mvjE, avatar-richard unsplash.com/photos/2uqsukZ8Pzc,
+// avatar-kristen unsplash.com/photos/xxrz4LJutjA
+const IMG = '/showcase/notifications';
+const participants = [
+  { name: 'Richard Taylor', backdrop: `${IMG}/backdrop-lake.jpg`, avatar: `${IMG}/avatar-richard.jpg`, focus: '50% 30%', extra: 'user' },
+  { name: 'Kristen Carlel', backdrop: `${IMG}/backdrop-cliff.jpg`, avatar: `${IMG}/avatar-kristen.jpg`, focus: '45% 30%', extra: 'more', host: true },
+  { name: 'Sofia Chang', backdrop: `${IMG}/backdrop-lattice.jpg`, initials: 'SC', extra: 'more' },
+];
+
+// Line icons (24px grid) for the call controls
+const ICONS: Record<string, string> = {
+  info: '<circle cx="12" cy="12" r="9.5"/><path d="M12 16v-5M12 8h.01"/>',
+  activity: '<path d="M20 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+  ai: '<path d="M3 6h10M3 12h8M3 18h10"/><path d="m18 8 .9 2.1L21 11l-2.1.9L18 14l-.9-2.1L15 11l2.1-.9z"/>',
+  micOff: '<path d="m2 2 20 20"/><path d="M18.9 13.2A7 7 0 0 0 19 12v-2"/><path d="M5 10v2a7 7 0 0 0 12 5"/><path d="M15 9.3V5a3 3 0 0 0-5.7-1.3"/><path d="M9 9v3a3 3 0 0 0 5.1 2.1"/><path d="M12 19v3"/>',
+  videoOff: '<path d="M10.7 6H14a2 2 0 0 1 2 2v2.5l5.3-3.1a.5.5 0 0 1 .7.5v8.3"/><path d="M16 16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2"/><path d="m2 2 20 20"/>',
+  share: '<path d="M13 3H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-3"/><path d="M8 21h8M12 17v4"/><path d="m17 8 5-5M17 3h5v5"/>',
+  smile: '<circle cx="12" cy="12" r="9.5"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>',
+  more: '<circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/>',
+  moreVertical: '<circle cx="12" cy="5" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="19" r="1.6" fill="currentColor"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  chevronUp: '<path d="m6 15 6-6 6 6"/>',
+  timer: '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M10 2h4"/>',
+  views: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+  leave: '<path d="M2.6 13.4a14 14 0 0 1 18.8 0l-.9 2.9a1.5 1.5 0 0 1-2 .9l-2.6-1a1.5 1.5 0 0 1-.9-1.5l.1-1.8a10 10 0 0 0-6.2 0l.1 1.8a1.5 1.5 0 0 1-.9 1.5l-2.6 1a1.5 1.5 0 0 1-2-.9z"/>',
+};
 const navRows = [72, 56, 64, 48, 60, 52, 68];
 const messages = [
   { name: 92, lines: [88, 62] },
@@ -51,26 +79,63 @@ const tabs = [
       </div>
 
       <div class="nd-surfaces">
-        <section class="nd-surface nd-meetings is-active" data-surface-view="meetings" aria-label="Meetings surface wireframe">
+        <section class="nd-surface nd-meetings is-active" data-surface-view="meetings" aria-label="Meetings call">
           <div class="nd-tiles">
-            {tiles.map((name) => (
+            {participants.map((person) => (
               <div class="nd-tile">
-                <span class="nd-tile-avatar"></span>
-                <span class="nd-tile-name">{name}</span>
+                <img class="nd-tile-bg" src={person.backdrop} alt="" />
+                {person.host && <span class="nd-tile-host">Host</span>}
+                {person.avatar ? (
+                  <img class="nd-tile-avatar" src={person.avatar} alt="" style={`object-position: ${person.focus}`} />
+                ) : (
+                  <span class="nd-tile-avatar nd-tile-avatar--initials">{person.initials}</span>
+                )}
+                <div class="nd-tile-meta">
+                  <div class="nd-tile-icons">
+                    <span class="nd-tile-muted" aria-label="Muted"><svg viewBox="0 0 24 24" set:html={ICONS.micOff} /></span>
+                    <svg class="nd-tile-extra" viewBox="0 0 24 24" set:html={ICONS[person.extra === 'user' ? 'user' : 'moreVertical']} />
+                  </div>
+                  <strong>{person.name}</strong>
+                  <span>AeroLabs - Main.</span>
+                </div>
               </div>
             ))}
           </div>
+
+          <div class="nd-meet-status">
+            <span class="nd-ai-on">Ai On</span>
+            <span class="nd-signal" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="nd-meet-status-spacer"></span>
+            <span class="nd-meet-pill">Timer<svg viewBox="0 0 24 24" set:html={ICONS.timer} /></span>
+            <span class="nd-meet-pill">Views<svg viewBox="0 0 24 24" set:html={ICONS.views} /></span>
+          </div>
+
+          <!-- Activity and Ai open the panel; the rest are for show -->
           <div class="nd-controls">
-            <div class="nd-control-group"><span class="nd-control-pill"></span></div>
             <div class="nd-control-group">
-              <span class="nd-control"></span>
-              <span class="nd-control"></span>
-              <span class="nd-control"></span>
-              <span class="nd-control nd-control--end"></span>
+              <span class="nd-ctl"><svg viewBox="0 0 24 24" set:html={ICONS.info} />Details</span>
+              <button type="button" class="nd-ctl" data-bar="chat" aria-label="Activity">
+                <span class="nd-ctl-icon"><svg viewBox="0 0 24 24" set:html={ICONS.activity} /><span class="nd-bar-badge" hidden>0</span></span>
+                Activity
+              </button>
+              <span class="nd-ctl">
+                <span class="nd-ctl-icon"><svg viewBox="0 0 24 24" set:html={ICONS.users} /><sup class="nd-ctl-count">3</sup></span>
+                Participants
+              </span>
+              <button type="button" class="nd-ctl" data-bar="ai" aria-label="Ai">
+                <span class="nd-ctl-icon"><svg viewBox="0 0 24 24" set:html={ICONS.ai} /><span class="nd-bar-badge" hidden>0</span></span>
+                Ai
+              </button>
             </div>
-            <div class="nd-control-group">
-              <span class="nd-control"></span>
-              <span class="nd-control"></span>
+            <div class="nd-control-group nd-control-group--center">
+              <span class="nd-ctl nd-ctl--alert"><svg viewBox="0 0 24 24" set:html={ICONS.micOff} />Unmute<svg class="nd-ctl-caret" viewBox="0 0 24 24" set:html={ICONS.chevronUp} /></span>
+              <span class="nd-ctl nd-ctl--alert"><svg viewBox="0 0 24 24" set:html={ICONS.videoOff} />Start video<svg class="nd-ctl-caret" viewBox="0 0 24 24" set:html={ICONS.chevronUp} /></span>
+              <span class="nd-ctl"><svg viewBox="0 0 24 24" set:html={ICONS.share} />Share</span>
+              <span class="nd-ctl"><svg viewBox="0 0 24 24" set:html={ICONS.smile} />Reactions</span>
+              <span class="nd-ctl"><svg viewBox="0 0 24 24" set:html={ICONS.more} />More</span>
+            </div>
+            <div class="nd-control-group nd-control-group--end">
+              <span class="nd-leave"><svg viewBox="0 0 24 24" set:html={ICONS.leave} />Leave</span>
             </div>
           </div>
         </section>
@@ -416,6 +481,9 @@ const tabs = [
     const toggleButtons = [...stage.querySelectorAll<HTMLButtonElement>('[data-surface]')];
     const surfaces = [...stage.querySelectorAll<HTMLElement>('[data-surface-view]')];
     const unread: Record<NotificationType, number> = { rta: 0, chat: 0, playbook: 0 };
+    const barButtons = [...stage.querySelectorAll<HTMLButtonElement>('[data-bar]')];
+    // Which AI tab the Ai button opens: whichever notified last
+    let lastAiTab: 'rta' | 'playbook' = 'rta';
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const items = PLAYBOOK_COPY.map(buildPlaybookItem);
     const collapsibleObserver = new ResizeObserver((entries) => {
@@ -542,6 +610,20 @@ const tabs = [
         badge.textContent = String(count);
         badge.hidden = count === 0;
       });
+      // Meetings bar: Activity counts chat, Ai counts Live Coach and Playbook
+      barButtons.forEach((button) => {
+        const ai = button.dataset.bar === 'ai';
+        const count = ai ? unread.rta + unread.playbook : unread.chat;
+        const badge = button.querySelector<HTMLElement>('.nd-bar-badge')!;
+        const previous = badge.hidden ? 0 : Number(badge.textContent);
+        badge.textContent = String(count);
+        badge.hidden = count === 0;
+        if (count > previous && !reducedMotion.matches) {
+          badge.animate([{ transform: 'scale(0.4)' }, { transform: 'scale(1.2)' }, { transform: 'scale(1)' }], { duration: 300, easing: 'ease-out' });
+        }
+        const label = ai ? 'Ai' : 'Activity';
+        button.setAttribute('aria-label', count ? `${label}, ${count} new` : label);
+      });
     }
 
     function selectTab(type: NotificationType, settleDelay = TAB_FADE, first?: PlaybookItem) {
@@ -619,6 +701,7 @@ const tabs = [
 
     function showCard(type: NotificationType, content: HTMLElement, timestamp: string, onOpen: () => void) {
       unread[type] += 1;
+      if (type !== 'chat') lastAiTab = type;
       renderUnread();
 
       const el = make('div', `nd-card nd-card--${type} is-entering`);
@@ -812,6 +895,13 @@ const tabs = [
       if ((event.target as HTMLElement).closest('button, input')) event.preventDefault();
     }, { signal });
     closeButton.addEventListener('click', closePanel, { signal });
+    barButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const target: NotificationType = button.dataset.bar === 'ai' ? lastAiTab : 'chat';
+        if (isOpen && activeTab === target) closePanel();
+        else openPanel(target);
+      }, { signal });
+    });
     stackList.forEach((stack) => {
       const enter = () => enterStack(stack);
       const leave = () => leaveStack(stack);
@@ -1059,85 +1149,323 @@ const tabs = [
     border-radius: 8px;
   }
 
-  /* Meetings wireframe */
+  /* Meetings call, from a Dialpad Meetings screenshot */
   .nd-meetings {
+    --nd-meet-pink: #ef1b6c;
+
     display: flex;
     flex-direction: column;
-    background: #262626;
+    background: #000;
+    color: #fff;
   }
 
   .nd-tiles {
     flex: 1;
     min-height: 0;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 8px;
-    padding: 16px var(--nd-content-right) 16px 16px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 12px var(--nd-content-right) 8px 16px;
+  }
+
+  /* Two tiles on top, the third centred below */
+  .nd-tile:nth-child(1) {
+    grid-column: 1 / 3;
+  }
+
+  .nd-tile:nth-child(2) {
+    grid-column: 3 / 5;
+  }
+
+  .nd-tile:nth-child(3) {
+    grid-column: 2 / 4;
   }
 
   .nd-tile {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    place-items: center;
     min-width: 0;
+    overflow: hidden;
     border-radius: 12px;
-    background: #3a3a3a;
+    background: #1c1c1c;
+  }
+
+  .nd-tile-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Keeps the white name legible over bright photos */
+  .nd-tile::after {
+    content: "";
+    position: absolute;
+    inset: 55% 0 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.45));
+    pointer-events: none;
+  }
+
+  .nd-tile-meta {
+    z-index: 1;
+  }
+
+  .nd-tile-host {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: #f2f2f2;
+    color: #222;
+    font-size: 11px;
+    font-weight: 600;
   }
 
   .nd-tile-avatar {
-    width: 72px;
-    height: 72px;
+    position: relative;
+    width: clamp(48px, 7vh, 72px);
+    height: clamp(48px, 7vh, 72px);
+    border: 2px solid rgba(255, 255, 255, 0.85);
     border-radius: 50%;
-    background: #555;
+    object-fit: cover;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
   }
 
-  .nd-tile-name {
+  .nd-tile-avatar--initials {
+    display: grid;
+    place-items: center;
+    border: 0;
+    background: #f7b928;
+    color: #222;
+    font-size: clamp(16px, 2.4vh, 24px);
+    font-weight: 500;
+  }
+
+  .nd-tile-meta {
     position: absolute;
-    bottom: 8px;
-    left: 8px;
-    padding: 2px 8px;
+    left: 14px;
+    bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+  }
+
+  .nd-tile-meta strong {
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .nd-tile-meta > span {
+    font-size: 11px;
+  }
+
+  .nd-tile-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .nd-tile-muted {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--nd-meet-pink);
+  }
+
+  .nd-meetings svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .nd-tile-muted svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .nd-tile-extra {
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+  }
+
+  .nd-meet-status {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px var(--nd-content-right) 4px 16px;
+  }
+
+  .nd-ai-on {
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #ff1ba4, #7c52ff);
+    font-size: 11px;
+  }
+
+  .nd-signal {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5px;
+    height: 10px;
+  }
+
+  .nd-signal i {
+    width: 2.5px;
+    border-radius: 1px;
+    background: #7ddc3c;
+  }
+
+  .nd-signal i:nth-child(1) {
+    height: 4px;
+  }
+
+  .nd-signal i:nth-child(2) {
+    height: 7px;
+  }
+
+  .nd-signal i:nth-child(3) {
+    height: 10px;
+  }
+
+  .nd-meet-status-spacer {
+    flex: 1;
+  }
+
+  .nd-meet-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
     border-radius: 6px;
-    background: #00000066;
-    color: #fff;
+    background: #2b2b2b;
     font-size: 12px;
+  }
+
+  .nd-meet-pill svg {
+    width: 14px;
+    height: 14px;
   }
 
   .nd-controls {
     flex: none;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
     gap: 16px;
-    height: 72px;
-    padding: 0 var(--nd-content-right) 0 16px;
+    padding: 8px var(--nd-content-right) 12px 16px;
   }
 
   .nd-control-group {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
   }
 
-  .nd-control {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #484848;
+  .nd-control-group--end {
+    justify-content: flex-end;
   }
 
-  .nd-control--end {
-    width: 56px;
-    border-radius: 20px;
-    background: #6e3a3a;
-  }
-
-  .nd-control-pill {
-    width: 88px;
-    height: 16px;
+  .nd-ctl {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 64px;
+    padding: 8px 6px;
+    border: 0;
     border-radius: 8px;
-    background: #484848;
+    background: none;
+    color: #fff;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background-color 0.15s ease;
+  }
+
+  .nd-ctl:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  button.nd-ctl {
+    cursor: pointer;
+  }
+
+  .nd-ctl svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .nd-ctl--alert {
+    min-width: 76px;
+    margin: 0 2px;
+    background: var(--nd-meet-pink);
+  }
+
+  .nd-ctl--alert:hover {
+    background: #d8155f;
+  }
+
+  .nd-ctl-caret {
+    position: absolute;
+    top: 8px;
+    right: 4px;
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .nd-ctl-icon {
+    position: relative;
+    display: flex;
+  }
+
+  .nd-ctl-count {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    font-size: 11px;
+  }
+
+  /* Unread count on Activity and Ai */
+  .nd-bar-badge {
+    position: absolute;
+    top: -7px;
+    right: -11px;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    border: 2px solid #000;
+    border-radius: 9px;
+    background: var(--nd-meet-pink);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 13px;
+    text-align: center;
+  }
+
+  .nd-leave {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 24px;
+    background: var(--nd-meet-pink);
+    font-size: 15px;
+    font-weight: 600;
   }
 
   /* App wireframe */
