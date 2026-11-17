@@ -62,6 +62,20 @@ const { eyebrow, items, authed, error } = Astro.props;
   </main>
 </Layout>
 
+<script>
+  // Remembers which showcase page (/showcase, /showcase/rippling…) the visitor is
+  // on, so the prototypes' "Showcase" button returns here
+  // (scripts/showcase-overrides/showcase-chrome.js)
+  document.addEventListener('astro:page-load', () => {
+    if (!document.querySelector('.sc-page')) return;
+    try {
+      sessionStorage.setItem('showcase-home', location.pathname);
+    } catch {
+      // Storage blocked; the button falls back to /showcase
+    }
+  });
+</script>
+
 <style>
   /* Footer (Contact) inherits the body background */
   :global(:root) {

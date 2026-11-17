@@ -9,6 +9,7 @@
 //   collapse chevron is hidden too (the toggle itself is removed by the
 //   upload script's patches).
 // - On Agentic Studio, the browser tab reads "Agentic Studio".
+// - The "Showcase" button returns to the showcase page the visitor came from.
 
 const style = document.createElement('style');
 style.textContent = `
@@ -67,3 +68,21 @@ new MutationObserver(() => {
   const right = document.querySelector('.d-uxes-component-settings-menu > :last-child');
   if (right && resetButton.parentElement !== right) right.append(resetButton);
 }).observe(document.body, { childList: true, subtree: true });
+
+// The header's "Showcase" button is patched to go to /showcase. Send it back to
+// whichever showcase page the visitor came from instead (stored by
+// src/components/ShowcasePage.astro), e.g. /showcase/rippling
+window.addEventListener('click', (event) => {
+  const button = event.target.closest?.('button');
+  if (!button || button.textContent.trim() !== 'Showcase' || !button.querySelector('.d-icon--chevron-left')) return;
+  let home = '/showcase';
+  try {
+    const stored = sessionStorage.getItem('showcase-home');
+    if (stored && /^\/showcase(\/[a-z0-9-]+)?\/?$/.test(stored) && !stored.startsWith('/showcase/prototypes')) home = stored;
+  } catch {
+    // Storage blocked; use /showcase
+  }
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  window.location.assign(home);
+}, true);
