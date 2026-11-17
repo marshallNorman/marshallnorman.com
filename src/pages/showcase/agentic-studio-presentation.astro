@@ -34,6 +34,11 @@ const context = [
   },
 ];
 
+const metrics = [
+  { value: '304,816', label: 'End-to-end AI agent conversations' },
+  { value: '58', label: 'Paying companies' },
+];
+
 const tour = [
   'Create a new agent on the canvas',
   'Manage it from the agent dashboard',
@@ -71,6 +76,17 @@ const tour = [
               </div>
             ))}
           </dl>
+          <div class="as-metrics">
+            <p class="as-metrics-label">Latest metrics</p>
+            <dl class="as-metrics-list">
+              {metrics.map((metric) => (
+                <div>
+                  <dt>{metric.label}</dt>
+                  <dd>{metric.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
       </section>
 
@@ -341,6 +357,75 @@ const tour = [
   .as-context-item.is-wide dd {
     font-size: clamp(18px, 1.6vw, 24px);
     line-height: 1.45;
+  }
+
+  /* Latest metrics */
+  .as-metrics {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(24px, 3vw, 48px);
+    margin-top: clamp(20px, 3.5vh, 32px);
+    padding-top: 14px;
+    border-top: 1px solid var(--grid-line);
+  }
+
+  .as-metrics-label {
+    flex: none;
+    margin: 0;
+    padding-top: 6px;
+    color: var(--accent);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 13px;
+  }
+
+  .as-metrics-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px clamp(28px, 4vw, 64px);
+    margin: 0;
+  }
+
+  /* Value above its label; dt stays first in the markup */
+  .as-metrics-list div {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .as-metrics-list dd {
+    margin: 0;
+    font-size: clamp(28px, 2.6vw, 44px);
+    line-height: 1.1;
+  }
+
+  .as-metrics-list dt {
+    margin-top: 4px;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  /* Short screens (e.g. 1280×720): tighten so the metrics clear the controls */
+  @media (max-height: 760px) {
+    .as-numeral {
+      font-size: 44px;
+    }
+
+    .as-head {
+      margin-bottom: 16px;
+    }
+
+    .as-context {
+      row-gap: 16px;
+    }
+
+    .as-metrics {
+      margin-top: 16px;
+      padding-top: 10px;
+    }
+
+    .as-metrics-list dd {
+      font-size: 28px;
+    }
   }
 
   /* Handoff */

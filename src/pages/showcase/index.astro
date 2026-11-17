@@ -59,6 +59,7 @@ const items = [
   <link slot="head" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&family=Roboto+Serif:ital,opsz,wght@0,8..144,400;1,8..144,400&display=swap" rel="stylesheet" />
 
   <main class="sc-page">
+    <a class="sc-home" href="/"><span aria-hidden="true">←</span> marshallnorman.com</a>
     <div class="sc-col">
       <p class="sc-label">Showcase</p>
       <h1>Selected work</h1>
@@ -125,6 +126,27 @@ const items = [
     width: min(680px, 100vw - 48px);
     margin-inline: auto;
     padding: clamp(96px, 12vw, 180px) 0 120px;
+  }
+
+  .sc-home {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    display: inline-flex;
+    gap: 6px;
+    color: var(--accent);
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 13px;
+    text-decoration: none;
+  }
+
+  .sc-home:hover {
+    text-decoration: underline;
+  }
+
+  .sc-home:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 
   .sc-label,
