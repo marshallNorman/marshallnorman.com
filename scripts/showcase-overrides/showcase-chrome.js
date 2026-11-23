@@ -71,7 +71,7 @@ new MutationObserver(() => {
 
 // The header's "Showcase" button is patched to go to /showcase. Send it back to
 // whichever showcase page the visitor came from instead (stored by
-// src/components/ShowcasePage.astro), e.g. /showcase/rippling
+// src/components/ShowcasePage.astro)
 window.addEventListener('click', (event) => {
   const button = event.target.closest?.('button');
   if (!button || button.textContent.trim() !== 'Showcase' || !button.querySelector('.d-icon--chevron-left')) return;

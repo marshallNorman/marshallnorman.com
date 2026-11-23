@@ -7,7 +7,7 @@ export type ShowcaseItem = {
   wip?: boolean;
 };
 
-// The work listed on /showcase (and, with additions, on client pages like /showcase/rippling)
+// The work listed on /showcase (and, with additions, on client showcase pages)
 export const showcaseItems: ShowcaseItem[] = [
   {
     type: 'Prototype',

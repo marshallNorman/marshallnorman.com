@@ -17,6 +17,90 @@ if (Astro.request.method === 'POST') {
 }
 
 const authed = isAuthed(Astro.cookies);
+
+// Loom walkthroughs (titles and lengths from Loom's oEmbed)
+const videos = [
+  { id: '465acf1df2cc4c0d96b97fcb8e111818', title: 'Agentic Studio Demo, Building and Testing Agents', length: '9:38' },
+  { id: '3038b1ff8dff43f7963540b0084eefdf', title: 'Creating and Using Call Center Playbooks with AI', length: '5:02' },
+];
 ---
 
-<ShowcasePage eyebrow="Showcase" items={showcaseItems} authed={authed} error={error}></ShowcasePage>
+<ShowcasePage eyebrow="Showcase" items={showcaseItems} authed={authed} error={error}>
+  <section class="sc-videos" aria-labelledby="sc-videos-title">
+    <h2 class="sc-videos-title" id="sc-videos-title">Video walkthroughs</h2>
+    {videos.map((video) => (
+      <figure class="sc-video">
+        <div class="sc-video-frame">
+          <iframe
+            src={`https://www.loom.com/embed/${video.id}?hide_owner=true&hide_share=true&hide_title=true&hideEmbedTopBar=true`}
+            title={video.title}
+            loading="lazy"
+            allow="fullscreen"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <figcaption>
+          <span class="sc-video-length">Video · {video.length}</span>
+          <span class="sc-video-name">{video.title}</span>
+        </figcaption>
+      </figure>
+    ))}
+  </section>
+</ShowcasePage>
+
+<style>
+  .sc-videos {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .sc-videos-title {
+    margin: 0;
+    color: #8674ea;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  .sc-video {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid #dcd5f5;
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  /* The recordings are 16:10 (Loom's oEmbed reports 4:3, which letterboxes) */
+  .sc-video-frame {
+    aspect-ratio: 16 / 10;
+    background: #ece9fb;
+  }
+
+  .sc-video-frame iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .sc-video figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 24px 24px;
+  }
+
+  .sc-video-length {
+    color: #8674ea;
+    font-family: "Roboto Mono", ui-monospace, monospace;
+    font-size: 13px;
+  }
+
+  .sc-video-name {
+    font-size: 24px;
+    line-height: 1.25;
+  }
+</style>
+
